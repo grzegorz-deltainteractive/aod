@@ -19,5 +19,6 @@ Route::get('/', function () {
 
 
 Route::group(['prefix' => 'admin'], function () {
+    Route::any('pools/categories/{id}', 'PoolsController@categories')->name('pools.categories');
     Voyager::routes();
 });

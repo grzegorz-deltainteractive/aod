@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::any('pools/categories/{id}', 'PoolsController@categories')->name('pools.categories');
+    Route::get('pools/categories/{id}', 'PoolsController@categories')->name('pools.categories');
+    Route::post('pools/categoriesSave/{id}', 'PoolsController@categoriesSave')->name('pools.categories.save');
     Voyager::routes();
 });

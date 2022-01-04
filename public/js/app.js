@@ -2067,12 +2067,36 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     // console.log(this.categories);
     this.categoryData = this.categories;
   },
-  props: ['categories'],
+  props: ['categories', 'saveUrl'],
   data: function data() {
     return {
       categoryData: [],
@@ -2081,13 +2105,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       newParameterName: "",
       newParameterRatingMin: 0,
       newParameterRatingMax: 10,
-      newParameterLabVisible: 0
+      newParameterLabVisible: 0,
+      prevParametrsIndexShow: -1
     };
   },
   methods: {
     addCategory: function addCategory() {
       this.newCategoryName = '';
       $('#addCategory').slideDown();
+      $('#newCategoryName').focus();
     },
     addCategorySave: function addCategorySave() {
       var self = this;
@@ -2095,29 +2121,74 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       if (this.newCategoryName == "") {
         alert('Proszę podać nazwę kategorii');
       } else {
-        console.log(this.categoryData); // sprawdzę czy wpis już mam
-
+        // sprawdzę czy wpis już mam
         try {
-          if (!Array.isArray(this.categoryData) || self.categoryData.length == 0) {
-            var item = {
+          if (_typeof(self.categoryData) == 'object' && self.categoryData.length == 0) {
+            try {
+              var item = {
+                "name": self.newCategoryName,
+                "parameters": []
+              };
+              this.categoryData.push(item);
+              this.saveForm();
+            } catch (e2) {
+              console.log(e2);
+            }
+          } else if (Array.isArray(this.categoryData) && this.categoryData.length == 0) {
+            console.log('2');
+            var _item = {
               "name": self.newCategoryName,
-              "parameters": {}
+              "parameters": []
             };
-            this.categoryData.push(item);
-          } else {// check;
+            this.categoryData.push(_item);
+            this.saveForm();
+          } else {
+            if (_typeof(this.categoryData) == 'object') {
+              var max = Object.keys(this.categoryData).length;
+              var exists = false;
+
+              for (var i = 0; i < max; i++) {
+                if (this.categoryData[i].name == self.newCategoryName) {
+                  exists = true;
+                }
+              }
+
+              if (exists) {
+                alert('Kategoria o tej samej nazwie już istnieje!');
+              } else {
+                var _item2 = {
+                  "name": self.newCategoryName,
+                  "parameters": []
+                };
+                this.categoryData.push(_item2);
+                this.saveForm();
+              }
+            } else {
+              console.log('nie');
+            }
           }
         } catch (e) {
-          console.log(e);
+          console.log(e); // let item = {
+          //     "name": self.newCategoryName,
+          //     "parameters": {}
+          // }
+          // this.categoryData.push(item);
         }
 
         $('#addCategory').slideUp();
       }
     },
-    editParameters: function editParameters(index) {
-      console.log(index);
+    editParameters: function editParameters(newId, index) {
       $('.editParametersDiv').hide();
       var id = '#categoryParams' + index;
-      $(id).show();
+
+      if (this.prevParametrsIndexShow != index) {
+        this.prevParametrsIndexShow = index;
+        $(id).show();
+      } else {
+        this.prevParametrsIndexShow = -1;
+        $(id).hide();
+      }
     },
     addParameter: function addParameter(id) {
       this.displayParametersForm = id;
@@ -2125,6 +2196,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       this.newParameterRatingMax = 20;
       this.newParameterName = "";
       this.newParameterLabVisible = 0;
+      $('#newParameterName').focus();
+      setTimeout(function () {
+        $('#newParameterName').focus();
+      }, 200);
     },
     getParamsCount: function getParamsCount(index) {
       try {
@@ -2133,18 +2208,97 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
       return 0;
     },
-    addParameterSave: function addParameterSave(id, index) {}
+    addParameterSave: function addParameterSave(id, index) {
+      if (this.newParameterName == '') {
+        alert('Proszę podać nazwę nowego parametru!');
+      } else {
+        var tmp = {
+          "name": this.newParameterName,
+          "rating_max": this.newParameterRatingMax,
+          "rating_min": this.newParameterRatingMin,
+          "visible_for_lab": this.newParameterLabVisible,
+          "category_id": id
+        };
+
+        try {
+          this.categoryData[index]['parameters'].push(tmp);
+          this.displayParametersForm = -1;
+          this.saveForm();
+        } catch (e) {
+          alert("Wystąpił problem przy dodawaniu parametru, proszę spróbować raz jeszcze");
+        }
+      }
+    },
+    deleteCategory: function deleteCategory(index) {
+      var conf = confirm("Czy na pewno chcesz usunąć kategorię i parametry?");
+
+      if (conf) {
+        try {
+          if (_typeof(this.categoryData) == 'object') {
+            var tmp = [];
+            var max = Object.keys(this.categoryData).length;
+
+            for (var i = 0; i < max; i++) {
+              if (i != index) {
+                tmp.push(this.categoryData[i]);
+              }
+            }
+
+            this.categoryData = tmp;
+            this.saveForm();
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+    deleteParameter: function deleteParameter(index, index2) {
+      var conf = confirm("Czy na pewno usunąć dany parametr?");
+
+      if (conf) {
+        try {
+          var parameters = this.categoryData[index]['parameters'];
+          var tmp = [];
+
+          if (parameters.length > 0) {
+            var max = parameters.length;
+
+            for (var i = 0; i < max; i++) {
+              if (i != index2) {
+                tmp.push(parameters[i]);
+              }
+            }
+
+            this.categoryData[index]["parameters"] = tmp;
+            this.saveForm();
+          }
+        } catch (e) {}
+      }
+    },
+    saveForm: function saveForm() {
+      // console.log(this.saveUrl);
+      var formData = this.categoryData;
+      console.log(formData);
+      toastr.info('Proszę czekać, zapisuję dane');
+      axios.post(this.saveUrl, formData).then(function (response) {
+        if (response.status == 200) {
+          toastr.success('Dane zostałyz zapisane poprawnie');
+        } else {
+          toastr.error('Wystąpił błąd przy zapisie danych');
+        }
+      });
+    }
   },
   computed: {
     isCategoriesEmpty: function isCategoriesEmpty() {
       var self = this;
       console.log(self.categories);
 
-      if (_typeof(self.categories) == 'object' && self.categories.length == 0) {
+      if (_typeof(this.categoryData) == 'object' && self.categoryData.length == 0) {
         return true;
       }
 
-      if (Array.isArray(self.categories) && self.categories.length == 0) {
+      if (Array.isArray(self.categoryData) && self.categoryData.length == 0) {
         return true;
       }
 
@@ -19884,7 +20038,14 @@ var render = function () {
                         _c("td", [
                           _c(
                             "button",
-                            { staticClass: "btn btn-sm btn-danger" },
+                            {
+                              staticClass: "btn btn-sm btn-danger",
+                              on: {
+                                click: function ($event) {
+                                  return _vm.deleteCategory(index)
+                                },
+                              },
+                            },
                             [_vm._v("Usuń kategorię i parametry")]
                           ),
                           _vm._v(" "),
@@ -19894,7 +20055,7 @@ var render = function () {
                               staticClass: "btn btn-sm btn-primary",
                               on: {
                                 click: function ($event) {
-                                  return _vm.editParameters(item.id)
+                                  return _vm.editParameters(item.id, index)
                                 },
                               },
                             },
@@ -19908,7 +20069,7 @@ var render = function () {
                         {
                           staticClass: "editParametersDiv",
                           staticStyle: { display: "none" },
-                          attrs: { id: "categoryParams" + item.id },
+                          attrs: { id: "categoryParams" + index },
                         },
                         [
                           _c("td", { attrs: { colspan: "3" } }, [
@@ -19916,13 +20077,101 @@ var render = function () {
                             _vm._v(" "),
                             item.parameters.length == 0
                               ? _c("div", [
-                                  _vm._v(
-                                    "\n                                Nie dodano parametrów, kliknij poniższy przycisk aby dodać parametr\n                            "
-                                  ),
+                                  _c("p", [
+                                    _vm._v(
+                                      "Nie dodano parametrów, kliknij poniższy przycisk aby dodać parametr."
+                                    ),
+                                  ]),
                                 ])
                               : _c("div", [
-                                  _vm._v(
-                                    "\n                                tutaj parametry\n                            "
+                                  _c(
+                                    "table",
+                                    {
+                                      staticClass:
+                                        "table table-hover dataTable no-footer",
+                                    },
+                                    [
+                                      _vm._m(2, true),
+                                      _vm._v(" "),
+                                      _c(
+                                        "tbody",
+                                        _vm._l(
+                                          item.parameters,
+                                          function (item2, index2) {
+                                            return _c("tr", [
+                                              _c("td", {
+                                                staticStyle: {
+                                                  "vertical-align": "middle",
+                                                },
+                                                domProps: {
+                                                  innerHTML: _vm._s(item2.name),
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c("td", {
+                                                staticStyle: {
+                                                  "vertical-align": "middle",
+                                                },
+                                                domProps: {
+                                                  innerHTML: _vm._s(
+                                                    item2.rating_min
+                                                  ),
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c("td", {
+                                                staticStyle: {
+                                                  "vertical-align": "middle",
+                                                },
+                                                domProps: {
+                                                  innerHTML: _vm._s(
+                                                    item2.rating_max
+                                                  ),
+                                                },
+                                              }),
+                                              _vm._v(" "),
+                                              _c(
+                                                "td",
+                                                {
+                                                  staticStyle: {
+                                                    "vertical-align": "middle",
+                                                  },
+                                                },
+                                                [
+                                                  item2.visible_for_lab == 0
+                                                    ? _c("span", [
+                                                        _vm._v("nie"),
+                                                      ])
+                                                    : _c("span", [
+                                                        _vm._v("tak"),
+                                                      ]),
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-sm btn-danger",
+                                                    on: {
+                                                      click: function ($event) {
+                                                        return _vm.deleteParameter(
+                                                          index,
+                                                          index2
+                                                        )
+                                                      },
+                                                    },
+                                                  },
+                                                  [_vm._v("Usuń parametr")]
+                                                ),
+                                              ]),
+                                            ])
+                                          }
+                                        ),
+                                        0
+                                      ),
+                                    ]
                                   ),
                                 ]),
                             _vm._v(" "),
@@ -19976,6 +20225,7 @@ var render = function () {
                                                       type: "text",
                                                       placeholder:
                                                         "Podaj nazwę nowego parametru",
+                                                      id: "newParameterName",
                                                     },
                                                     domProps: {
                                                       value:
@@ -20624,7 +20874,7 @@ var render = function () {
                                                   },
                                                 },
                                               },
-                                              [_vm._v("Dodaj nowy parametr")]
+                                              [_vm._v("Zapisz parametr")]
                                             ),
                                           ]
                                         ),
@@ -20634,20 +20884,22 @@ var render = function () {
                                 )
                               : _vm._e(),
                             _vm._v(" "),
-                            _c("div", [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-sm btn-primary",
-                                  on: {
-                                    click: function ($event) {
-                                      return _vm.addParameter(item.id)
+                            _vm.displayParametersForm == -1
+                              ? _c("div", [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-sm btn-primary",
+                                      on: {
+                                        click: function ($event) {
+                                          return _vm.addParameter(item.id)
+                                        },
+                                      },
                                     },
-                                  },
-                                },
-                                [_vm._v("Dodaj nowy parametr")]
-                              ),
-                            ]),
+                                    [_vm._v("Dodaj nowy parametr")]
+                                  ),
+                                ])
+                              : _vm._e(),
                           ]),
                         ]
                       ),
@@ -20704,6 +20956,7 @@ var render = function () {
                   attrs: {
                     type: "text",
                     placeholder: "Podaj nazwę nowej kategorii",
+                    id: "newCategoryName",
                   },
                   domProps: { value: _vm.newCategoryName },
                   on: {
@@ -20764,6 +21017,24 @@ var staticRenderFns = [
             "\n                        Ilość parametrów\n                    "
           ),
         ]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Opcje")]),
+      ]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Nazwa")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Ocena minimalna")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Ocena maksymalna")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Czy widzi to laboratorium")]),
         _vm._v(" "),
         _c("th", [_vm._v("Opcje")]),
       ]),

@@ -7,6 +7,7 @@
         <div id="categories-vue-wrapper">
             <categories
                 :categories="{{json_encode($categories)}}"
+                save-url="{{route('pools.categories.save', ['id' => $id])}}"
             ></categories>
         </div>
 

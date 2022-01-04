@@ -24,18 +24,42 @@
                         </td>
                         <td style="vertical-align: middle" v-html="getParamsCount(index)"></td>
                         <td>
-                            <button class="btn btn-sm btn-danger">Usuń kategorię i parametry</button>
-                            <button class="btn btn-sm btn-primary" v-on:click="editParameters(item.id)">Edytuj parametry</button>
+                            <button class="btn btn-sm btn-danger" v-on:click="deleteCategory(index)">Usuń kategorię i parametry</button>
+                            <button class="btn btn-sm btn-primary" v-on:click="editParameters(item.id, index)">Edytuj parametry</button>
                         </td>
                     </tr>
-                    <tr :id="'categoryParams'+item.id" style="display: none" class="editParametersDiv">
+                    <tr :id="'categoryParams'+index" style="display: none" class="editParametersDiv">
                         <td colspan="3">
                             <h5>Parametry</h5>
                             <div v-if="item.parameters.length == 0">
-                                Nie dodano parametrów, kliknij poniższy przycisk aby dodać parametr
+                                <p>Nie dodano parametrów, kliknij poniższy przycisk aby dodać parametr.</p>
                             </div>
                             <div v-else>
-                                tutaj parametry
+                                <table class="table table-hover dataTable no-footer">
+                                    <thead>
+                                    <tr>
+                                        <th>Nazwa</th>
+                                        <th>Ocena minimalna</th>
+                                        <th>Ocena maksymalna</th>
+                                        <th>Czy widzi to laboratorium</th>
+                                        <th>Opcje</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(item2, index2) in item.parameters">
+                                        <td style="vertical-align: middle" v-html="item2.name"></td>
+                                        <td style="vertical-align: middle" v-html="item2.rating_min"></td>
+                                        <td style="vertical-align: middle" v-html="item2.rating_max"></td>
+                                        <td style="vertical-align: middle">
+                                            <span v-if="item2.visible_for_lab == 0">nie</span>
+                                            <span v-else>tak</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" @click="deleteParameter(index, index2)">Usuń parametr</button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="" :id="'parametersAdd'+item.id"  v-if="displayParametersForm == item.id">
 <!--                                formularz dodania parametru-->
@@ -46,7 +70,7 @@
                                                 <label class="control-label">
                                                     Parametr
                                                 </label>
-                                                <input type="text" class="form-control" v-model="newParameterName" placeholder="Podaj nazwę nowego parametru" />
+                                                <input type="text" class="form-control" v-model="newParameterName" placeholder="Podaj nazwę nowego parametru" id="newParameterName" />
                                             </div>
                                             <div class="form-group  col-md-12 ">
                                                 <label class="control-label">
@@ -116,11 +140,11 @@
                                         </div>
                                     </div>
                                     <div class="panel-footer">
-                                        <button class="btn btn-primary save " v-on:click="addParameterSave(item.id, index)">Dodaj nowy parametr</button>
+                                        <button class="btn btn-primary save " v-on:click="addParameterSave(item.id, index)">Zapisz parametr</button>
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div v-if="displayParametersForm == -1">
                                 <button class="btn btn-sm btn-primary" v-on:click="addParameter(item.id)">Dodaj nowy parametr</button>
                             </div>
                         </td>
@@ -143,7 +167,7 @@
                             <label class="control-label">
                                 Podaj nazwę kategorii
                             </label>
-                            <input type="text" class="form-control" v-model="newCategoryName" placeholder="Podaj nazwę nowej kategorii" />
+                            <input type="text" class="form-control" v-model="newCategoryName" placeholder="Podaj nazwę nowej kategorii" id="newCategoryName" />
                         </div>
                     </div>
                 </div>
@@ -162,7 +186,7 @@ export default {
         this.categoryData = this.categories;
     },
     props: [
-        'categories'
+        'categories', 'saveUrl'
         ],
     data: function () {
         return {
@@ -174,42 +198,88 @@ export default {
             newParameterRatingMin: 0,
             newParameterRatingMax: 10,
             newParameterLabVisible: 0,
+
+            prevParametrsIndexShow: -1
         }
     },
     methods: {
         addCategory: function() {
             this.newCategoryName = '';
             $('#addCategory').slideDown();
+            $('#newCategoryName').focus();
         },
         addCategorySave: function() {
             var self = this;
             if (this.newCategoryName == "") {
                 alert('Proszę podać nazwę kategorii');
             } else {
-                console.log(this.categoryData);
-
                 // sprawdzę czy wpis już mam
                 try {
-                    if (!Array.isArray(this.categoryData) || self.categoryData.length == 0) {
+                    if (typeof self.categoryData == 'object' && self.categoryData.length == 0) {
+                        try {
+                            let item = {
+                                "name": self.newCategoryName,
+                                "parameters": []
+                            }
+                            this.categoryData.push(item);
+                            this.saveForm();
+                        } catch (e2) {
+                            console.log(e2);
+
+                        }
+                    } else if (Array.isArray(this.categoryData) && this.categoryData.length == 0) {
+                        console.log('2');
                         let item = {
                             "name": self.newCategoryName,
-                            "parameters": {}
+                            "parameters": []
                         }
                         this.categoryData.push(item);
+                        this.saveForm();
                     } else {
-                        // check;
+                        if (typeof this.categoryData == 'object') {
+
+                            let max = Object.keys(this.categoryData).length;
+                            let exists = false;
+                            for (let i=0; i<max; i++) {
+                                if (this.categoryData[i].name == self.newCategoryName) {
+                                    exists = true;
+                                }
+                            }
+                            if (exists) {
+                                alert('Kategoria o tej samej nazwie już istnieje!');
+                            } else {
+                                let item = {
+                                    "name": self.newCategoryName,
+                                    "parameters": []
+                                }
+                                this.categoryData.push(item);
+                                this.saveForm();
+                            }
+                        } else {
+                            console.log('nie');
+                        }
                     }
                 } catch (e) {
                     console.log(e);
+                    // let item = {
+                    //     "name": self.newCategoryName,
+                    //     "parameters": {}
+                    // }
+                    // this.categoryData.push(item);
                 }
                 $('#addCategory').slideUp();
             }
         },
-        editParameters: function(index) {
-            console.log(index);
+        editParameters: function(newId, index) {
             $('.editParametersDiv').hide();
             let id = '#categoryParams'+index;
-            $(id).show();
+            if (this.prevParametrsIndexShow != index) {
+                this.prevParametrsIndexShow = index;
+                $(id).show();
+            } else {
+                this.prevParametrsIndexShow = -1;
+                $(id).hide();
+            }
         },
         addParameter: function(id)
         {
@@ -218,6 +288,10 @@ export default {
             this.newParameterRatingMax = 20;
             this.newParameterName = "";
             this.newParameterLabVisible = 0;
+            $('#newParameterName').focus();
+            setTimeout(function() {
+                $('#newParameterName').focus();
+            }, 200);
         },
         getParamsCount: function (index) {
             try {
@@ -228,17 +302,91 @@ export default {
             return 0;
         },
         addParameterSave: function (id, index) {
-            
+            if (this.newParameterName == '') {
+                alert('Proszę podać nazwę nowego parametru!');
+            } else {
+                let tmp = {
+                    "name": this.newParameterName,
+                    "rating_max": this.newParameterRatingMax,
+                    "rating_min": this.newParameterRatingMin,
+                    "visible_for_lab": this.newParameterLabVisible,
+                    "category_id": id
+                };
+                try {
+                    this.categoryData[index]['parameters'].push(tmp);
+                    this.displayParametersForm = -1;
+                    this.saveForm();
+                } catch (e) {
+                    alert ("Wystąpił problem przy dodawaniu parametru, proszę spróbować raz jeszcze");
+                }
+            }
+        },
+        deleteCategory: function(index)
+        {
+            let conf = confirm("Czy na pewno chcesz usunąć kategorię i parametry?");
+            if (conf) {
+                try {
+                    if (typeof this.categoryData == 'object') {
+                        let tmp = [];
+                        let max = Object.keys(this.categoryData).length;
+                        for (let i =0; i < max; i++) {
+                            if (i != index) {
+                                tmp.push(this.categoryData[i]);
+                            }
+                        }
+                        this.categoryData = tmp;
+                        this.saveForm();
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        },
+        deleteParameter: function(index, index2) {
+            let conf = confirm("Czy na pewno usunąć dany parametr?");
+            if (conf) {
+                try {
+                    let parameters = this.categoryData[index]['parameters'];
+                    let tmp = [];
+                    if (parameters.length > 0) {
+                        let max = parameters.length;
+                        for (let i = 0; i< max; i++) {
+                            if (i != index2) {
+                                tmp.push(parameters[i]);
+                            }
+                        }
+                        this.categoryData[index]["parameters"] = tmp;
+                        this.saveForm();
+                    }
+                } catch (e) {
+
+                }
+            }
+        },
+
+        saveForm: function() {
+            // console.log(this.saveUrl);
+            let formData = this.categoryData;
+            console.log(formData);
+            toastr.info('Proszę czekać, zapisuję dane');
+            axios.post(this.saveUrl, formData).then(function (response) {
+                if (response.status == 200) {
+                    toastr.success('Dane zostałyz zapisane poprawnie');
+                } else {
+                    toastr.error('Wystąpił błąd przy zapisie danych');
+                }
+            });
         }
+
     },
     computed: {
         isCategoriesEmpty: function() {
             let self = this;
             console.log(self.categories);
-            if (typeof self.categories == 'object' && self.categories.length == 0) {
+            if (typeof this.categoryData == 'object' && self.categoryData.length == 0) {
                 return true;
             }
-            if ((Array.isArray(self.categories) && self.categories.length == 0)) {
+            if ((Array.isArray(self.categoryData) && self.categoryData.length == 0)) {
                 return true;
             }
             return false;

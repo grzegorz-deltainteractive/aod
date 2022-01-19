@@ -19,6 +19,7 @@ class User extends \TCG\Voyager\Models\User
         'name', 'email', 'password',
     ];
 
+
     /**
      * The attributes that should be hidden for arrays.
      *

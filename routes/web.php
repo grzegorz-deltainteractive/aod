@@ -22,5 +22,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('pools/categories/{id}', 'PoolsController@categories')->name('pools.categories');
     Route::post('pools/categoriesSave/{id}', 'PoolsController@categoriesSave')->name('pools.categories.save');
     Route::get('suppliers/pools/{id}', 'SuppliersPoolsController@pools')->name('suppliers.pools');
+    Route::any('suppliers/pools/{id}/fill/{poolId}', 'SuppliersPoolsController@fillPool')->name('suppliers.pools.fill');
+    Route::any('suppliers/pools/{id}/filled/{poolId}', 'SuppliersPoolsController@filledPools')->name('suppliers.pools.filled');
+    Route::any('suppliers/pools/{id}/filled/{poolId}/user/{userId}', 'SuppliersPoolsController@filledPoolsSingle')->name('suppliers.pools.filled.single');
     Voyager::routes();
 });

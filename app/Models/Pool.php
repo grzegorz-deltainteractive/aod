@@ -11,4 +11,15 @@ class Pool extends Model
     {
         return $this->hasMany(Categories::class, 'pool_id');
     }
+
+    public static $statuses = [
+        '1' => 'Robocza',
+        '2' => 'Aktywna',
+        '3' => 'Nieaktywna'
+    ];
+
+    public static function getStatuses()
+    {
+        return self::$statuses;
+    }
 }

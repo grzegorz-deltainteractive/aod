@@ -13,8 +13,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nazwa ankiety</th>
-                            <th>Użytkownik</th>
-                            <th>Zaakceptowana</th>
+                            <th>Wypełniona</th>
                             <th>Opcje</th>
                         </tr>
                         </thead>
@@ -26,9 +25,6 @@
                                 </td>
                                 <td style="vertical-align: middle">
                                     {{$pool['name']}}
-                                </td>
-                                <td style="vertical-align: middle">
-
                                 </td>
                                 <td>
                                     <?php
@@ -56,6 +52,6 @@
             <h5>Brak ankiet dla dostawcy</h5>
         @endif
             <br />
-            <a href="/admin/suppliers" class="btn btn-sm btn-primary btn-danger ">Powrót</a>
+            <a href="/admin/suppliers" class="btn btn-sm btn-secondary " style="background-color: #cccccc">Powrót</a>
     </div>
 @stop

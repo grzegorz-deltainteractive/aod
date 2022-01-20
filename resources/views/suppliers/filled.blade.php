@@ -48,7 +48,7 @@
                     <h4>Brak wypełnionych ankiet</h4>
                 @endif
                     <br />
-                <a href="{{route('suppliers.pools', ['id' => $supplier_id])}}" class="btn btn-sm btn-primary btn-danger ">Powrót</a>
+                <a href="{{route('suppliers.pools', ['id' => $supplier_id])}}" class="btn btn-sm btn-secondary" style="background-color: #cccccc">Powrót</a>
             </div>
         </div>
     </div>

@@ -50,7 +50,7 @@
                     <br />
                 @endforeach
                 <br />
-                <a href="{{route('suppliers.pools.filled', ['id' => $supplier_id, 'poolId' => $pool_id])}}" class="btn btn-sm btn-primary btn-danger ">Powrót</a>
+                <a href="{{route('suppliers.pools.filled', ['id' => $supplier_id, 'poolId' => $pool_id])}}" class="btn btn-sm btn-secondary " style="background-color: #cccccc">Powrót</a>
             </div>
         </div>
     </div>

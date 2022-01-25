@@ -22,4 +22,6 @@ class Pool extends Model
     {
         return self::$statuses;
     }
+
+
 }

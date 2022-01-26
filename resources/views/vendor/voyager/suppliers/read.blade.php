@@ -232,7 +232,11 @@ if (!empty($supplierPools)) {
                                             $poolData = \App\Models\SupplierPoolQuestion::calculatePoolResult($pool->id, $supplier);
                                             ?>
                                             <tr>
-                                                <td>{{$pool->name ?? ''}}</td>
+                                                <td>
+                                                    <a href="{{route('suppliers.listPools', ['id' => $pool->id, 'supplierId' => $supplier->id])}}">
+                                                    {{$pool->name ?? ''}}
+                                                    </a>
+                                                </td>
                                                 <td>{{$year}}</td>
                                                 <td>
                                                     {{$suppliersPoolsResult['poolsSummary'][$pool->id]['total'] .' / '.$suppliersPoolsResult['poolsSummary'][$pool->id]['max']}}

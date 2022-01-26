@@ -18,7 +18,10 @@ if (!function_exists('getBreadcrumbs')) {
             'roles' => 'Uprawnienia',
             'edit' => 'Edytuj',
             'categories' => 'Kategorie ankiety',
-            'displaypools' => 'Średnia ankiet'
+            'displaypools' => 'Średnia ankiet',
+            'draws' => 'Wykres parametru',
+            'listpools' => 'Lista ankiet dla dostawcy',
+            'singlepool' => 'Pojedyńcza ankieta'
         ];
         foreach ($segments as &$segment) {
             if (array_key_exists($segment, $translations)) {

@@ -23,6 +23,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('pools/categoriesSave/{id}', 'PoolsController@categoriesSave')->name('pools.categories.save');
     Route::get('suppliers/pools/{id}', 'SuppliersPoolsController@pools')->name('suppliers.pools');
     Route::get('suppliers/displaypools/{id}/{supplierId}', 'SuppliersPoolsController@displayPools')->name('suppliers.displayPools');
+    Route::get('suppliers/listpools/{id}/{supplierId}', 'SuppliersPoolsController@listPools')->name('suppliers.listPools');
+    Route::get('suppliers/singlepool/{id}/{supplierId}/{userId}', 'SuppliersPoolsController@singlePool')->name('suppliers.singlePool');
+    Route::get('suppliers/displaypools/draws/{id}/{supplierId}/{parameterId}', 'SuppliersPoolsController@displayParameterDraw')->name('suppliers.displayParameterDraw');
     Route::any('suppliers/pools/{id}/fill/{poolId}', 'SuppliersPoolsController@fillPool')->name('suppliers.pools.fill');
     Route::any('suppliers/pools/{id}/filled/{poolId}', 'SuppliersPoolsController@filledPools')->name('suppliers.pools.filled');
     Route::any('suppliers/pools/{id}/filled/{poolId}/user/{userId}', 'SuppliersPoolsController@filledPoolsSingle')->name('suppliers.pools.filled.single');

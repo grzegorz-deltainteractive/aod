@@ -64,6 +64,16 @@ class SupplierPoolQuestion extends Model
         }
         return '-';
     }
+    public static function getSingleNotice($parameterId, $supplierId, $poolId, $userId)
+    {
+        $check = self::where('category_param_id', $parameterId)->where('supplier_id', $supplierId)->where('pool_id', $poolId)
+            ->where('user_id', $userId)->pluck('notices');
+        if ($check) {
+            return $check[0];
+        } else {
+            return '-';
+        }
+    }
 
     public static function calculatePoolResult($poolId, $supplier)
     {

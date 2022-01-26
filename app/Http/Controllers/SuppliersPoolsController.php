@@ -158,4 +158,62 @@ class SuppliersPoolsController extends VoyagerBaseController {
 //        dd($result);
         return view('suppliers/averagePools', ['supplier' => $supplier, 'results' => $result, 'pool' => $pool, 'ut' => $ut]);
     }
+
+    public function displayParameterDraw($poolId, $supplierId, $parameterId)
+    {
+        $supplier = Supplier::where('id', $supplierId)->first();
+        $result = SupplierPoolQuestion::getResultForSinglePool($poolId, $supplier);
+        $pool = Pool::where('id', $poolId)->first();
+        $ut = [];
+        foreach ($result['users'] as &$user) {
+            $userRead = User::where('id', $user)->first();
+            if (!empty($userRead->laboratory)) {
+                $ut[$user] = $userRead->name .' - '.$userRead->laboratory[0]->name;
+            } else {
+                $ut[$user] = $userRead->name .' - nie wybrano laboratorium';
+            }
+        }
+        unset($user);
+        $parameter = CategoriesParameters::where('id', $parameterId)->first();
+//        dd($result);
+        return view('suppliers/singleParameter', ['supplier' => $supplier, 'results' => $result, 'pool' => $pool, 'ut' => $ut, 'parameter' => $parameter]);
+    }
+
+    public function listPools($poolId, $supplierId)
+    {
+        $supplier = Supplier::where('id', $supplierId)->first();
+        $result = SupplierPoolQuestion::getResultForSinglePool($poolId, $supplier);
+        $pool = Pool::where('id', $poolId)->first();
+        $ut = [];
+        foreach ($result['users'] as &$user) {
+            $userRead = User::where('id', $user)->first();
+            if (!empty($userRead->laboratory)) {
+                $ut[$user] = $userRead->name .' - '.$userRead->laboratory[0]->name;
+            } else {
+                $ut[$user] = $userRead->name .' - nie wybrano laboratorium';
+            }
+        }
+        unset($user);
+
+        return view('suppliers/listPools', ['supplier' => $supplier, 'results' => $result, 'pool' => $pool, 'ut' => $ut]);
+    }
+
+    public function singlePool($poolId, $supplierId, $userId)
+    {
+        $supplier = Supplier::where('id', $supplierId)->first();
+        $result = SupplierPoolQuestion::getResultForSinglePool($poolId, $supplier);
+        $pool = Pool::where('id', $poolId)->first();
+        $ut = [];
+        foreach ($result['users'] as &$user) {
+            $userRead = User::where('id', $user)->first();
+            if (!empty($userRead->laboratory)) {
+                $ut[$user] = $userRead->name .' - '.$userRead->laboratory[0]->name;
+            } else {
+                $ut[$user] = $userRead->name .' - nie wybrano laboratorium';
+            }
+        }
+        unset($user);
+//        dd($result);
+        return view('suppliers/singlePool', ['supplier' => $supplier, 'results' => $result, 'pool' => $pool, 'ut' => $ut, 'userIdGlobal' => $userId]);
+    }
 }

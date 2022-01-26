@@ -38,6 +38,14 @@
                             {{$pool->numer_procedury}}
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-2">
+                            Kod ankiety
+                        </div>
+                        <div class="col-12 col-lg-10">
+                            {{$pool->numer_procedury}}
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                           <thead>
@@ -101,7 +109,9 @@
                                             ?>
                                         </td>
                                         <td>
-
+                                            <a class="btn btn-small" href="{{route('suppliers.displayParameterDraw', ['id' => $pool->id, 'supplierId' => $supplier->id, 'parameterId' => $parameter->id])}}">
+                                                >
+                                            </a>
                                         </td>
                                     </tr>
                                     <?php $i++;?>
@@ -154,6 +164,7 @@
                                                 $sum1 = $sum1 + $results1;
                                             }
                                         }
+                                        $sum1 = (int)($sum1/count($results['users']));
                                     ?>
                                 <tr>
                                     <td>{{$ut[$user]}}</td>

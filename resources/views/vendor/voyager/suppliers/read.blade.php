@@ -12,6 +12,11 @@ if ($supplier) {
 } else {
     $supplierPools = [];
 }
+$suppliersPoolsResult = [];
+if (!empty($supplierPools)) {
+    $suppliersPoolsResult = \App\Models\SupplierPoolQuestion::getResults($supplierPools, $supplier);
+//    dd($suppliersPoolsResult);
+}
 ?>
 @extends('voyager::master')
 
@@ -223,15 +228,26 @@ if ($supplier) {
                                     <tbody>
                                     @foreach ($supplierPools as $year=>$pools)
                                         @foreach($pools as $pool)
+                                            <?php
+                                            $poolData = \App\Models\SupplierPoolQuestion::calculatePoolResult($pool->id, $supplier);
+                                            ?>
                                             <tr>
                                                 <td>{{$pool->name ?? ''}}</td>
                                                 <td>{{$year}}</td>
+                                                <td>
+                                                    {{$suppliersPoolsResult['poolsSummary'][$pool->id]['total'] .' / '.$suppliersPoolsResult['poolsSummary'][$pool->id]['max']}}
+                                                </td>
+                                                <td>
+                                                    {{sprintf("%.2f", ($suppliersPoolsResult['poolsSummary'][$pool->id]['total'] / $suppliersPoolsResult['poolsSummary'][$pool->id]['max'] )*100 )}}%
+                                                </td>
                                                 <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td>1</td>
+                                                <td>{{count($suppliersPoolsResult['poolsCount'][$pool->id])}}</td>
+                                                <td>{{count($suppliersPoolsResult['poolsCount'][$pool->id])}}</td>
+                                                <td>
+                                                    <a href="{{route('suppliers.displayPools', ['id' => $pool->id, 'supplierId' => $supplier->id])}}">
+                                                    {{count($suppliersPoolsResult['poolsCount'][$pool->id])}}
+                                                    </a>
+                                                </td>
                                             </tr>
 
                                         @endforeach

@@ -16,7 +16,9 @@ if (!function_exists('getBreadcrumbs')) {
             'settings' => 'Ustawienia',
             'users' => 'Użytkownicy',
             'roles' => 'Uprawnienia',
-            'edit' => 'Edytuj'
+            'edit' => 'Edytuj',
+            'categories' => 'Kategorie ankiety',
+            'displaypools' => 'Średnia ankiet'
         ];
         foreach ($segments as &$segment) {
             if (array_key_exists($segment, $translations)) {
@@ -34,4 +36,13 @@ if (!function_exists('getBreadcrumbs')) {
         unset ($segment);
         return $segments;
     }
+}
+function median($values) {
+    $values = array_values($values);
+    $count = count($values);
+    if ($count === 0)  return 0;
+    asort($values);
+    $half = floor($count / 2);
+    if ($count % 2) return $values[$half];
+    return ($values[$half - 1] + $values[$half]) / 2.0;
 }

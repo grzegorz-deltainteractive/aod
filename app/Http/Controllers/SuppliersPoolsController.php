@@ -11,6 +11,7 @@ use App\Models\Categories;
 use App\Models\CategoriesParameters;
 use App\Models\Supplier;
 use App\Models\SupplierPoolQuestion;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
@@ -137,5 +138,24 @@ class SuppliersPoolsController extends VoyagerBaseController {
                 }
             }
         }
+    }
+
+    public function displaypools($poolId, $supplierId)
+    {
+        $supplier = Supplier::where('id', $supplierId)->first();
+        $result = SupplierPoolQuestion::getResultForSinglePool($poolId, $supplier);
+        $pool = Pool::where('id', $poolId)->first();
+        $ut = [];
+        foreach ($result['users'] as &$user) {
+            $userRead = User::where('id', $user)->first();
+            if (!empty($userRead->laboratory)) {
+                $ut[$user] = $userRead->name .' - '.$userRead->laboratory[0]->name;
+            } else {
+                $ut[$user] = $userRead->name .' - nie wybrano laboratorium';
+            }
+        }
+        unset($user);
+//        dd($result);
+        return view('suppliers/averagePools', ['supplier' => $supplier, 'results' => $result, 'pool' => $pool, 'ut' => $ut]);
     }
 }

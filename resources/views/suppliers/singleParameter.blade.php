@@ -15,7 +15,12 @@
     </h1>
     @include('voyager::multilingual.language-selector')
 @stop
-
+<?php
+    $toDrawData = [];
+    for ($i = $parameter->rating_min; $i <= $parameter->rating_max; $i++) {
+        $toDrawData[$i] = 0;
+    }
+?>
 @section('content')
     <div class="page-content read container-fluid">
         <div class="panel panel-bordered">
@@ -74,7 +79,9 @@
                 </fieldset>
                 <fieldset>
                     <legend>Wykres</legend>
-                    <div style="min-height: 300px"></div>
+                    <div style="min-height: 300px">
+                        <canvas id="myChart2"></canvas>
+                    </div>
                 </fieldset>
                 <fieldset>
                     <legend>
@@ -100,6 +107,7 @@
                                                 foreach ($results1 as $userId=>$value) {
                                                     if ($user == $userId && $paramId == $parameter->id) {
                                                         echo $value;
+                                                        $toDrawData[$value] = $toDrawData[$value] + 1;
                                                     }
                                                 }
                                             }
@@ -118,4 +126,31 @@
             </div>
         </div>
     </div>
+    @if(isset($toDrawData) && !empty($toDrawData))
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script type="text/javascript">
+            <?php
+            $keys = array_keys($toDrawData);
+            $keys = "'".implode("','", $keys)."'";
+            $values = implode(",",array_values($toDrawData))
+            ?>
+            const drawLabels = [<?php echo $keys;?>];
+            const drawData = {
+                labels: drawLabels,
+                datasets: [{
+                    label: 'Liczba odpowiedzi',
+                    backgroundColor: '#22A7F0',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [<?php echo $values;?>]
+                }]
+            };
+            const drawConfig = {
+                type: 'bar',
+                data: drawData,
+                options: {}
+            };
+            const myChart2 = new Chart(
+                document.getElementById('myChart2'), drawConfig );
+        </script>
+    @endif
 @endsection

@@ -132,6 +132,9 @@
                         </table>
                     </div>
                 </fieldset>
+                <?php
+                    $toDrawData = [];
+                ?>
                 <fieldset>
                     <legend>
                         Wyniki dział/laboratorum
@@ -171,13 +174,46 @@
                                     <td><?php echo $sum .'/'.$sum1;?></td>
                                     <td><?php echo sprintf("%.2f", ($sum/$sum1)*100);?>%</td>
                                 </tr>
-
+                                <?php
+                                    $toDrawData[$ut[$user]] = $sum;
+                                ?>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                 </fieldset>
+                <fieldset>
+                    <legend>Wykres</legend>
+                    <canvas id="myChart2"></canvas>
+                </fieldset>
             </div>
         </div>
     </div>
+    @if(isset($toDrawData) && !empty($toDrawData))
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript">
+        <?php
+        $keys = array_keys($toDrawData);
+        $keys = "'".implode("','", $keys)."'";
+        $values = implode(",",array_values($toDrawData))
+        ?>
+        const drawLabels = [<?php echo $keys;?>];
+        const drawData = {
+            labels: drawLabels,
+            datasets: [{
+                label: 'Punkty',
+                backgroundColor: '#22A7F0',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [<?php echo $values;?>]
+            }]
+        };
+        const drawConfig = {
+            type: 'bar',
+            data: drawData,
+            options: {}
+        };
+        const myChart2 = new Chart(
+            document.getElementById('myChart2'), drawConfig );
+    </script>
+    @endif
 @endsection

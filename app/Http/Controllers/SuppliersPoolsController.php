@@ -148,7 +148,7 @@ class SuppliersPoolsController extends VoyagerBaseController {
         $ut = [];
         foreach ($result['users'] as &$user) {
             $userRead = User::where('id', $user)->first();
-            if (!empty($userRead->laboratory)) {
+            if (isset($userRead->laboratory[0]) && !empty($userRead->laboratory[0])) {
                 $ut[$user] = $userRead->name .' - '.$userRead->laboratory[0]->name;
             } else {
                 $ut[$user] = $userRead->name .' - nie wybrano laboratorium';
@@ -167,7 +167,7 @@ class SuppliersPoolsController extends VoyagerBaseController {
         $ut = [];
         foreach ($result['users'] as &$user) {
             $userRead = User::where('id', $user)->first();
-            if (!empty($userRead->laboratory)) {
+            if (isset($userRead->laboratory[0]) && !empty($userRead->laboratory[0])) {
                 $ut[$user] = $userRead->name .' - '.$userRead->laboratory[0]->name;
             } else {
                 $ut[$user] = $userRead->name .' - nie wybrano laboratorium';
@@ -187,7 +187,7 @@ class SuppliersPoolsController extends VoyagerBaseController {
         $ut = [];
         foreach ($result['users'] as &$user) {
             $userRead = User::where('id', $user)->first();
-            if (!empty($userRead->laboratory)) {
+            if (isset($userRead->laboratory[0]) && !empty($userRead->laboratory[0])) {
                 $ut[$user] = $userRead->name .' - '.$userRead->laboratory[0]->name;
             } else {
                 $ut[$user] = $userRead->name .' - nie wybrano laboratorium';
@@ -206,7 +206,7 @@ class SuppliersPoolsController extends VoyagerBaseController {
         $ut = [];
         foreach ($result['users'] as &$user) {
             $userRead = User::where('id', $user)->first();
-            if (!empty($userRead->laboratory)) {
+            if (isset($userRead->laboratory[0]) && !empty($userRead->laboratory[0])) {
                 $ut[$user] = $userRead->name .' - '.$userRead->laboratory[0]->name;
             } else {
                 $ut[$user] = $userRead->name .' - nie wybrano laboratorium';

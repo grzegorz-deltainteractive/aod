@@ -228,6 +228,7 @@ if (!empty($supplierPools)) {
                                     <tbody>
                                     @foreach ($supplierPools as $year=>$pools)
                                         @foreach($pools as $pool)
+                                            @if (isset($suppliersPoolsResult['poolsSummary'][$pool->id]))
                                             <?php
                                             $poolData = \App\Models\SupplierPoolQuestion::calculatePoolResult($pool->id, $supplier);
                                             ?>
@@ -253,7 +254,7 @@ if (!empty($supplierPools)) {
                                                     </a>
                                                 </td>
                                             </tr>
-
+                                            @endif
                                         @endforeach
                                     @endforeach
                                     </tbody>

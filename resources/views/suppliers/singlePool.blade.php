@@ -132,7 +132,10 @@
                         </table>
                     </div>
                 </fieldset>
-
+                <br />
+                <fieldset>
+                    <a href="{{route('suppliers.listPools', ['id' => $pool->id, 'supplierId' => $supplier->id])}}" class="btn btn-sm btn-secondary " style="background-color: #cccccc">Powrót</a>
+                </fieldset>
             </div>
         </div>
     </div>

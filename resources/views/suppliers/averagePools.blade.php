@@ -186,8 +186,14 @@
                     <legend>Wykres</legend>
                     <canvas id="myChart2"></canvas>
                 </fieldset>
+                <br />
+                <fieldset>
+                    <a href="{{url('/admin/suppliers/'.$supplier->id)}}" class="btn btn-sm btn-secondary " style="background-color: #cccccc">Powrót</a>
+                </fieldset>
             </div>
+
         </div>
+
     </div>
     @if(isset($toDrawData) && !empty($toDrawData))
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

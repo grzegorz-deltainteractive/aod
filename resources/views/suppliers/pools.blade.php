@@ -34,12 +34,17 @@
                                     } else {
                                         echo 'Nie';
                                     }
+
                                     ?>
                                 </td>
                                 <td style="vertical-align: middle">
+                                    @if (canAcceptPool())
                                     <a href="{{route('suppliers.pools.filled', ['id' => $supplier_id, 'poolId' => $pool->id])}}" class="btn btn-sm btn-primary ">Sprawdź uzupełnienia</a>
-                                    @if (!$check)
+                                    @endif
+                                    @if (canFillPool() && !$check)
                                         <a href="{{route('suppliers.pools.fill', ['id' => $supplier_id, 'poolId' => $pool->id])}}" class="btn btn-sm btn-primary ">Uzupełnij ankietę</a>
+                                    @else
+                                        Uzupełniłeś już tą ankietę!
                                     @endif
                                 </td>
                             </tr>

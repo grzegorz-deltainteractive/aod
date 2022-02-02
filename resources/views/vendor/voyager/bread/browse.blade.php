@@ -35,7 +35,9 @@
         @include('voyager::multilingual.language-selector')
     </div>
 @stop
-
+<?php
+    $columnCount = 0;
+?>
 @section('content')
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
@@ -197,14 +199,14 @@
                                                         @if($row->field == 'name')
                                                             <a href="{{$pokazUrl}}">
                                                         @endif
-                                                        {{ mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field} }}
+                                                        {{ mb_strlen( $data->{$row->field} ) > 80 ? mb_substr($data->{$row->field}, 0, 80) . ' ...' : $data->{$row->field} }}
                                                         @if($row->name == 'name')
                                                             </a>
                                                         @endif
                                                     </div>
                                                 @elseif($row->type == 'text_area')
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
-                                                    <div>{{ mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field} }}</div>
+                                                    <div>{{ mb_strlen( $data->{$row->field} ) > 80 ? mb_substr($data->{$row->field}, 0, 80) . ' ...' : $data->{$row->field} }}</div>
                                                 @elseif($row->type == 'file' && !empty($data->{$row->field}) )
                                                     @include('voyager::multilingual.input-hidden-bread-browse')
                                                     @if(json_decode($data->{$row->field}) !== null)
@@ -355,6 +357,8 @@
                     ],
                     config('voyager.dashboard.data_tables', []))
                 , true) !!});
+            var colCount = table.columns().header().length;
+            table.columns.adjust().draw();
             @else
                 $('#search-input select').select2({
                     minimumResultsForSearch: Infinity

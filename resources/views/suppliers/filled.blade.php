@@ -20,24 +20,48 @@
                             <th>Lp</th>
                             <th>Data wypełnienia</th>
                             <th>Użytkownik</th>
+                            <th>Status</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php $i = 1;?>
                         @foreach($pools as $pool)
+                            <?php
+                                $status = \App\Models\SupplierPoolStatus::getPoolFilledStatus($pool->user->id, $pool_id, $supplier_id );
+                                $color = 'transparent';
+                                $statusText = '';
+                                $accepted = false;
+                                if ($status == 'unfilled') {
+                                    $color = 'yellow';
+                                    $statusText = 'Niewypełniona';
+                                } else if ($status == 'unaceppted') {
+                                    $color = 'red';
+                                    $statusText = 'Wypełniona, ale nie zaakceptowana';
+                                } else {
+                                    $color = 'green';
+                                    $statusText = $status;
+                                    $accepted = true;
+                                }
+                            ?>
                             <tr>
-                                <td>
+                                <td style="vertical-align: middle;">
                                     {{$i}}
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle;">
                                     {{$pool->created_at}}
                                 </td>
-                                <td>
+                                <td style="vertical-align: middle;">
                                     {{$pool->user->name}}
+                                </td>
+                                <td style="background-color: {{$color}}; color: black; text-align: center; vertical-align: middle">
+                                    {{$statusText}}
                                 </td>
                                 <td>
                                     <a href="{{route('suppliers.pools.filled.single', ['id' => $pool->supplier_id, 'poolId' => $pool->pool_id, 'userId' => $pool->user_id])}}" class="btn btn-sm btn-primary ">Przeglądnij wyniki</a>
+                                    @if(canAcceptPool() && !$accepted)
+                                        <a href="{{route('suppliers.pools.accept', ['id' => $pool->supplier_id, 'poolId' => $pool->pool_id, 'userId' => $pool->user_id])}}" class="btn btn-sm btn-primary " onclick="return confirm('Czy chcesz zaakceptować ankietę? Zostanie zapisany status z datą i Twoim użytkownikiem jako użytkownik akceptujący daną ankietę.')">Akceptuj ankietę</a>
+                                    @endif
                                 </td>
                             </tr>
                             <?php $i++;?>

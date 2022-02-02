@@ -28,6 +28,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('suppliers/displaypools/draws/{id}/{supplierId}/{parameterId}', 'SuppliersPoolsController@displayParameterDraw')->name('suppliers.displayParameterDraw');
     Route::any('suppliers/pools/{id}/fill/{poolId}', 'SuppliersPoolsController@fillPool')->name('suppliers.pools.fill');
     Route::any('suppliers/pools/{id}/filled/{poolId}', 'SuppliersPoolsController@filledPools')->name('suppliers.pools.filled');
+    Route::any('suppliers/pools/accept/{id}/{poolId}/{userId}', 'SuppliersPoolsController@acceptPool')->name('suppliers.pools.accept');
     Route::any('suppliers/pools/{id}/filled/{poolId}/user/{userId}', 'SuppliersPoolsController@filledPoolsSingle')->name('suppliers.pools.filled.single');
     Route::any('suppliers/contacts/add/{id}', 'SuppliersController@addContact')->name('suppliers.contact.add');
     Route::any('suppliers/contacts/remove/{id}/{contactId}', 'SuppliersController@removeContact')->name('suppliers.contact.remove');

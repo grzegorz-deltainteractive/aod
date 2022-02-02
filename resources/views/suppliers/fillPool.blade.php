@@ -31,6 +31,7 @@
                             </tr>
                             </thead>
                             @foreach ($category->categoriesParameters as $parameter)
+                                @if(checkDisplayField($parameter->visible_for_lab))
                                 <tr>
                                     <td style="vertical-align: middle">{{$parameter->name}}</td>
                                     <td  style="vertical-align: middle">{{$parameter->rating_min}}</td>
@@ -43,6 +44,7 @@
                                         <textarea name="parameter-notices[{{$category->id}}][{{$parameter->id}}]" class="form-control"></textarea>
                                     </td>
                                 </tr>
+                                @endif
                             @endforeach
                         </table>
                         <br /><br />

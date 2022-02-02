@@ -44,7 +44,7 @@
                         <input type="text" name="stanowisko" placeholder="Podaj stanowisko" class="form-control" />
                     </div>
                     <button class="btn btn-sm btn-primary"  type="submit">Dodaj kontakt</button>
-                    <a href="{{url('/admin/suppliers/'.$supplier_id)}}" class="btn btn-sm btn-info">Powrót do karty dostawcy</a>
+                    <a href="{{url('/admin/suppliers/'.$supplier_id)}}" class="btn btn-sm btn-secondary">Powrót do karty dostawcy</a>
                 </form>
             </div>
         </div>

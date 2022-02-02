@@ -68,7 +68,7 @@ class SupplierPoolQuestion extends Model
     {
         $check = self::where('category_param_id', $parameterId)->where('supplier_id', $supplierId)->where('pool_id', $poolId)
             ->where('user_id', $userId)->pluck('notices');
-        if ($check) {
+        if ($check && !empty($check) && isset($check[0])) {
             return $check[0];
         } else {
             return '-';

@@ -11,6 +11,7 @@ use App\Models\Categories;
 use App\Models\CategoriesParameters;
 use App\Models\Supplier;
 use App\Models\SupplierPoolQuestion;
+use App\Models\SupplierPoolStatus;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -39,8 +40,31 @@ class SuppliersPoolsController extends VoyagerBaseController {
     public function filledPools($id, $poolId) {
 
         $pools = SupplierPoolQuestion::where('pool_id', $poolId)->where('supplier_id', $id)->select(['user_id', 'created_at', 'pool_id', 'supplier_id'])->groupBy(['user_id', 'created_at', 'pool_id', 'supplier_id'])->distinct()->get();
-//        dd($pools);
         return view("suppliers/filled", ['pools' => $pools, 'supplier_id' => $id, 'pool_id' => $poolId]);
+    }
+
+    /**
+     * accept single pool
+     * @param $id
+     * @param $poolId
+     * @param $userId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function acceptPool($id, $poolId, $userId)
+    {
+        if (SupplierPoolStatus::acceptPool($userId, $poolId, $id)) {
+            return redirect(route('suppliers.pools.filled', ['id' => $id, 'poolId' => $poolId]))->with([
+                    'message'    => 'Poprawnie zaakceptowano ankietę',
+                    'alert-type' => 'success',
+                ]
+            );
+        } else {
+            return redirect(route('suppliers.pools.filled', ['id' => $id, 'poolId' => $poolId]))->with([
+                    'message'    => 'Nie udało się zaakceptować ankiety',
+                    'alert-type' => 'error',
+                ]
+            );
+        }
     }
 
     /**
@@ -94,6 +118,7 @@ class SuppliersPoolsController extends VoyagerBaseController {
                             $spq->save();
                         }
                     }
+                    SupplierPoolStatus::addPoolFillDate($userId, $poolId, $id);
                     return redirect(route('suppliers.pools', ['id' => $id]));
                 }
             }

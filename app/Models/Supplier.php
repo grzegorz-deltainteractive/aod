@@ -10,9 +10,13 @@ class Supplier extends Model
     public $table = 'suppliers';
 
     public static $statuses = [
-        0 => 'nieaktywny',
-        1 => 'aktywny'
+        0 => 'Nieaktywny',
+        1 => 'Aktywny'
     ];
+
+    public static function getStatuses() {
+        return self::$statuses;
+    }
 
     public function departmentRelation() {
         return $this->hasOne(Department::class, 'id', 'department' );

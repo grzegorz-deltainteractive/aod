@@ -26,6 +26,11 @@ class Supplier extends Model
         return self::$statuses[$status];
     }
 
+    public function contacts()
+    {
+        return $this->hasMany(SuppliersContacts::class, 'supplier_id', 'id');
+    }
+
     /**
      * get suppliers pools
      * @param $supplier Supplier model of supplier

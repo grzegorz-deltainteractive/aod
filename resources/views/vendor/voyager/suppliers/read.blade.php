@@ -17,6 +17,7 @@ if (!empty($supplierPools)) {
     $suppliersPoolsResult = \App\Models\SupplierPoolQuestion::getResults($supplierPools, $supplier);
 //    dd($suppliersPoolsResult);
 }
+$departmens = \App\Models\Department::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
 ?>
 @extends('voyager::master')
 
@@ -47,6 +48,9 @@ if (!empty($supplierPools)) {
                 <i class="glyphicon glyphicon-list"></i> <span class="hidden-xs hidden-sm">{{ __('voyager::generic.return_to_list') }}</span>
             </a>
         @endcan
+        <a href="{{route('suppliers.contact.add', ['id' => $dataTypeContent->getKey()])}}" class="btn btn-info">
+            Dodaj kontakt
+        </a>
     </h1>
     @include('voyager::multilingual.language-selector')
 @stop
@@ -120,86 +124,56 @@ if (!empty($supplierPools)) {
                 </div>
             </div>
             <hr />
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <fieldset>
-                        <legend>
-                            Kontakt działu IT
-                        </legend>
-                        <div class="row">
-                            <div class="col-12 col-lg-5 ">
-                                Mail:
+            @if(count($supplier->contacts) == 0)
+                <h4>Brak dodanych kontaktów dla danego dostawcy. Kliknij na górze przycisk <strong>Dodaj kontakt</strong> aby dodać kontakt dla dostawcy</h4>
+                <br />
+            @else
+                <div class="row">
+                @foreach ($supplier->contacts as $sc)
+                    <div class="col-12 col-lg-6">
+                        <fieldset>
+                            <legend>
+                                Kontakt do działu <strong>{{$departmens[$sc->department_id]}}</strong>&nbsp;
+                                <a href="{{route('suppliers.contact.remove', ['id' => $supplierId, 'contactId' => $sc->id])}}" class="btn btn-danger" onclick="return confirm('Czy na pewno usunąć kontakt?')"><i class="voyager-trash"></i> Usuń kontakt</a>
+                            </legend>
+                            <div class="row">
+                                <div class="col-12 col-lg-5 ">
+                                    Mail:
+                                </div>
+                                <div class="col-12 col-lg-7">
+                                    <p>{{$sc->email ?? ''}}</p>
+                                </div>
                             </div>
-                            <div class="col-12 col-lg-7">
-                                <p>{{$supplier->contact_it_mail ?? ''}}</p>
+                            <div class="row">
+                                <div class="col-12 col-lg-5 ">
+                                    Telefon:
+                                </div>
+                                <div class="col-12 col-lg-7">
+                                    <p>{{$sc->phone ?? ''}}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-5 ">
-                                Telefon:
+                            <div class="row">
+                                <div class="col-12 col-lg-5 ">
+                                    Imię i nazwisko:
+                                </div>
+                                <div class="col-12 col-lg-7">
+                                    <p>{{$sc->name ?? ''}}</p>
+                                </div>
                             </div>
-                            <div class="col-12 col-lg-7">
-                                <p>{{$supplier->contact_it_phone ?? ''}}</p>
+                            <div class="row">
+                                <div class="col-12 col-lg-5 ">
+                                    Stanowisko:
+                                </div>
+                                <div class="col-12 col-lg-7">
+                                    <p>{{$sc->stanowisko ?? ''}}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-5 ">
-                                Imię i nazwisko:
-                            </div>
-                            <div class="col-12 col-lg-7">
-                                <p>{{$supplier->contact_it_name ?? ''}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-5 ">
-                                Stanowisko:
-                            </div>
-                            <div class="col-12 col-lg-7">
-                                <p>{{$supplier->contact_it_stanowisko ?? ''}}</p>
-                            </div>
-                        </div>
-                    </fieldset>
+                        </fieldset>
+                    </div>
+                @endforeach
                 </div>
-                <div class="col-12 col-lg-6">
-                    <fieldset>
-                        <legend>
-                            Kontakt działu medycznego
-                        </legend>
-                        <div class="row">
-                            <div class="col-12 col-lg-5 ">
-                                Mail:
-                            </div>
-                            <div class="col-12 col-lg-7">
-                                <p>{{$supplier->contact_medical_mail ?? ''}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-5 ">
-                                Telefon:
-                            </div>
-                            <div class="col-12 col-lg-7">
-                                <p>{{$supplier->contact_medical_phone ?? ''}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-5 ">
-                                Imię i nazwisko:
-                            </div>
-                            <div class="col-12 col-lg-7">
-                                <p>{{$supplier->contact_medical_name ?? ''}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-5">
-                                Stanowisko:
-                            </div>
-                            <div class="col-12 col-lg-7">
-                                <p>{{$supplier->contact_medical_stanowisko ?? ''}}</p>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-            </div>
+            @endif
+
             <div class="row">
                 <div class="col-12 col-lg-12">
                     <fieldset>

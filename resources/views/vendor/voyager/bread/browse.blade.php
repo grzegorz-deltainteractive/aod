@@ -37,67 +37,12 @@
 @stop
 
 @section('content')
-    <?php
-        $departments = [];
-        $laboratiories = [];
-        $years = [];
-        foreach ($dataTypeContent as $data) {
-            if (isset($data->department_id) && !empty($data->department_id)) {
-                if (!in_array($data->department_id, $departments)) {
-                    $departments[] = $data->department_id;
-                }
-            }
-            if (isset($data->data_wydania_ankiety) && !empty($data->data_wydania_ankiety)) {
-                $year = date('Y', strtotime($data->data_wydania_ankiety));
-                if (!in_array($year, $years)) {
-                    $years[(int)$year] = $year;
-                }
-            }
-        }
-        $departmentsList = \App\Models\Department::getDepartmentsById($departments);
-
-    ?>
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-bordered">
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="form-group col-12 col-md-4 ">
-                                <label class="control-label">
-                                    Dział
-                                </label>
-                                <select name="dzial" id="search-dzial" class="form-control">
-                                    <option value="">Wybierz dział</option>
-                                    @foreach ($departmentsList as $listItem)
-                                        <option value="{{$listItem}}">{{$listItem}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-12 col-md-4 ">
-                                <label class="control-label">
-                                    Rok
-                                </label>
-                                <select name="dzial" id="search-rok" class="form-control">
-                                    <option value="">Wybierz rok</option>
-                                    @foreach ($years as $listItem)
-                                        <option value="{{$listItem}}">{{$listItem}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-12 col-md-4 ">
-                                <label class="control-label">
-                                    Status
-                                </label>
-                                <select name="dzial" id="search-status" class="form-control">
-                                    <option value="">Wybierz status</option>
-                                    @foreach (\App\Models\Pool::getStatuses() as $listItem)
-                                        <option value="{{$listItem}}">{{$listItem}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
                         @if ($isServerSide)
                             <form method="get" class="form-search">
                                 <div id="search-input">
@@ -132,60 +77,60 @@
                         <div class="table-responsive">
                             <table id="dataTable" class="table table-hover">
                                 <thead>
-                                <tr>
-                                    @if($showCheckboxColumn)
-                                        <th class="dt-not-orderable">
-                                            <input type="checkbox" class="select_all">
-                                        </th>
-                                    @endif
-                                    @foreach($dataType->browseRows as $row)
+                                    <tr>
+                                        @if($showCheckboxColumn)
+                                            <th class="dt-not-orderable">
+                                                <input type="checkbox" class="select_all">
+                                            </th>
+                                        @endif
+                                        @foreach($dataType->browseRows as $row)
                                         <th>
                                             @if ($isServerSide && in_array($row->field, $sortableColumns))
                                                 <a href="{{ $row->sortByUrl($orderBy, $sortOrder) }}">
+                                            @endif
+                                            {{ $row->getTranslatedAttribute('display_name') }}
+                                            @if ($isServerSide)
+                                                @if ($row->isCurrentSortField($orderBy))
+                                                    @if ($sortOrder == 'asc')
+                                                        <i class="voyager-angle-up pull-right"></i>
+                                                    @else
+                                                        <i class="voyager-angle-down pull-right"></i>
                                                     @endif
-                                                    {{ $row->getTranslatedAttribute('display_name') }}
-                                                    @if ($isServerSide)
-                                                        @if ($row->isCurrentSortField($orderBy))
-                                                            @if ($sortOrder == 'asc')
-                                                                <i class="voyager-angle-up pull-right"></i>
-                                                            @else
-                                                                <i class="voyager-angle-down pull-right"></i>
-                                                            @endif
-                                                        @endif
+                                                @endif
                                                 </a>
                                             @endif
                                         </th>
-                                    @endforeach
-
-                                    <th class="actions text-right dt-not-orderable">{{ __('voyager::generic.actions') }}</th>
-                                </tr>
+                                        @endforeach
+                                        <th class="actions text-right dt-not-orderable">{{ __('voyager::generic.actions') }}</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($dataTypeContent as $data)
-                                    <?php
-                                    $pokazUrl = '';
-                                    if (!empty($actions)) {
-                                        foreach ($actions as $action) {
-                                            $class = get_class($action);
-                                            $action = new $class($dataType, $data);
-                                            if ($action->getTitle() == "Pokaż") {
-                                                $pokazUrl = $action->getRoute($dataType->name);
+                                    @foreach($dataTypeContent as $data)
+                                        <?php
+                                        $pokazUrl = '';
+                                        if (!empty($actions)) {
+                                            foreach ($actions as $action) {
+                                                $class = get_class($action);
+                                                $action = new $class($dataType, $data);
+                                                if ($action->getTitle() == "Pokaż") {
+                                                    $pokazUrl = $action->getRoute($dataType->name);
+                                                }
                                             }
                                         }
-                                    }
 
-                                    ?>
-                                    <tr>
+                                        ?>
+                                    <tr >
                                         @if($showCheckboxColumn)
                                             <td>
                                                 <input type="checkbox" name="row_id" id="checkbox_{{ $data->getKey() }}" value="{{ $data->getKey() }}">
                                             </td>
                                         @endif
+
                                         @foreach($dataType->browseRows as $row)
                                             @php
-                                                if ($data->{$row->field.'_browse'}) {
-                                                    $data->{$row->field} = $data->{$row->field.'_browse'};
-                                                }
+                                            if ($data->{$row->field.'_browse'}) {
+                                                $data->{$row->field} = $data->{$row->field.'_browse'};
+                                            }
                                             @endphp
                                             <td>
                                                 @if (isset($row->details->view))
@@ -213,16 +158,16 @@
                                                         @endif
                                                     @endif
 
-                                                @elseif($row->type == 'multiple_checkbox' && property_exists($row->details, 'options'))
-                                                    @if (@count(json_decode($data->{$row->field})) > 0)
-                                                        @foreach(json_decode($data->{$row->field}) as $item)
-                                                            @if (@$row->details->options->{$item})
-                                                                {{ $row->details->options->{$item} . (!$loop->last ? ', ' : '') }}
-                                                            @endif
-                                                        @endforeach
-                                                    @else
-                                                        {{ __('voyager::generic.none') }}
-                                                    @endif
+                                                    @elseif($row->type == 'multiple_checkbox' && property_exists($row->details, 'options'))
+                                                        @if (@count(json_decode($data->{$row->field})) > 0)
+                                                            @foreach(json_decode($data->{$row->field}) as $item)
+                                                                @if (@$row->details->options->{$item})
+                                                                    {{ $row->details->options->{$item} . (!$loop->last ? ', ' : '') }}
+                                                                @endif
+                                                            @endforeach
+                                                        @else
+                                                            {{ __('voyager::generic.none') }}
+                                                        @endif
 
                                                 @elseif(($row->type == 'select_dropdown' || $row->type == 'radio_btn') && property_exists($row->details, 'options'))
 
@@ -242,7 +187,7 @@
                                                             <span class="label label-primary">{{ $row->details->off }}</span>
                                                         @endif
                                                     @else
-                                                        {{ $data->{$row->field} }}
+                                                    {{ $data->{$row->field} }}
                                                     @endif
                                                 @elseif($row->type == 'color')
                                                     <span class="badge badge-lg" style="background-color: {{ $data->{$row->field} }}">{{ $data->{$row->field} }}</span>
@@ -251,9 +196,9 @@
                                                     <div>
                                                         @if($row->field == 'name')
                                                             <a href="{{$pokazUrl}}">
-                                                                @endif
-                                                                {{ mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field} }}
-                                                                @if($row->name == 'name')
+                                                        @endif
+                                                        {{ mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field} }}
+                                                        @if($row->name == 'name')
                                                             </a>
                                                         @endif
                                                     </div>
@@ -298,13 +243,13 @@
                                                     @if ($files)
                                                         @if (property_exists($row->details, 'show_as_images') && $row->details->show_as_images)
                                                             @foreach (array_slice($files, 0, 3) as $file)
-                                                                <img src="@if( !filter_var($file, FILTER_VALIDATE_URL)){{ Voyager::image( $file ) }}@else{{ $file }}@endif" style="width:50px">
+                                                            <img src="@if( !filter_var($file, FILTER_VALIDATE_URL)){{ Voyager::image( $file ) }}@else{{ $file }}@endif" style="width:50px">
                                                             @endforeach
                                                         @else
                                                             <ul>
-                                                                @foreach (array_slice($files, 0, 3) as $file)
-                                                                    <li>{{ $file }}</li>
-                                                                @endforeach
+                                                            @foreach (array_slice($files, 0, 3) as $file)
+                                                                <li>{{ $file }}</li>
+                                                            @endforeach
                                                             </ul>
                                                         @endif
                                                         @if (count($files) > 3)
@@ -330,12 +275,12 @@
                                         <td class="no-sort no-click bread-actions">
                                             @foreach($actions as $action)
                                                 @if (!method_exists($action, 'massAction'))
-                                                    @include('voyager::bread.partials.actions', ['action' => $action])
+                                                    @include('vendor.voyager.bread.partials.actions', ['action' => $action])
                                                 @endif
                                             @endforeach
                                         </td>
                                     </tr>
-                                @endforeach
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -387,9 +332,9 @@
 @stop
 
 @section('css')
-    @if(!$dataType->server_side && config('dashboard.data_tables.responsive'))
-        <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
-    @endif
+@if(!$dataType->server_side && config('dashboard.data_tables.responsive'))
+    <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
+@endif
 @stop
 
 @section('javascript')
@@ -400,7 +345,7 @@
     <script>
         $(document).ready(function () {
             @if (!$dataType->server_side)
-            var table = $('#dataTable').DataTable({!! json_encode(
+                var table = $('#dataTable').DataTable({!! json_encode(
                     array_merge([
                         "order" => $orderColumn,
                         "language" => __('voyager::datatable'),
@@ -411,46 +356,22 @@
                     config('voyager.dashboard.data_tables', []))
                 , true) !!});
             @else
-            $('#search-input select').select2({
-                minimumResultsForSearch: Infinity
-            });
+                $('#search-input select').select2({
+                    minimumResultsForSearch: Infinity
+                });
             @endif
 
             @if ($isModelTranslatable)
-            $('.side-body').multilingual();
-            //Reinitialise the multilingual features when they change tab
-            $('#dataTable').on('draw.dt', function(){
-                $('.side-body').data('multilingual').init();
-            })
+                $('.side-body').multilingual();
+                //Reinitialise the multilingual features when they change tab
+                $('#dataTable').on('draw.dt', function(){
+                    $('.side-body').data('multilingual').init();
+                })
             @endif
             $('.select_all').on('click', function(e) {
                 $('input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
             });
-
-
-            $('#search-dzial').change(function() {
-                let val = $(this).val();
-                table
-                    .column(8)
-                    .search(val)
-                    .draw();
-            });
-            $('#search-rok').change(function() {
-                let val = $(this).val();
-                table
-                    .column(4)
-                    .search(val)
-                    .draw();
-            });
-            $('#search-status').change(function() {
-                let val = $(this).val();
-                table
-                    .column(7)
-                    .search(val)
-                    .draw();
-            });
         });
-
 
 
         var deleteFormAction;
@@ -460,26 +381,26 @@
         });
 
         @if($usesSoftDeletes)
-        @php
-            $params = [
-                's' => $search->value,
-                'filter' => $search->filter,
-                'key' => $search->key,
-                'order_by' => $orderBy,
-                'sort_order' => $sortOrder,
-            ];
-        @endphp
-        $(function() {
-            $('#show_soft_deletes').change(function() {
-                if ($(this).prop('checked')) {
-                    $('#dataTable').before('<a id="redir" href="{{ (route('voyager.'.$dataType->slug.'.index', array_merge($params, ['showSoftDeleted' => 1]), true)) }}"></a>');
-                }else{
-                    $('#dataTable').before('<a id="redir" href="{{ (route('voyager.'.$dataType->slug.'.index', array_merge($params, ['showSoftDeleted' => 0]), true)) }}"></a>');
-                }
+            @php
+                $params = [
+                    's' => $search->value,
+                    'filter' => $search->filter,
+                    'key' => $search->key,
+                    'order_by' => $orderBy,
+                    'sort_order' => $sortOrder,
+                ];
+            @endphp
+            $(function() {
+                $('#show_soft_deletes').change(function() {
+                    if ($(this).prop('checked')) {
+                        $('#dataTable').before('<a id="redir" href="{{ (route('voyager.'.$dataType->slug.'.index', array_merge($params, ['showSoftDeleted' => 1]), true)) }}"></a>');
+                    }else{
+                        $('#dataTable').before('<a id="redir" href="{{ (route('voyager.'.$dataType->slug.'.index', array_merge($params, ['showSoftDeleted' => 0]), true)) }}"></a>');
+                    }
 
-                $('#redir')[0].click();
+                    $('#redir')[0].click();
+                })
             })
-        })
         @endif
         $('input[name="row_id"]').on('change', function () {
             var ids = [];

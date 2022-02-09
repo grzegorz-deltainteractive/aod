@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 
 class Pool extends Model
@@ -23,5 +24,12 @@ class Pool extends Model
         return self::$statuses;
     }
 
+    public static function getPoolsForDepartmentAndLaboratoryList($departmentsIds, $laboratoryIds)
+    {
+        $poolsForDepartments = DB::table('pools_departments')->whereIn('department_id', $departmentsIds)->pluck('pool_id')->toArray();
+        $poolsForLaboratory = DB::table('pools_laboratories')->whereIn('laboratory_id', $laboratoryIds)->pluck('pool_id')->toArray();
+
+        return self::whereIn('id', array_intersect($poolsForLaboratory, $poolsForDepartments))->get();
+    }
 
 }

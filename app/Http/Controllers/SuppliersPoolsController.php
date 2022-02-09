@@ -25,7 +25,17 @@ class SuppliersPoolsController extends VoyagerBaseController {
         $supplier = Supplier::where('id', $id)->first();
         $pools = [];
         if ($supplier) {
-            $pools = Pool::where('department_id', $supplier->department)->where('laboratory_id', $supplier->laboratory)->get();
+            $deparments = $supplier->departments;
+            $laboratories = $supplier->laboratories;
+            $deparmentsIds = [];
+            $laboratoriesIds = [];
+            foreach ($deparments as $single) {
+                $deparmentsIds[] = $single->id;
+            }
+            foreach ($laboratories as $single) {
+                $laboratoriesIds[] = $single->id;
+            }
+            $pools = Pool::getPoolsForDepartmentAndLaboratoryList($deparmentsIds, $laboratoriesIds);
         }
 
         return view("suppliers/pools", ['pools' => $pools, 'supplier_id' => $id]);
@@ -40,6 +50,7 @@ class SuppliersPoolsController extends VoyagerBaseController {
     public function filledPools($id, $poolId) {
 
         $pools = SupplierPoolQuestion::where('pool_id', $poolId)->where('supplier_id', $id)->select(['user_id', 'created_at', 'pool_id', 'supplier_id'])->groupBy(['user_id', 'created_at', 'pool_id', 'supplier_id'])->distinct()->get();
+
         return view("suppliers/filled", ['pools' => $pools, 'supplier_id' => $id, 'pool_id' => $poolId]);
     }
 

@@ -41,6 +41,7 @@
         $departments = [];
         $laboratiories = [];
         $years = [];
+//        dd($dataTypeContent);
         foreach ($dataTypeContent as $data) {
             if (isset($data->department_id) && !empty($data->department_id)) {
                 if (!in_array($data->department_id, $departments)) {
@@ -54,7 +55,7 @@
                 }
             }
         }
-        $departmentsList = \App\Models\Department::getDepartmentsById($departments);
+        $departmentsList = \App\Models\Department::getAllDepartmentsList();
 
     ?>
     <div class="page-content browse container-fluid">
@@ -431,7 +432,7 @@
             $('#search-dzial').change(function() {
                 let val = $(this).val();
                 table
-                    .column(8)
+                    .column(6)
                     .search(val)
                     .draw();
             });
@@ -445,7 +446,7 @@
             $('#search-status').change(function() {
                 let val = $(this).val();
                 table
-                    .column(7)
+                    .column(5)
                     .search(val)
                     .draw();
             });

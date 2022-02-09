@@ -18,12 +18,14 @@ class Supplier extends Model
         return self::$statuses;
     }
 
-    public function departmentRelation() {
-        return $this->hasOne(Department::class, 'id', 'department' );
+    public function departments() {
+//        return $this->hasOne(Department::class, 'id', 'department' );
+        return $this->belongsToMany(Department::class, 'suppliers_departments', 'supplier_id', 'department_id');
     }
 
-    public function laboratoryRelation() {
-        return $this->hasOne(Laboratory::class, 'id', 'laboratory');
+    public function laboratories() {
+//        return $this->hasOne(Laboratory::class, 'id', 'laboratory');
+        return $this->belongsToMany(Laboratory::class, 'suppliers_laboratories', 'supplier_id', 'laboratory_id');
     }
 
     public static function getStatusName($status) {
@@ -35,6 +37,28 @@ class Supplier extends Model
         return $this->hasMany(SuppliersContacts::class, 'supplier_id', 'id');
     }
 
+    public static function getSupplierDepartmentsAndLaboratories($id)
+    {
+        $supplier = self::where('id', $id)->first();
+        $deparmentsIds = [];
+        $laboratoriesIds = [];
+        if ($supplier) {
+            $deparments = $supplier->departments;
+            $laboratories = $supplier->laboratories;
+
+            foreach ($deparments as $single) {
+                $deparmentsIds[] = $single->id;
+            }
+            foreach ($laboratories as $single) {
+                $laboratoriesIds[] = $single->id;
+            }
+        }
+        return [
+            'departmentsIds' => $deparmentsIds,
+            'laboratoriesIds' => $laboratoriesIds
+        ];
+    }
+
     /**
      * get suppliers pools
      * @param $supplier Supplier model of supplier
@@ -43,7 +67,11 @@ class Supplier extends Model
     public static function pools($supplier)
     {
         $return = [];
-        $pools = Pool::where('department_id', $supplier->department)->where('laboratory_id', $supplier->laboratory)->get();
+        $deparmentsAndLaboratoriesIds = self::getSupplierDepartmentsAndLaboratories($supplier->id);
+//        dd($deparmentsAndLaboratoriesIds);
+        $pools  = Pool::getPoolsForDepartmentAndLaboratoryList($deparmentsAndLaboratoriesIds['departmentsIds'], $deparmentsAndLaboratoriesIds['laboratoriesIds']);
+//        $pools = Pool::where('department_id', $supplier->department)->where('laboratory_id', $supplier->laboratory)->get();
+
         foreach ($pools as $pool) {
             $year = date('Y', strtotime($pool->data_wydania_ankiety));
             if (!array_key_exists($year, $return)) {

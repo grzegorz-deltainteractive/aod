@@ -18,4 +18,10 @@ class Department extends Model
         $list = self::whereIn('id', $ids)->pluck('name', 'id');
         return $list;
     }
+
+    public static function getAllDepartmentsList()
+    {
+        $list = self::pluck('name', 'id');
+        return $list;
+    }
 }

@@ -101,6 +101,7 @@ class SupplierPoolQuestion extends Model
                                 $poolsMax[$pool->id][$category->id] = 0;
                             }
                             $poolsMax[$pool->id][$category->id] = $poolsMax[$pool->id][$category->id] + $single->rating_max;
+
                             $score = self::where('pool_id', $pool->id)->where('category_id', $category->id)
                                 ->where('category_param_id', $single->id)->where('supplier_id', $supplier->id)->get();
                             if (!empty($score)) {

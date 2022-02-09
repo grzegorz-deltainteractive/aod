@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 use App\Models\Pool;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SuppliersPoolsController extends VoyagerBaseController {
 
@@ -193,6 +194,39 @@ class SuppliersPoolsController extends VoyagerBaseController {
         unset($user);
 //        dd($result);
         return view('suppliers/averagePools', ['supplier' => $supplier, 'results' => $result, 'pool' => $pool, 'ut' => $ut]);
+    }
+
+    public function displaypoolsPdf($poolId, $supplierId)
+    {
+        $supplier = Supplier::where('id', $supplierId)->first();
+        $result = SupplierPoolQuestion::getResultForSinglePool($poolId, $supplier);
+        $pool = Pool::where('id', $poolId)->first();
+        $ut = [];
+        foreach ($result['users'] as &$user) {
+            $userRead = User::where('id', $user)->first();
+            if (isset($userRead->laboratory[0]) && !empty($userRead->laboratory[0])) {
+                $ut[$user] = $userRead->name .' - '.$userRead->laboratory[0]->name;
+            } else {
+                $ut[$user] = $userRead->name .' - nie wybrano laboratorium';
+            }
+        }
+        unset($user);
+//        dd($result);
+//        return view('suppliers/averagePoolsPdf', ['supplier' => $supplier, 'results' => $result, 'pool' => $pool, 'ut' => $ut]);
+        try {
+            view()->share('supplier', $supplier);
+            view()->share('results', $result);
+            view()->share('pool', $pool);
+            view()->share('ut', $ut);
+            $pdf = PDF::loadView('suppliers/averagePoolsPdf');
+//            $pdf->setWarnings(true);
+            $pdf->setPaper('a4', 'landscape');
+//            $pdf->save('ankieta-'.$poolId.'-'.$supplierId.'.pdf');
+            return $pdf->stream('ankieta-'.$poolId.'-'.$supplierId.'.pdf');
+        } catch (\Exception $ex) {
+            dd($ex);
+        }
+
     }
 
     public function displayParameterDraw($poolId, $supplierId, $parameterId)

@@ -3,6 +3,10 @@
 @section('page_title', __('voyager::generic.viewing').' '.$dataType->getTranslatedAttribute('display_name_plural'))
 
 @section('page_header')
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
     <div class="container-fluid">
         <h1 class="page-title">
             <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
@@ -55,8 +59,8 @@
             }
         }
     }
-    $departmentsList = \App\Models\Department::getDepartmentsById($departments);
-    $laboratioriesList = \App\Models\Laboratory::getLaboratoriesById($laboratiories);
+    $departmentsList = \App\Models\Department::getAllDepartmentsList();
+    $laboratioriesList = \App\Models\Laboratory::getAllLaboratoriesList();
 
     ?>
     <div class="page-content browse container-fluid">
@@ -399,11 +403,14 @@
     @if(!$dataType->server_side && config('dashboard.data_tables.responsive'))
         <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     @endif
+
     <script>
         $(document).ready(function () {
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(
                     array_merge([
+                        'dom' => 'Bfrtip',
+                        'buttons' => ['csv'],
                         "order" => $orderColumn,
                         "language" => __('voyager::datatable'),
                         "columnDefs" => [
@@ -413,6 +420,7 @@
                     config('voyager.dashboard.data_tables', []))
                 , true) !!});
             var colCount = table.columns().header().length;
+
             table.columns.adjust().draw();
             @else
                 $('#search-input select').select2({

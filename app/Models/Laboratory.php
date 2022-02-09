@@ -13,4 +13,10 @@ class Laboratory extends Model
         $list = self::whereIn('id', $ids)->pluck('name', 'id');
         return $list;
     }
+
+    public static function getAllLaboratoriesList()
+    {
+        $list = self::pluck('name', 'id');
+        return $list;
+    }
 }

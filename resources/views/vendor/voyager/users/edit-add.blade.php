@@ -25,7 +25,7 @@
             {{ csrf_field() }}
 
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <div class="panel panel-bordered">
                     {{-- <div class="panel"> --}}
                         @if (count($errors) > 0)
@@ -39,6 +39,22 @@
                         @endif
 
                         <div class="panel-body">
+						
+						 <div class="form-group">
+                                <label for="imie">Imię</label>
+                                <input type="text" class="form-control" id="imie" name="imie" placeholder="Imię"
+                                       value="{{ old('imie', $dataTypeContent->imie ?? '') }}">
+                            </div>
+						 <div class="form-group">
+                                <label for="nazwisko">Nazwisko</label>
+                                <input type="text" class="form-control" id="nazwisko" name="nazwisko" placeholder="Nazwisko"
+                                       value="{{ old('nazwisko', $dataTypeContent->nazwisko ?? '') }}">
+                            </div>
+						<div class="form-group">
+                                <label for="miasto">Miasto</label>
+                                <input type="text" class="form-control" id="miasto" name="miasto" placeholder="Miasto"
+                                       value="{{ old('miasto', $dataTypeContent->miasto ?? '') }}">
+                            </div>
                             <div class="form-group">
                                 <label for="name">{{ __('voyager::generic.name') }}</label>
                                 <input type="text" class="form-control" id="name" name="name" placeholder="{{ __('voyager::generic.name') }}"
@@ -62,7 +78,7 @@
 
                             @can('editRoles', $dataTypeContent)
                                 <div class="form-group">
-                                    <label for="default_role">{{ __('voyager::profile.role_default') }}</label>
+                                    <label for="default_role">Rola</label>
                                     @php
                                         $dataTypeRows = $dataType->{(isset($dataTypeContent->id) ? 'editRows' : 'addRows' )};
 
@@ -71,8 +87,16 @@
                                     @endphp
                                     @include('voyager::formfields.relationship')
                                 </div>
+								
+								<div class="form-group">
+                                <label for="dzial">Dział</label>
+                                <input type="text" class="form-control" id="dzial" name="dzial" placeholder="{{ __('voyager::generic.dzial') }}"
+                                       value="{{ old('dzial', $dataTypeContent->dzial ?? '') }}">
+                            </div>
+								
+								
                                 <div class="form-group">
-                                    <label for="additional_roles">{{ __('voyager::profile.roles_additional') }}</label>
+                                    <label for="additional_roles">Role dodatkowe</label>
                                     @php
                                         $row     = $dataTypeRows->where('field', 'user_belongstomany_role_relationship')->first();
                                         $options = $row->details;
@@ -101,18 +125,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="panel panel panel-bordered panel-warning">
-                        <div class="panel-body">
-                            <div class="form-group">
-                                @if(isset($dataTypeContent->avatar))
-                                    <img src="{{ filter_var($dataTypeContent->avatar, FILTER_VALIDATE_URL) ? $dataTypeContent->avatar : Voyager::image( $dataTypeContent->avatar ) }}" style="width:200px; height:auto; clear:both; display:block; padding:2px; border:1px solid #ddd; margin-bottom:10px;" />
-                                @endif
-                                <input type="file" data-name="avatar" name="avatar">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               
             </div>
 
             <button type="submit" class="btn btn-primary pull-right save">

@@ -38,6 +38,26 @@
 <?php
     $columnCount = 0;
 ?>
+  <?php
+    $departments = [];
+    $laboratiories = [];
+    $years = [];
+    foreach ($dataTypeContent as $data) {
+        if (isset($data->department) && !empty($data->department)) {
+            if (!in_array($data->department, $departments)) {
+                $departments[] = $data->department;
+            }
+        }
+        if (isset($data->laboratory) && !empty($data->laboratory)) {
+            if (!in_array($data->laboratory, $laboratiories)) {
+                $laboratiories[] = $data->laboratory;
+            }
+        }
+    }
+    $departmentsList = \App\Models\Department::getDepartmentsById($departments);
+    $laboratioriesList = \App\Models\Laboratory::getLaboratoriesById($laboratiories);
+
+    ?>
 @section('content')
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
@@ -45,6 +65,62 @@
             <div class="col-md-12">
                 <div class="panel panel-bordered">
                     <div class="panel-body">
+					
+					
+					
+					<div class="row">
+					 <div class="form-group col-12 col-md-3 ">
+                                <label class="control-label">
+                                    Rola
+                                </label>
+                                <select name="dzial" id="search-dzial" class="form-control">
+                                    <option value="">Wybierz rolę</option>
+                                    @foreach ($departmentsList as $listItem)
+                                        <option value="{{$listItem}}">{{$listItem}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+					
+					
+                            <div class="form-group col-12 col-md-3 ">
+                                <label class="control-label">
+                                    Dział
+                                </label>
+                                <select name="dzial" id="search-dzial" class="form-control">
+                                    <option value="">Wybierz dział</option>
+                                    @foreach ($departmentsList as $listItem)
+                                        <option value="{{$listItem}}">{{$listItem}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-12 col-md-3 ">
+                                <label class="control-label">
+                                    Miasto
+                                </label>
+                                <select name="laboratorium" id="search-laboratorium" class="form-control">
+                                    <option value="">Wybierz miasto</option>
+									<option value="Warszawa">Warszawa</option>
+                                    @foreach ($laboratioriesList as $listItem)
+                                        <option value="{{$listItem}}">{{$listItem}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-12 col-md-3 ">
+                                <label class="control-label">
+                                    Aktywny
+                                </label>
+                                <select name="dzial" id="search-status" class="form-control">
+                                    <option value="">Wybierz status</option>
+                                    @foreach (\App\Models\Supplier::getStatuses() as $listItem)
+                                        <option value="{{$listItem}}">{{$listItem}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+						
+						
+					
+					
                         @if ($isServerSide)
                             <form method="get" class="form-search">
                                 <div id="search-input">

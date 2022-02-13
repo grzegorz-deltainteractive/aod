@@ -19,7 +19,9 @@
         "sass-loader": "^8.0.0",
         "vue": "^2.6.11",
         "vue-loader": "^15.9.6",
-        "vue-template-compiler": "^2.6.14"
+        "vue-template-compiler": "^2.6.14",
+        "datatables.net": "^2.1.1",
+        "datatables.net-buttons": "^2.2.2"
     },
     "dependencies": {
         "vue-i18n": "^7.8.1"

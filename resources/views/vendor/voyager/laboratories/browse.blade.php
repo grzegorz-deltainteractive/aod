@@ -3,10 +3,6 @@
 @section('page_title', __('voyager::generic.viewing').' '.$dataType->getTranslatedAttribute('display_name_plural'))
 
 @section('page_header')
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
     <div class="container-fluid">
         <h1 class="page-title">
             <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
@@ -37,18 +33,9 @@
             @endif
         @endforeach
         @include('voyager::multilingual.language-selector')
+		
+		
 
-
-		<div style="margin-top:-102px; background:#fff; right:420px; position:fixed; border:1px solid red;  index-z:9999; width:400px; padding:20px;  -webkit-border-radius: 3px;
--moz-border-radius: 3px;
-border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy którzy zostali pominięci:<br/>-</div>
-		<script>function sprawdz(){ var h=document.getElementById('plik').value; if(h==""){ document.getElementById('plik').style.border="1px solid red"; return false; } }</script>
-		<form style="float:right;padding-top:25px;display:inline-block" action="" method="get">
-		<input type="hidden" name="ok" value="aaaa"/>
-		<input style="display:inline-block" type="file" id="plik" accept="application/vnd.ms-excel"/>
-		<button onClick="return sprawdz();" class="btn btn-primary btn-add-new" type="hidden" name="ok" value="aaaa"/> <i class="voyager-list"></i> <span>Import</span></button>
-
-		</form>
     </div>
 @stop
 <?php
@@ -60,9 +47,10 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
     $laboratiories = [];
     $years = [];
     foreach ($dataTypeContent as $data) {
-        if (isset($data->department) && !empty($data->department)) {
-            if (!in_array($data->department, $departments)) {
-                $departments[] = $data->department;
+		//print_r($data);
+        if (isset($data->city) && !empty($data->city)) {
+            if (!in_array($data->city, $departments)) {
+                $departments[] = $data->city;
             }
         }
         if (isset($data->laboratory) && !empty($data->laboratory)) {
@@ -71,8 +59,8 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
             }
         }
     }
-    $departmentsList = \App\Models\Department::getAllDepartmentsList();
-    $laboratioriesList = \App\Models\Laboratory::getAllLaboratoriesList();
+   // $departmentsList = \App\Models\Department::getDepartmentsById($departments);
+    $departmentsList = \App\Models\Laboratory::getLaboratoriesById($departments);
 
     ?>
     <div class="page-content browse container-fluid">
@@ -84,37 +72,16 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
                         <div class="row">
                             <div class="form-group col-12 col-md-4 ">
                                 <label class="control-label">
-                                    Dział
+                                    Miasto
                                 </label>
                                 <select name="dzial" id="search-dzial" class="form-control">
-                                    <option value="">Wybierz dział</option>
+                                    <option value="">Wybierz miasto</option>
                                     @foreach ($departmentsList as $listItem)
                                         <option value="{{$listItem}}">{{$listItem}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-12 col-md-4 ">
-                                <label class="control-label">
-                                    Laboratorium
-                                </label>
-                                <select name="laboratorium" id="search-laboratorium" class="form-control">
-                                    <option value="">Wybierz laboratorium</option>
-                                    @foreach ($laboratioriesList as $listItem)
-                                        <option value="{{$listItem}}">{{$listItem}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-12 col-md-4 ">
-                                <label class="control-label">
-                                    Status
-                                </label>
-                                <select name="dzial" id="search-status" class="form-control">
-                                    <option value="">Wybierz status</option>
-                                    @foreach (\App\Models\Supplier::getStatuses() as $listItem)
-                                        <option value="{{$listItem}}">{{$listItem}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                           
                         </div>
                         @if ($isServerSide)
                             <form method="get" class="form-search">

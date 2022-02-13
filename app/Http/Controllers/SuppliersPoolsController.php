@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use App\Models\CategoriesParameters;
+use App\Models\PoolSupplier;
 use App\Models\Supplier;
 use App\Models\SupplierPoolQuestion;
 use App\Models\SupplierPoolStatus;
@@ -36,8 +37,11 @@ class SuppliersPoolsController extends VoyagerBaseController {
             foreach ($laboratories as $single) {
                 $laboratoriesIds[] = $single->id;
             }
-            $pools = Pool::getPoolsForDepartmentAndLaboratoryList($deparmentsIds, $laboratoriesIds);
+//            $pools = Pool::getPoolsForDepartmentAndLaboratoryList($deparmentsIds, $laboratoriesIds);
+            $supplierPools = PoolSupplier::where('supplier_id', $id)->pluck('pool_id')->toArray();
+            $pools = Pool::whereIn('id', $supplierPools)->get();
         }
+
 
         return view("suppliers/pools", ['pools' => $pools, 'supplier_id' => $id]);
     }
@@ -285,5 +289,17 @@ class SuppliersPoolsController extends VoyagerBaseController {
         unset($user);
 //        dd($result);
         return view('suppliers/singlePool', ['supplier' => $supplier, 'results' => $result, 'pool' => $pool, 'ut' => $ut, 'userIdGlobal' => $userId]);
+    }
+
+    /**
+     * list supplier pools
+     * @param $supplierId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
+     */
+    public function listSupplierPools($supplierId)
+    {
+        $supplier = Supplier::where('id', $supplierId)->first();
+
+        return view('suppliers/listSupplierPools', ['supplier' => $supplier]);
     }
 }

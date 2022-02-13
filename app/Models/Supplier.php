@@ -28,6 +28,11 @@ class Supplier extends Model
         return $this->belongsToMany(Laboratory::class, 'suppliers_laboratories', 'supplier_id', 'laboratory_id');
     }
 
+    public function poolsRelation() {
+//        return $this->hasOne(Laboratory::class, 'id', 'laboratory');
+        return $this->belongsToMany(Pool::class, 'pools_suppliers', 'supplier_id', 'pool_id');
+    }
+
     public static function getStatusName($status) {
         return self::$statuses[$status];
     }
@@ -70,7 +75,6 @@ class Supplier extends Model
         $deparmentsAndLaboratoriesIds = self::getSupplierDepartmentsAndLaboratories($supplier->id);
 //        dd($deparmentsAndLaboratoriesIds);
         $pools  = Pool::getPoolsForDepartmentAndLaboratoryList($deparmentsAndLaboratoriesIds['departmentsIds'], $deparmentsAndLaboratoriesIds['laboratoriesIds']);
-//        $pools = Pool::where('department_id', $supplier->department)->where('laboratory_id', $supplier->laboratory)->get();
 
         foreach ($pools as $pool) {
             $year = date('Y', strtotime($pool->data_wydania_ankiety));
@@ -81,5 +85,21 @@ class Supplier extends Model
         }
         krsort($return);
         return $return;
+    }
+
+    /**\get supplier shortocode
+     * @param $id
+     * @return string
+     */
+    public static function getSupplierShortcode($id)
+    {
+        $supplier = self::where('id', $id)->first();
+        if ($supplier) {
+            if (!empty($supplier->skrot)) {
+                return $supplier->skrot;
+            }
+            return strtoupper(substr($supplier->name, 0, 3)).$supplier->id;
+        }
+        return '';
     }
 }

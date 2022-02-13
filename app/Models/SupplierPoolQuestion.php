@@ -201,4 +201,11 @@ class SupplierPoolQuestion extends Model
             'users' => $users
         ];
     }
+
+    public static function getFilledData($poolId, $id)
+    {
+        $filled = self::where('pool_id', $poolId)->where('supplier_id', $id)->select(['user_id', 'created_at', 'pool_id', 'supplier_id'])->groupBy(['user_id', 'created_at', 'pool_id', 'supplier_id'])->distinct()->first();
+
+        return $filled;
+    }
 }

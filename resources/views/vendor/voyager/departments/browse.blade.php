@@ -33,9 +33,9 @@
             @endif
         @endforeach
         @include('voyager::multilingual.language-selector')
-		
-		
-	
+
+
+
     </div>
 @stop
 <?php
@@ -59,16 +59,16 @@
             }
         }
     }
-  
-    $departmentsList = \App\Models\Department::getDepartmentsByMiasto($departments);
+
+    $departmentsList = \App\Models\Department::getAllDepartmentsList();
 
     ?>
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">
-			
-			
+
+
 			 @if ($isServerSide)
                             <form method="get" class="form-search">
                                 <div id="search-input">
@@ -100,10 +100,10 @@
                                 @endif
                             </form>
                         @endif
-			
-			
-			
-			
+
+
+
+
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <div class="row">
@@ -118,10 +118,10 @@
                                     @endforeach
                                 </select>
                             </div>
-                          
-                           
+
+
                         </div>
-                       
+
                         <div class="table-responsive">
                             <table id="dataTable" class="table table-hover">
                                 <thead>

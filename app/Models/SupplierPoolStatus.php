@@ -55,6 +55,22 @@ class SupplierPoolStatus extends Model {
     }
 
     /**
+     * return date supplied year
+     * @param $pool_id
+     * @param $supplier_id
+     * @return false|string
+     */
+    public static function getPoolFilledYear($pool_id, $supplier_id)
+    {
+        $check = self::where('pool_id', $pool_id)->where('supplier_id', $supplier_id)->first();
+        if (!empty($check)) {
+            return date('Y', strtotime($check->filled_date));
+        } else {
+            return '-';
+        }
+    }
+
+    /**
      * Accept pool
      * @param $user_id
      * @param $pool_id

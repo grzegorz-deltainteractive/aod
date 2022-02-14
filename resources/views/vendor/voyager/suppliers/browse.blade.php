@@ -418,9 +418,15 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
     <script>
         $(document).ready(function () {
             @if (!$dataType->server_side)
-                var table = $('#dataTable').DataTable({!! json_encode(
+                var table2 = $('#dataTable').DataTable({!! json_encode(
                     array_merge([
+                        'buttons' => ['pageLength', 'pdfHtml5', 'excelHtml5', 'csvHtml5'],
+                        'dom' => 'Bfrtip',
                         "order" => $orderColumn,
+                        'lengthMenu' => [
+                            [ 10, 25, 50, -1 ],
+                            [ '10 wierszy', '25 wierszy', '50 wierszy', 'Pokaż wszystko' ]
+                        ],
                         "language" => __('voyager::datatable'),
                         "columnDefs" => [
                             ['targets' => 'dt-not-orderable', 'searchable' =>  false, 'orderable' => false],
@@ -428,8 +434,9 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
                     ],
                     config('voyager.dashboard.data_tables', []))
                 , true) !!});
-            var colCount = table.columns().header().length;
-            table.columns.adjust().draw();
+
+            var colCount = table2.columns().header().length;
+            table2.columns.adjust().draw();
             @else
                 $('#search-input select').select2({
                     minimumResultsForSearch: Infinity
@@ -449,28 +456,29 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
 
             $('#search-dzial').change(function() {
                 let val = $(this).val();
-                table
+                table2
                     .column(6)
                     .search(val)
                     .draw();
-                table.columns.adjust().draw();
+                table2.columns.adjust().draw();
             });
             $('#search-laboratorium').change(function() {
                 let val = $(this).val();
-                table
+                table2
                     .column(7)
                     .search(val)
                     .draw();
-                table.columns.adjust().draw();
+                table2.columns.adjust().draw();
             });
             $('#search-status').change(function() {
                 let val = $(this).val();
-                table
+                table2
                     .column(5)
                     .search(val)
                     .draw();
-                table.columns.adjust().draw();
+                table2.columns.adjust().draw();
             });
+
         });
 
 

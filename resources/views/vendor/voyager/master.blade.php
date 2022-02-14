@@ -115,9 +115,13 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 @include('voyager::partials.app-footer')
 
 <!-- Javascript Libs -->
-
-
 <script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
+
+@if(!empty(config('voyager.additional_js')))<!-- Additional Javascript -->
+@foreach(config('voyager.additional_js') as $js)
+    <script type="text/javascript" src="{{ asset($js) }}"></script>
+@endforeach
+@endif
 
 <script>
     @if(Session::has('alerts'))
@@ -140,11 +144,10 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
     @endif
 </script>
 @include('voyager::media.manager')
+
 @yield('javascript')
 @stack('javascript')
-@if(!empty(config('voyager.additional_js')))<!-- Additional Javascript -->
-@foreach(config('voyager.additional_js') as $js)<script type="text/javascript" src="{{ asset($js) }}"></script>@endforeach
-@endif
+
 
 </body>
 </html>

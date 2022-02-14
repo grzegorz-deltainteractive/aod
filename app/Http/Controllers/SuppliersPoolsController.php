@@ -97,6 +97,27 @@ class SuppliersPoolsController extends VoyagerBaseController {
         return view("suppliers/filledSingle", ['pool' => $pool, 'data' => $spq, 'supplier_id' => $id, 'pool_id' => $poolId, 'user_id' => $userId]);
     }
 
+    public function filledPoolsSinglePdf($id, $poolId, $userId)
+    {
+        $spq = SupplierPoolQuestion::where('supplier_id', $id)->where('pool_id', $poolId)->where('user_id', $userId)->get();
+        $pool = Pool::where('id', $poolId)->first();
+        try {
+            view()->share('supplier_id', $id);
+            view()->share('user_id', $userId);
+            view()->share('pool', $pool);
+            view()->share('pool_id', $poolId);
+            view()->share('data', $spq);
+            $pdf = PDF::loadView('suppliers/filledSinglePdf');
+//            $pdf->setWarnings(true);
+            $pdf->setPaper('a4', 'landscape');
+//            $pdf->save('ankieta-'.$poolId.'-'.$supplierId.'.pdf');
+            return $pdf->stream('ankieta-pojedyncza-'.$poolId.'-'.$id.'.pdf');
+        } catch (\Exception $ex) {
+            dd($ex);
+        }
+//        return view("suppliers/filledSinglePdf", ['pool' => $pool, 'data' => $spq, 'supplier_id' => $id, 'pool_id' => $poolId, 'user_id' => $userId]);
+    }
+
     /**
      * fill pool
      * @param $id

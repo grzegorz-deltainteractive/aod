@@ -31,6 +31,12 @@ class SupplierPoolStatus extends Model {
         $model->save();
     }
 
+    public static function getStatus($user_id, $pool_id, $supplier_id)
+    {
+        $check = self::where('pool_id', $pool_id)->where('user_id', $user_id)->where('supplier_id', $supplier_id)->first();
+        return $check;
+    }
+
     /**
      * return accepted status
      * @param $user_id

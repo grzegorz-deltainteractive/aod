@@ -16,11 +16,14 @@ if (!empty($status)) {
     $userNameAccepted = '';
 }
 ?>
-@extends('voyager::master')
-@section('content')
-    <h1 class="page-title" style="width: 100%;">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="http://aod.develop/admin/voyager-assets?path=css%2Fapp.css">
+</head>
+<body>
+    <h1 class="page-title">
         Ankieta "{{$pool->name}}" - wyniki
-        <a href="{{route('suppliers.pools.filled.single.pdf', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float">Zapisz PDF</a>
     </h1>
     <div class="page-content container-fluid">
         <div class="panel panel-bordered">
@@ -61,41 +64,41 @@ if (!empty($status)) {
                     </table>
                     <br />
                 @endforeach
-                <div class="row">
-                    <div class="col-12 col-md-5">
-                        Uzupełnił:
-                    </div>
-                    <div class="col-12 col-md-7">
-                        {{$userNameFilled}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-5">
-                        Data uzupełnienia:
-                    </div>
-                    <div class="col-12 col-md-7">
-                        {{$status->filled_date}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-5">
-                        Zaakceptował:
-                    </div>
-                    <div class="col-12 col-md-7">
-                        {{$userNameAccepted}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-5">
-                        Data zaakceptowania:
-                    </div>
-                    <div class="col-12 col-md-7">
-                        {{$status->accepted_date ?? '-'}}
-                    </div>
-                </div>
                 <br />
-                <a href="javascript:history.back();" class="btn btn-sm btn-secondary " style="background-color: #cccccc">Powrót</a>
+                    <div class="row">
+                        <div class="col-12 col-md-5">
+                            Uzupełnił:
+                        </div>
+                        <div class="col-12 col-md-7">
+                            {{$userNameFilled}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-5">
+                            Data uzupełnienia:
+                        </div>
+                        <div class="col-12 col-md-7">
+                            {{$status->filled_date}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-5">
+                            Zaakceptował:
+                        </div>
+                        <div class="col-12 col-md-7">
+                            {{$userNameAccepted}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-5">
+                            Data zaakceptowania:
+                        </div>
+                        <div class="col-12 col-md-7">
+                            {{$status->accepted_date ?? '-'}}
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
-@stop
+</body>
+</html>

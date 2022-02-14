@@ -395,7 +395,13 @@
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(
                     array_merge([
+                        'buttons' => ['pageLength', 'pdfHtml5', 'excelHtml5', 'csvHtml5'],
+                        'dom' => 'Bfrtip',
                         "order" => $orderColumn,
+                        'lengthMenu' => [
+                            [ 10, 25, 50, -1 ],
+                            [ '10 wierszy', '25 wierszy', '50 wierszy', 'Pokaż wszystko' ]
+                        ],
                         "language" => __('voyager::datatable'),
                         "columnDefs" => [
                             ['targets' => 'dt-not-orderable', 'searchable' =>  false, 'orderable' => false],

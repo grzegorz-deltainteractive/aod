@@ -65,9 +65,9 @@
             <div class="col-md-12">
                 <div class="panel panel-bordered">
                     <div class="panel-body">
-					
-					
-					
+
+
+
 					<div class="row">
 					 <div class="form-group col-12 col-md-3 ">
                                 <label class="control-label">
@@ -80,8 +80,8 @@
                                     @endforeach
                                 </select>
                             </div>
-					
-					
+
+
                             <div class="form-group col-12 col-md-3 ">
                                 <label class="control-label">
                                     Dział
@@ -117,10 +117,10 @@
                                 </select>
                             </div>
                         </div>
-						
-						
-					
-					
+
+
+
+
                         @if ($isServerSide)
                             <form method="get" class="form-search">
                                 <div id="search-input">
@@ -179,6 +179,7 @@
                                             @endif
                                         </th>
                                         @endforeach
+                                            <th>Ankiety</th>
                                         <th class="actions text-right dt-not-orderable">{{ __('voyager::generic.actions') }}</th>
                                     </tr>
                                 </thead>
@@ -350,6 +351,21 @@
                                                 @endif
                                             </td>
                                         @endforeach
+                                        <td>
+                                            <?php
+                                                $usersPools = \App\Models\SupplierPoolQuestion::getUserPools($data->getKey());
+                                                if (!empty($usersPools)) {
+                                                    foreach ($usersPools as $s) {
+                                                        $pool = \App\Models\Pool::where('id', $s->pool_id)->first();
+                                                        ?>
+                                                        <a href="{{route('suppliers.pools.filled.single', ['id' => $s->supplier_id, 'poolId' => $s->pool_id, 'userId' => $data->getKey()])}}">
+                                                            {{$pool->name}}
+                                                        </a><br />
+                                                        <?php
+                                                    }
+                                                }
+                                            ?>
+                                        </td>
                                         <td class="no-sort no-click bread-actions">
 										<?php if( $data->getKey()==1 || $data->getKey()==2  || $data->getKey()>130 ){  ?>
                                             @foreach($actions as $action)
@@ -427,7 +443,13 @@
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(
                     array_merge([
+                        'buttons' => ['pageLength', 'pdfHtml5', 'excelHtml5', 'csvHtml5'],
+                        'dom' => 'Bfrtip',
                         "order" => $orderColumn,
+                        'lengthMenu' => [
+                            [ 10, 25, 50, -1 ],
+                            [ '10 wierszy', '25 wierszy', '50 wierszy', 'Pokaż wszystko' ]
+                        ],
                         "language" => __('voyager::datatable'),
                         "columnDefs" => [
                             ['targets' => 'dt-not-orderable', 'searchable' =>  false, 'orderable' => false],

@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-bordered">
-                    {{-- <div class="panel"> --}}
+                        {{-- <div class="panel"> --}}
                         @if (count($errors) > 0)
                             <div class="alert alert-danger">
                                 <ul>
@@ -39,31 +39,40 @@
                         @endif
 
                         <div class="panel-body">
-						
-						 <div class="form-group">
+
+                            <div class="form-group">
                                 <label for="imie">Imię</label>
                                 <input type="text" class="form-control" id="imie" name="imie" placeholder="Imię"
                                        value="{{ old('imie', $dataTypeContent->imie ?? '') }}">
                             </div>
-						 <div class="form-group">
+                            <div class="form-group">
                                 <label for="nazwisko">Nazwisko</label>
-                                <input type="text" class="form-control" id="nazwisko" name="nazwisko" placeholder="Nazwisko"
+                                <input type="text" class="form-control" id="nazwisko" name="nazwisko"
+                                       placeholder="Nazwisko"
                                        value="{{ old('nazwisko', $dataTypeContent->nazwisko ?? '') }}">
                             </div>
-						<div class="form-group">
+                            <div class="form-group">
                                 <label for="miasto">Miasto</label>
                                 <input type="text" class="form-control" id="miasto" name="miasto" placeholder="Miasto"
                                        value="{{ old('miasto', $dataTypeContent->miasto ?? '') }}">
                             </div>
                             <div class="form-group">
+                                <label for="telefon">Telefon</label>
+                                <input type="text" class="form-control" id="telefon" name="telefon"
+                                       placeholder="Telefon"
+                                       value="{{ old('telefon', $dataTypeContent->telefon ?? '') }}">
+                            </div>
+                            <div class="form-group">
                                 <label for="name">{{ __('voyager::generic.name') }}</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="{{ __('voyager::generic.name') }}"
+                                <input type="text" class="form-control" id="name" name="name"
+                                       placeholder="{{ __('voyager::generic.name') }}"
                                        value="{{ old('name', $dataTypeContent->name ?? '') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="email">{{ __('voyager::generic.email') }}</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="{{ __('voyager::generic.email') }}"
+                                <input type="email" class="form-control" id="email" name="email"
+                                       placeholder="{{ __('voyager::generic.email') }}"
                                        value="{{ old('email', $dataTypeContent->email ?? '') }}">
                             </div>
 
@@ -73,7 +82,8 @@
                                     <br>
                                     <small>{{ __('voyager::profile.password_hint') }}</small>
                                 @endif
-                                <input type="password" class="form-control" id="password" name="password" value="" autocomplete="new-password">
+                                <input type="password" class="form-control" id="password" name="password" value=""
+                                       autocomplete="new-password">
                             </div>
 
                             @can('editRoles', $dataTypeContent)
@@ -87,14 +97,10 @@
                                     @endphp
                                     @include('voyager::formfields.relationship')
                                 </div>
-								
-								<div class="form-group">
-                                <label for="dzial">Dział</label>
-                                <input type="text" class="form-control" id="dzial" name="dzial" placeholder="{{ __('voyager::generic.dzial') }}"
-                                       value="{{ old('dzial', $dataTypeContent->dzial ?? '') }}">
-                            </div>
-								
-								
+
+
+
+
                                 <div class="form-group">
                                     <label for="additional_roles">Role dodatkowe</label>
                                     @php
@@ -104,20 +110,30 @@
                                     @include('voyager::formfields.relationship')
                                 </div>
                             @endcan
+                            <div class="form-group">
+                                <label for="dzial">Dział</label>
+                                @php
+                                    $dataTypeRows = $dataType->{(isset($dataTypeContent->id) ? 'editRows' : 'addRows' )};
+
+                                    $row     = $dataTypeRows->where('field', 'user_belongstomany_department_relationship')->first();
+                                    $options = $row->details;
+                                @endphp
+                                @include('voyager::formfields.relationship')
+                            </div>
                             @php
-                            if (isset($dataTypeContent->locale)) {
-                                $selected_locale = $dataTypeContent->locale;
-                            } else {
-                                $selected_locale = config('app.locale', 'en');
-                            }
+                                if (isset($dataTypeContent->locale)) {
+                                    $selected_locale = $dataTypeContent->locale;
+                                } else {
+                                    $selected_locale = config('app.locale', 'en');
+                                }
 
                             @endphp
                             <div class="form-group">
                                 <label for="locale">{{ __('voyager::generic.locale') }}</label>
                                 <select class="form-control select2" id="locale" name="locale">
                                     @foreach (Voyager::getLocales() as $locale)
-                                    <option value="{{ $locale }}"
-                                    {{ ($locale == $selected_locale ? 'selected' : '') }}>{{ $locale }}</option>
+                                        <option value="{{ $locale }}"
+                                            {{ ($locale == $selected_locale ? 'selected' : '') }}>{{ $locale }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -125,7 +141,7 @@
                     </div>
                 </div>
 
-               
+
             </div>
 
             <button type="submit" class="btn btn-primary pull-right save">
@@ -134,7 +150,8 @@
         </form>
 
         <iframe id="form_target" name="form_target" style="display:none"></iframe>
-        <form id="my_form" action="{{ route('voyager.upload') }}" target="form_target" method="post" enctype="multipart/form-data" style="width:0px;height:0;overflow:hidden">
+        <form id="my_form" action="{{ route('voyager.upload') }}" target="form_target" method="post"
+              enctype="multipart/form-data" style="width:0px;height:0;overflow:hidden">
             {{ csrf_field() }}
             <input name="image" id="upload_file" type="file" onchange="$('#my_form').submit();this.value='';">
             <input type="hidden" name="type_slug" id="type_slug" value="{{ $dataType->slug }}">

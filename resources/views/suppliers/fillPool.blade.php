@@ -51,7 +51,7 @@
                     @endforeach
                     <button class="btn btn-sm btn-primary"  type="submit">Zapisz ankietę</button>
                     <br />
-                    <a href="{{route('suppliers.pools', ['id' => $pool->id])}}" class="btn btn-sm btn-secondary " style="background-color: #cccccc">Powrót</a>
+                    <a href="javascript:history.back();" class="btn btn-sm btn-secondary " style="background-color: #cccccc">Powrót</a>
                 </form>
             </div>
         </div>

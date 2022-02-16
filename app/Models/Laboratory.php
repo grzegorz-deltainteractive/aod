@@ -19,4 +19,8 @@ class Laboratory extends Model
         $list = self::pluck('name', 'id');
         return $list;
     }
+
+    public function suppliers() {
+        return $this->belongsToMany(Supplier::class, 'suppliers_laboratories', 'laboratory_id', 'supplier_id');
+    }
 }

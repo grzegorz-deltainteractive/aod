@@ -46,4 +46,24 @@ class Pool extends Model
         return self::whereIn('id', array_intersect($poolsForLaboratory, $poolsForDepartments))->get();
     }
 
+    public static function getPoolsByDepartment($departmentId)
+    {
+        $poolsIds = DB::table('pools_departments')->where('department_id', $departmentId)->pluck('pool_id')->toArray();
+        if (empty($poolsIds)) {
+            return [];
+        }
+        $pools = self::whereIn('id', $poolsIds)->get();
+        return $pools;
+    }
+
+    public static function getPoolsByLaboratory($laboratoryId)
+    {
+        $poolsIds = DB::table('pools_laboratories')->where('laboratory_id', $laboratoryId)->pluck('pool_id')->toArray();
+        if (empty($poolsIds)) {
+            return [];
+        }
+        $pools = self::whereIn('id', $poolsIds)->get();
+        return $pools;
+    }
+
 }

@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Models\Department;
 use App\Models\Laboratory;
+use App\Models\Pool;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends \TCG\Voyager\Models\User
 {
@@ -42,5 +45,29 @@ class User extends \TCG\Voyager\Models\User
     public function laboratory ()
     {
         return $this->belongsToMany(Laboratory::class, 'user_laboratories', 'user_id', 'laboratory_id');
+    }
+
+    public function departments() {
+        return $this->belongsToMany(Department::class, 'users_departments', 'user_id', 'department_id');
+    }
+
+    /**
+     * get pools for user
+     * @param $userId
+     * @return array
+     */
+    public static function getPoolsForUser($userId)
+    {
+        $user = self::where('id', $userId)->first();
+        $departmentsId = $user->departments->pluck('id')->toArray();
+        $pools = [];
+        if (!empty($departmentsId)) {
+            $poolsId = DB::table('pools_departments')->whereIn('department_id', $departmentsId)->groupBy('pool_id')->pluck('pool_id')->toArray();
+            if (!empty($poolsId)) {
+                $pools = Pool::whereIn('id', $poolsId)->get();
+            }
+        }
+
+        return $pools;
     }
 }

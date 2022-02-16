@@ -39,7 +39,7 @@
         @include('voyager::multilingual.language-selector')
 
 
-		<div style="margin-top:-102px; background:#fff; right:420px; position:fixed; border:1px solid red;  index-z:9999; width:400px; padding:20px;  -webkit-border-radius: 3px;
+		<div style="margin-top:-102px; background:#fff; right:420px; position:fixed; border:1px solid green;  index-z:9999; width:400px; padding:20px;  -webkit-border-radius: 3px;
 -moz-border-radius: 3px;
 border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy którzy zostali pominięci:<br/>-</div>
 		<script>function sprawdz(){ var h=document.getElementById('plik').value; if(h==""){ document.getElementById('plik').style.border="1px solid red"; return false; } }</script>
@@ -374,6 +374,7 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
                                     'order_by' => $orderBy,
                                     'sort_order' => $sortOrder,
                                     'showSoftDeleted' => $showSoftDeleted,
+									'id'=>'wyszukiwarka',
                                 ])->links() }}
                             </div>
                         @endif
@@ -473,7 +474,7 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
             $('#search-status').change(function() {
                 let val = $(this).val();
                 table2
-                    .column(5)
+                    .column(4)
                     .search(val)
                     .draw();
                 table2.columns.adjust().draw();

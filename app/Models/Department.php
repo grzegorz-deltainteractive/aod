@@ -24,4 +24,8 @@ class Department extends Model
         $list = self::pluck('name', 'id');
         return $list;
     }
+
+    public function suppliers() {
+        return $this->belongsToMany(Supplier::class, 'suppliers_departments', 'department_id', 'supplier_id');
+    }
 }

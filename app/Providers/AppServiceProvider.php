@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Http\Controllers\VoyagerAuthController;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(VoyagerAuthController::class, \App\Http\Controllers\VoyagerAuthController::class);
     }
 
     /**

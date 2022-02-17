@@ -8,7 +8,7 @@
 $translations = [
     'Suppliers' => 'Dostawcy'
 ];
-
+$user = \Illuminate\Support\Facades\Auth::user();
 ?>
 <nav class="navbar navbar-default navbar-fixed-top navbar-top">
     <div class="container-fluid">
@@ -75,12 +75,18 @@ $translations = [
                                         </button>
                                     </form>
                                 @else
+                                    @if ($item['route'] == 'voyager.profile')
+                                        <a href="{{url('/admin/users/'.$user->id)}}">
+                                            <i class="{!! $item['icon_class'] !!}"></i> Profil
+                                        </a>
+                                    @else
                                     <a href="{{ isset($item['route']) && Route::has($item['route']) ? route($item['route']) : (isset($item['route']) ? $item['route'] : '#') }}" {!! isset($item['target_blank']) && $item['target_blank'] ? 'target="_blank"' : '' !!}>
                                         @if(isset($item['icon_class']) && !empty($item['icon_class']))
                                             <i class="{!! $item['icon_class'] !!}"></i>
                                         @endif
                                         {{__($name)}}
                                     </a>
+                                    @endif
                                 @endif
                             </li>
                         @endforeach

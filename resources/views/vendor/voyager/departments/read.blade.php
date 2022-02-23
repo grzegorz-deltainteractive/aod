@@ -140,103 +140,117 @@
                             @endforeach
                         </div>
                     </div>
-                    <h4>Ankiety dla działu</h4>
-                    <?php $pools = \App\Models\Pool::getPoolsByDepartment($dataTypeContent->id);?>
-                    @if (empty($pools))
-                        <h5>Brak ankiet</h5>
-                    @else
-                        <div class="row">
-                            <div class="col-12 col-lg-12">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item active">
+                            <a class="nav-link" id="ankiety-tab" data-toggle="tab" href="#ankiety" role="tab" aria-controls="ankiety" aria-selected="true" aria-expanded="true">Ankiety dla działu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="dostawcy-tab" data-toggle="tab" href="#dostawcy" role="tab" aria-controls="dostawcy" aria-selected="false">Dostawcy</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane active in" id="ankiety" role="tabpanel" aria-labelledby="ankiety-tab">
+                            <h4>Ankiety dla działu</h4>
+                            <?php $pools = \App\Models\Pool::getPoolsByDepartment($dataTypeContent->id);?>
+                            @if (empty($pools))
+                                <h5>Brak ankiet</h5>
+                            @else
+                                <div class="row">
+                                    <div class="col-12 col-lg-12">
+                                        <table class="table table-ordered">
+                                            <thead>
+                                            <tr>
+                                                <th>Nazwa</th>
+                                                <th>Numer procedury</th>
+                                                <th>Dostawca</th>
+                                                <th>Rok</th>
+                                                <th>Wynik #</th>
+                                                <th>Wynik %</th>
+                                                <th>Zmiana r/r</th>
+                                                <th>Ocenione</th>
+                                                <th>Zaakceptowane</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach ($pools as $pool)
+                                                @foreach ($pool->suppliers as $supplier)
+                                                    <tr>
+                                                        <td style="vertical-align: middle">
+                                                            <a href="{{route('suppliers.displayPools', ['id' => $pool->id, 'supplierId' => $supplier->id])}}">
+                                                                {{$pool->name}}
+                                                            </a>
+                                                        </td>
+                                                        <td style="vertical-align: middle">
+                                                            {{trim($pool->numer_procedury .'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id))}}
+                                                        </td>
+                                                        <td style="vertical-align: middle">
+                                                            {{$supplier->name}}
+                                                        </td>
+                                                        <td style="vertical-align: middle">
+                                                            {{date('Y', strtotime($pool->data_wydania_ankiety))}}
+                                                        </td>
+                                                        <td style="vertical-align: middle">
+                                                            33
+                                                        </td>
+                                                        <td style="vertical-align: middle">
+                                                            33
+                                                        </td>
+                                                        <td style="vertical-align: middle">
+                                                            +2%
+                                                        </td>
+                                                        <td style="vertical-align: middle">
+                                                            1/3
+                                                        </td>
+                                                        <td style="vertical-align: middle">
+                                                            2/3
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="tab-pane" id="dostawcy" role="tabpanel" aria-labelledby="dostawcy-tab">
+                            <h4>Dostawcy</h4>
+                            @if (count($laboratorium->suppliers) == 0)
+                                <h5>Brak dostawców</h5>
+                            @else
                                 <table class="table table-ordered">
                                     <thead>
-                                        <tr>
-                                            <th>Nazwa</th>
-                                            <th>Numer procedury</th>
-                                            <th>Dostawca</th>
-                                            <th>Rok</th>
-                                            <th>Wynik #</th>
-                                            <th>Wynik %</th>
-                                            <th>Zmiana r/r</th>
-                                            <th>Ocenione</th>
-                                            <th>Zaakceptowane</th>
-                                        </tr>
+                                    <tr>
+                                        <th>Nazwa</th>
+                                        <th>Miasto</th>
+                                        <th>Ocena {{$laboratorium->name}}</th>
+                                        <th>Ocena ogólna</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($pools as $pool)
-                                        @foreach ($pool->suppliers as $supplier)
-                                            <tr>
-                                                <td style="vertical-align: middle">
-                                                    <a href="{{route('suppliers.displayPools', ['id' => $pool->id, 'supplierId' => $supplier->id])}}">
-                                                    {{$pool->name}}
-                                                    </a>
-                                                </td>
-                                                <td style="vertical-align: middle">
-                                                    {{trim($pool->numer_procedury .'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id))}}
-                                                </td>
-                                                <td style="vertical-align: middle">
+                                    @foreach ($laboratorium->suppliers as $supplier)
+                                        <tr>
+                                            <td style="vertical-align: middle">
+                                                <a href="{{url('/admin/suppliers/'.$supplier->id)}}">
                                                     {{$supplier->name}}
-                                                </td>
-                                                <td style="vertical-align: middle">
-                                                    {{date('Y', strtotime($pool->data_wydania_ankiety))}}
-                                                </td>
-                                                <td style="vertical-align: middle">
-                                                    33
-                                                </td>
-                                                <td style="vertical-align: middle">
-                                                    33
-                                                </td>
-                                                <td style="vertical-align: middle">
-                                                    +2%
-                                                </td>
-                                                <td style="vertical-align: middle">
-                                                    1/3
-                                                </td>
-                                                <td style="vertical-align: middle">
-                                                    2/3
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                                </a>
+                                            </td>
+                                            <td style="vertical-align: middle">
+                                                {{$supplier->city}}
+                                            </td>
+                                            <td style="vertical-align: middle">
+                                                99%
+                                            </td>
+                                            <td style="vertical-align: middle">
+                                                97%
+                                            </td>
+                                        </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
-                            </div>
+                            @endif
                         </div>
-                    @endif
-                    <h4>Dostawcy</h4>
-                    @if (count($laboratorium->suppliers) == 0)
-                        <h5>Brak dostawców</h5>
-                    @else
-                    <table class="table table-ordered">
-                        <thead>
-                        <tr>
-                            <th>Nazwa</th>
-                            <th>Miasto</th>
-                            <th>Ocena {{$laboratorium->name}}</th>
-                            <th>Ocena ogólna</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($laboratorium->suppliers as $supplier)
-                            <tr>
-                                <td style="vertical-align: middle">
-                                    <a href="{{url('/admin/suppliers/'.$supplier->id)}}">
-                                    {{$supplier->name}}
-                                    </a>
-                                </td>
-                                <td style="vertical-align: middle">
-                                    {{$supplier->city}}
-                                </td>
-                                <td style="vertical-align: middle">
-                                    99%
-                                </td>
-                                <td style="vertical-align: middle">
-                                    97%
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>

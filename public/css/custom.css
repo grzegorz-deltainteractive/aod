@@ -1,3 +1,52 @@
 .btn-danger {
-    background-color: #cccccc !important;
+  background-color: #cccccc !important;
 }
+.dataTables_wrapper .dt-buttons .buttons-pdf,
+.dataTables_wrapper .dt-buttons .buttons-excel,
+.dataTables_wrapper .dt-buttons .buttons-csv {
+  display: none;
+}
+.dataTables_wrapper .dataTables_filter {
+  width: 50%;
+}
+@media screen and (max-width: 768px) {
+  .dataTables_wrapper .dataTables_filter {
+    width: 100%;
+  }
+}
+.dataTables_wrapper .dataTables_filter label {
+  width: 100%;
+  text-align: right;
+}
+.dataTables_wrapper .dataTables_filter input {
+  width: 80%;
+  color: #76838f;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #e4eaec;
+  padding: 3px 6px;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  margin-left: 5px;
+}
+.voyager ul.nav-tabs {
+  background-color: transparent;
+}
+.voyager ul.nav-tabs li.nav-item.active a:hover {
+  background-color: #76838f;
+}
+.dataTable2 td,
+.dataTable2 th {
+  font-size: 14px;
+}
+.export-buttons-table a {
+  margin-left: 20px;
+}
+.export-buttons-table img {
+  max-width: 30px;
+  height: auto;
+}
+.btn-secondary {
+  background-color: #cccccc;
+}
+/*# sourceMappingURL=custom.css.map */

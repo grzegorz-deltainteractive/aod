@@ -8,7 +8,7 @@
             <div class="panel panel-bordered">
                 <div class="panel-body">
                     <h2>Ankiety dla dostawcy</h2>
-                    <table class="table table-hover dataTable no-footer">
+                    <table class="table table-hover no-footer">
                         <thead>
                         <tr>
                             <th>ID</th>

@@ -1,0 +1,69 @@
+.btn-danger {
+    background-color: #cccccc !important;
+}
+.dataTables_wrapper {
+    .dt-buttons {
+        .buttons-pdf,
+        .buttons-excel,
+        .buttons-csv {
+            display: none;
+        }
+    }
+    .dataTables_filter {
+        width: 50%;
+        @media screen and (max-width: 768px) {
+            width: 100%;
+        }
+        label {
+            width: 100%;
+            text-align: right;
+        }
+        input {
+            width: 80%;
+            color: #76838f;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #e4eaec;
+            padding: 3px 6px;
+        }
+    }
+    .dataTables_paginate {
+        .paginate_button {
+            margin-left: 5px;
+        }
+    }
+}
+.voyager {
+    ul.nav-tabs {
+        background-color: transparent;
+
+        li.nav-item {
+            //&:hover {
+            //    background-color: #76838f;
+            //}
+            &.active {
+
+                a:hover {
+                    background-color: #76838f;
+                }
+            }
+        }
+    }
+}
+.dataTable2 {
+    td, th {
+        font-size: 14px;
+    }
+}
+.export-buttons-table {
+    a {
+        margin-left: 20px;
+    }
+    img {
+        max-width: 30px;
+        height: auto;
+    }
+}
+.btn-secondary {
+    background-color: #cccccc
+}

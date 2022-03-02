@@ -82,6 +82,19 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <div class="row">
+                            <div class="col-12 text-right pull-right" style="padding-right: 15px;">
+                                <a href="#"  class="export-buttons-table button-export-csv" title="Eksportuj do CSV">
+                                    <img src="/images/export-csv.png" alt="" />
+                                </a>
+                                <a href="#" class="export-buttons-table  button-export-xls" title="Eksportuj do XLS">
+                                    <img src="/images/export-xls.png" alt="" />
+                                </a>
+                                <a href="#" class="export-buttons-table  button-export-pdf" title="Exportuj do PDF">
+                                    <img src="/images/export-pdf.png" alt="" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-12 col-md-4 ">
                                 <label class="control-label">
                                     Dział
@@ -478,6 +491,19 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
                     .search(val)
                     .draw();
                 table2.columns.adjust().draw();
+            });
+
+            $('.button-export-csv').click(function(e) {
+                e.preventDefault();
+                table2.button( '.buttons-csv' ).trigger();
+            });
+            $('.button-export-xls').click(function(e) {
+                e.preventDefault();
+                table2.button( '.buttons-excel' ).trigger();
+            });
+            $('.button-export-pdf').click(function(e) {
+                e.preventDefault();
+                table2.button( '.buttons-pdf' ).trigger();
             });
 
         });

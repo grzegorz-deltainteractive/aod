@@ -34,6 +34,7 @@ foreach ($pool->suppliers as $supplier) {
 <div class="page-content browse container-fluid">
     <div class="panel panel-bordered">
         <div class="panel-body">
+            @if(canExportData())
             <div class="row">
                 <div class="col-12 text-right pull-right" style="padding-right: 15px;">
                     <a href="#"  class="export-buttons-table button-export-csv" title="Eksportuj do CSV">
@@ -47,6 +48,7 @@ foreach ($pool->suppliers as $supplier) {
                     </a>
                 </div>
             </div>
+            @endif
             <div class="row">
                 <div class="form-group col-12 col-md-4 ">
                     <label class="control-label">

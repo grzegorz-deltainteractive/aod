@@ -81,6 +81,7 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
             <div class="col-md-12">
                 <div class="panel panel-bordered">
                     <div class="panel-body">
+                        @if(canExportData())
                         <div class="row">
                             <div class="col-12 text-right pull-right" style="padding-right: 15px;">
                                 <a href="#"  class="export-buttons-table button-export-csv" title="Eksportuj do CSV">
@@ -94,6 +95,7 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
                                 </a>
                             </div>
                         </div>
+                        @endif
                         <div class="row">
                             <div class="form-group col-12 col-md-4 ">
                                 <label class="control-label">

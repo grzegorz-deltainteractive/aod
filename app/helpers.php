@@ -75,6 +75,25 @@ function canAcceptPool()
     return false;
 }
 
+function canExportData() {
+    $user = Auth::user();
+    $allowedRoles = [1, 3, 5, 6, 7, 8];
+    if (in_array($user->role_id, $allowedRoles)) {
+        return true;
+    }
+    return false;
+}
+
+function canEditPoolsCategories()
+{
+    $user = Auth::user();
+    $allowedRoles = [1, 3, 8];
+    if (in_array($user->role_id, $allowedRoles)) {
+        return true;
+    }
+    return false;
+}
+
 /**
  * check display pool row data
  * @param $visibleForLab

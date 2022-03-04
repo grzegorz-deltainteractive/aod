@@ -111,6 +111,7 @@ $columnCount = 0;
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <div class="row">
+                            @if(canExportData())
                             <div class="row">
                                 <div class="col-12 text-right pull-right" style="padding-right: 15px;">
                                     <a href="#" class="export-buttons-table button-export-csv" title="Eksportuj do CSV">
@@ -125,6 +126,7 @@ $columnCount = 0;
                                     </a>
                                 </div>
                             </div>
+                            @endif
                             <div class="form-group col-12 col-md-4 ">
                                 <label class="control-label">
                                     Miasto

@@ -180,10 +180,22 @@ $statuses = [
                                     </div>
                                 </td>
                                 <td>
-                                    {{$suppliersPoolsResult['poolsSummary'][$pool->id]['total'] .' / '.$suppliersPoolsResult['poolsSummary'][$pool->id]['max']}}
+                                    <?php
+                                    try {
+                                        echo $suppliersPoolsResult['poolsSummary'][$pool->id]['total'] .' / '.$suppliersPoolsResult['poolsSummary'][$pool->id]['max'];
+                                    } catch (Exception $ex) {
+                                        echo '- / -';
+                                    }
+                                    ?>
                                 </td>
                                 <td>
-                                    {{sprintf("%.2f", ($suppliersPoolsResult['poolsSummary'][$pool->id]['total'] / $suppliersPoolsResult['poolsSummary'][$pool->id]['max'] )*100 )}}%
+                                    <?php
+                                    try {
+                                        echo sprintf("%.2f", ($suppliersPoolsResult['poolsSummary'][$pool->id]['total'] / $suppliersPoolsResult['poolsSummary'][$pool->id]['max'] )*100) .' %';
+                                    } catch (Exception $ex) {
+                                        echo '- / - %';
+                                    }
+                                    ?>
                                 </td>
                             </tr>
                         @endforeach

@@ -35,6 +35,6 @@ class CategoriesAction extends AbstractAction
     public function shouldActionDisplayOnDataType()
     {
         // show or hide the action button, in this case will show for posts model
-        return $this->dataType->slug == 'pools';
+        return $this->dataType->slug == 'pools' && canEditPoolsCategories();
     }
 }

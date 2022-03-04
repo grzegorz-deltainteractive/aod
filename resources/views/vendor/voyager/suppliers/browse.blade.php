@@ -38,8 +38,7 @@
         @endforeach
         @include('voyager::multilingual.language-selector')
 
-
-		<div style="margin-top:-102px; background:#fff; right:420px; position:fixed; border:1px solid green;  index-z:9999; width:400px; padding:20px;  -webkit-border-radius: 3px;
+		<div style="margin-top:-102px; background:#fff; right:420px; position:fixed; border:1px solid green;  index-z:9999; width:400px; padding:15px;  -webkit-border-radius: 3px;
 -moz-border-radius: 3px;
 border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy którzy zostali pominięci:<br/>-</div>
 		<script>function sprawdz(){ var h=document.getElementById('plik').value; if(h==""){ document.getElementById('plik').style.border="1px solid red"; return false; } }</script>
@@ -47,7 +46,6 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
 		<input type="hidden" name="ok" value="aaaa"/>
 		<input style="display:inline-block" type="file" id="plik" accept="application/vnd.ms-excel"/>
 		<button onClick="return sprawdz();" class="btn btn-primary btn-add-new" type="hidden" name="ok" value="aaaa"/> <i class="voyager-list"></i> <span>Import</span></button>
-
 		</form>
     </div>
 @stop

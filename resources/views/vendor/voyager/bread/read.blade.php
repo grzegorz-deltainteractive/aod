@@ -4,7 +4,7 @@
 
 @section('page_header')
     <h1 class="page-title">
-        <i class="{{ $dataType->icon }}"></i> {{ __('voyager::generic.viewing') }} {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }} &nbsp;
+        <i class="{{ $dataType->icon }}"></i> {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }} &nbsp;
 
         @can('edit', $dataTypeContent)
             <a href="{{ route('voyager.'.$dataType->slug.'.edit', $dataTypeContent->getKey()) }}" class="btn btn-info">

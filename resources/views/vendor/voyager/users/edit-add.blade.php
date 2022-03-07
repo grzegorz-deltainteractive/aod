@@ -40,43 +40,43 @@
 
                         <div class="panel-body">
 
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label for="imie">Imię</label>
                                 <input type="text" class="form-control" id="imie" name="imie" placeholder="Imię"
                                        value="{{ old('imie', $dataTypeContent->imie ?? '') }}">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label for="nazwisko">Nazwisko</label>
                                 <input type="text" class="form-control" id="nazwisko" name="nazwisko"
                                        placeholder="Nazwisko"
                                        value="{{ old('nazwisko', $dataTypeContent->nazwisko ?? '') }}">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label for="miasto">Miasto</label>
                                 <input type="text" class="form-control" id="miasto" name="miasto" placeholder="Miasto"
                                        value="{{ old('miasto', $dataTypeContent->miasto ?? '') }}">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label for="telefon">Telefon</label>
                                 <input type="text" class="form-control" id="telefon" name="telefon"
                                        placeholder="Telefon"
                                        value="{{ old('telefon', $dataTypeContent->telefon ?? '') }}">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label for="name">{{ __('voyager::generic.name') }}</label>
                                 <input type="text" class="form-control" id="name" name="name"
                                        placeholder="{{ __('voyager::generic.name') }}"
                                        value="{{ old('name', $dataTypeContent->name ?? '') }}">
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label for="email">{{ __('voyager::generic.email') }}</label>
                                 <input type="email" class="form-control" id="email" name="email"
                                        placeholder="{{ __('voyager::generic.email') }}"
                                        value="{{ old('email', $dataTypeContent->email ?? '') }}">
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label for="password">{{ __('voyager::generic.password') }}</label>
                                 @if(isset($dataTypeContent->password))
                                     <br>
@@ -87,7 +87,7 @@
                             </div>
 
                             @can('editRoles', $dataTypeContent)
-                                <div class="form-group">
+                                <div class="form-group col-md-6">
                                     <label for="default_role">Rola</label>
                                     @php
                                         $dataTypeRows = $dataType->{(isset($dataTypeContent->id) ? 'editRows' : 'addRows' )};
@@ -101,21 +101,24 @@
 
 
 
-                                <div class="form-group">
-                                    <label for="additional_roles">Role dodatkowe</label>
-                                    @php
-                                        $row     = $dataTypeRows->where('field', 'user_belongstomany_role_relationship')->first();
-                                        $options = $row->details;
-                                    @endphp
-                                    @include('voyager::formfields.relationship')
-                                </div>
+
                             @endcan
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label for="dzial">Dział</label>
                                 @php
                                     $dataTypeRows = $dataType->{(isset($dataTypeContent->id) ? 'editRows' : 'addRows' )};
 
                                     $row     = $dataTypeRows->where('field', 'user_belongstomany_department_relationship')->first();
+                                    $options = $row->details;
+                                @endphp
+                                @include('voyager::formfields.relationship')
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="dzial">Laboratorium</label>
+                                @php
+                                    $dataTypeRows = $dataType->{(isset($dataTypeContent->id) ? 'editRows' : 'addRows' )};
+
+                                    $row     = $dataTypeRows->where('field', 'user_belongstomany_laboratory_relationship')->first();
                                     $options = $row->details;
                                 @endphp
                                 @include('voyager::formfields.relationship')
@@ -128,7 +131,7 @@
                                 }
 
                             @endphp
-                            <div class="form-group">
+                            <div class="form-group col-md-6" style="display: none;">
                                 <label for="locale">{{ __('voyager::generic.locale') }}</label>
                                 <select class="form-control select2" id="locale" name="locale">
                                     @foreach (Voyager::getLocales() as $locale)
@@ -136,6 +139,14 @@
                                             {{ ($locale == $selected_locale ? 'selected' : '') }}>{{ $locale }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="form-group col-md-6" style="display: none;">
+                                <label for="additional_roles">Role dodatkowe</label>
+                                @php
+                                    $row     = $dataTypeRows->where('field', 'user_belongstomany_role_relationship')->first();
+                                    $options = $row->details;
+                                @endphp
+                                @include('voyager::formfields.relationship')
                             </div>
                         </div>
                     </div>

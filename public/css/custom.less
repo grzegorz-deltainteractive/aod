@@ -3,20 +3,26 @@
 }
 .dataTables_wrapper {
     .dt-buttons {
+        float: right;
+        text-align: right;
         .buttons-pdf,
         .buttons-excel,
         .buttons-csv {
             display: none;
         }
+        .buttons-page-length {
+            background: white;
+        }
     }
     .dataTables_filter {
         width: 50%;
+        float: left;
         @media screen and (max-width: 768px) {
             width: 100%;
         }
         label {
             width: 100%;
-            text-align: right;
+            text-align: left;
         }
         input {
             width: 80%;
@@ -24,7 +30,7 @@
             background-color: #fff;
             background-image: none;
             border: 1px solid #e4eaec;
-            padding: 3px 6px;
+            padding: 5px 6px;
         }
     }
     .dataTables_paginate {
@@ -66,4 +72,19 @@
 }
 .btn-secondary {
     background-color: #cccccc
+}
+.panel-body {
+    .form-group {
+
+    }
+}
+.row>[class*=col-] {
+    margin-bottom: 12px;
+}
+.page-content {
+    .panel-bordered {
+        h3 {
+            font-size: 20px;
+        }
+    }
 }

@@ -1,13 +1,21 @@
 .btn-danger {
   background-color: #cccccc !important;
 }
+.dataTables_wrapper .dt-buttons {
+  float: right;
+  text-align: right;
+}
 .dataTables_wrapper .dt-buttons .buttons-pdf,
 .dataTables_wrapper .dt-buttons .buttons-excel,
 .dataTables_wrapper .dt-buttons .buttons-csv {
   display: none;
 }
+.dataTables_wrapper .dt-buttons .buttons-page-length {
+  background: white;
+}
 .dataTables_wrapper .dataTables_filter {
   width: 50%;
+  float: left;
 }
 @media screen and (max-width: 768px) {
   .dataTables_wrapper .dataTables_filter {
@@ -16,7 +24,7 @@
 }
 .dataTables_wrapper .dataTables_filter label {
   width: 100%;
-  text-align: right;
+  text-align: left;
 }
 .dataTables_wrapper .dataTables_filter input {
   width: 80%;
@@ -24,7 +32,7 @@
   background-color: #fff;
   background-image: none;
   border: 1px solid #e4eaec;
-  padding: 3px 6px;
+  padding: 5px 6px;
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   margin-left: 5px;
@@ -48,5 +56,11 @@
 }
 .btn-secondary {
   background-color: #cccccc;
+}
+.row > [class*=col-] {
+  margin-bottom: 12px;
+}
+.page-content .panel-bordered h3 {
+  font-size: 20px;
 }
 /*# sourceMappingURL=custom.css.map */

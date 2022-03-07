@@ -25,7 +25,7 @@ $departmens = \App\Models\Department::orderBy('name', 'asc')->pluck('name', 'id'
 
 @section('page_header')
     <h1 class="page-title">
-        <i class="{{ $dataType->icon }}"></i> {{ __('voyager::generic.viewing') }} {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }} &nbsp;
+        <img src="/images/gray_dostawcy.png" alt="" class="header-icon-img" />  {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }} &nbsp;
 
         @can('edit', $dataTypeContent)
             <a href="{{ route('voyager.'.$dataType->slug.'.edit', $dataTypeContent->getKey()) }}" class="btn btn-info">
@@ -67,50 +67,50 @@ $departmens = \App\Models\Department::orderBy('name', 'asc')->pluck('name', 'id'
                             Dane adresowe i działy oceniające
                         </legend>
                         <div class="row">
-                            <div class="col-12 col-lg-5">
+                            <div class="col-12 col-md-4">
                                 Ulica
                             </div>
-                            <div class="col-12 col-lg-7">
+                            <div class="col-12col-md-8">
                                 {{$supplier->street ?? ''}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-lg-5">
+                            <div class="col-12 col-md-4">
                                 Kod pocztowy i miasto
                             </div>
-                            <div class="col-12 col-lg-7">
+                            <div class="col-12col-md-8">
                                 {{$supplier->city ?? ''}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-lg-5">
+                            <div class="col-12 col-md-4">
                                 NIP
                             </div>
-                            <div class="col-12 col-lg-7">
+                            <div class="col-12col-md-8">
                                 {{$supplier->nip ?? ''}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-lg-5">
+                            <div class="col-12 col-md-4">
                                 Działy
                             </div>
-                            <div class="col-12 col-lg-7">
+                            <div class="col-12col-md-8">
                                 {{$supplier->departmentRelation->name ?? '' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-lg-5">
+                            <div class="col-12 col-md-4">
                                 Laboratorium
                             </div>
-                            <div class="col-12 col-lg-7">
+                            <div class="col-12col-md-8">
                                 {{$supplier->laboratoryRelation->name ?? '' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-lg-5">
+                            <div class="col-12 col-md-4">
                                 Status
                             </div>
-                            <div class="col-12 col-lg-7">
+                            <div class="col-12col-md-8">
                                 {{\App\Models\Supplier::getStatusName($supplier->status) }}
                             </div>
                         </div>
@@ -137,34 +137,34 @@ $departmens = \App\Models\Department::orderBy('name', 'asc')->pluck('name', 'id'
                                 <a href="{{route('suppliers.contact.remove', ['id' => $supplierId, 'contactId' => $sc->id])}}" class="btn btn-danger" onclick="return confirm('Czy na pewno usunąć kontakt?')"><i class="voyager-trash"></i> Usuń kontakt</a>
                             </legend>
                             <div class="row">
-                                <div class="col-12 col-lg-5 ">
+                                <div class="col-12 col-md-4 ">
                                     Mail:
                                 </div>
-                                <div class="col-12 col-lg-7">
+                                <div class="col-12col-md-8">
                                     <p>{{$sc->email ?? ''}}</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12 col-lg-5 ">
+                                <div class="col-12 col-md-4 ">
                                     Telefon:
                                 </div>
-                                <div class="col-12 col-lg-7">
+                                <div class="col-12col-md-8">
                                     <p>{{$sc->phone ?? ''}}</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12 col-lg-5 ">
+                                <div class="col-12 col-md-4 ">
                                     Imię i nazwisko:
                                 </div>
-                                <div class="col-12 col-lg-7">
+                                <div class="col-12col-md-8">
                                     <p>{{$sc->name ?? ''}}</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12 col-lg-5 ">
+                                <div class="col-12 col-md-4 ">
                                     Stanowisko:
                                 </div>
-                                <div class="col-12 col-lg-7">
+                                <div class="col-12col-md-8">
                                     <p>{{$sc->stanowisko ?? ''}}</p>
                                 </div>
                             </div>

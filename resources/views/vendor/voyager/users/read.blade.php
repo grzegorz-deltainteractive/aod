@@ -62,11 +62,11 @@
                                     }
                                 @endphp
                                 <div class="row">
-                                    <div class="col-12 col-lg-5">
+                                    <div class="col-12 col-md-4">
                                         {{ $row->getTranslatedAttribute('display_name') }}
                                     </div>
 
-                                    <div class="col-12 col-lg-7">
+                                    <div class="col-12 col-md-8">
                                         @if (isset($row->details->view))
                                             @include($row->details->view, ['row' => $row, 'dataType' => $dataType, 'dataTypeContent' => $dataTypeContent, 'content' => $dataTypeContent->{$row->field}, 'action' => 'read', 'view' => 'read', 'options' => $row->details])
                                         @elseif($row->type == "image")

@@ -9,7 +9,7 @@
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
     <div class="container-fluid">
         <h1 class="page-title">
-            <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
+            <img src="/images/gray_dostawcy.png" alt="" class="header-icon-img" /> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
         </h1>
         @can('add', app($dataType->model_name))
             <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
@@ -37,7 +37,7 @@
             @endif
         @endforeach
         @include('voyager::multilingual.language-selector')
-
+        <div style="display: none">
 		<div style="margin-top:-102px; background:#fff; right:420px; position:fixed; border:1px solid green;  index-z:9999; width:400px; padding:15px;  -webkit-border-radius: 3px;
 -moz-border-radius: 3px;
 border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy którzy zostali pominięci:<br/>-</div>
@@ -47,6 +47,7 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
 		<input style="display:inline-block" type="file" id="plik" accept="application/vnd.ms-excel"/>
 		<button onClick="return sprawdz();" class="btn btn-primary btn-add-new" type="hidden" name="ok" value="aaaa"/> <i class="voyager-list"></i> <span>Import</span></button>
 		</form>
+        </div>
     </div>
 @stop
 <?php
@@ -434,7 +435,10 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
             @if (!$dataType->server_side)
                 var table2 = $('#dataTable').DataTable({!! json_encode(
                     array_merge([
-                        'buttons' => ['pageLength', 'pdfHtml5', 'excelHtml5', 'csvHtml5'],
+                        'buttons' => ['pageLength', 'excelHtml5', 'csvHtml5', [
+                            'extend' => 'pdfHtml5',
+                            'orientation' => 'landscape',
+                        ]   ],
                         'dom' => 'Bfrtip',
                         "order" => $orderColumn,
                         'lengthMenu' => [

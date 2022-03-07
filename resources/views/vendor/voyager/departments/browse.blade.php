@@ -5,7 +5,7 @@
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
-            <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
+            <img src="/images/gray_departamenty.png" alt="" class="header-icon-img" /> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
         </h1>
         @can('add', app($dataType->model_name))
             <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
@@ -435,7 +435,10 @@ $columnCount = 0;
             @if (!$dataType->server_side)
             var table = $('#dataTable').DataTable({!! json_encode(
                     array_merge([
-                        'buttons' => ['pageLength', 'pdfHtml5', 'excelHtml5', 'csvHtml5'],
+                        'buttons' => ['pageLength', 'excelHtml5', 'csvHtml5', [
+                            'extend' => 'pdfHtml5',
+                            'orientation' => 'landscape',
+                        ]   ],
                         'dom' => 'Bfrtip',
                         "order" => $orderColumn,
                         'lengthMenu' => [

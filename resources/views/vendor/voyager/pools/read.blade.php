@@ -26,7 +26,7 @@ foreach ($pool->suppliers as $supplier) {
 
 @section('page_header')
     <h1 class="page-title">
-        <i class="{{ $dataType->icon }}"></i> {{'Definicja ankiety: '.$pool->numer_procedury}} &nbsp;
+        <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" /> {{'Definicja ankiety: '.$pool->numer_procedury}} &nbsp;
     </h1>
 @stop
 

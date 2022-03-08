@@ -1,0 +1,14 @@
+.table-responsive table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.table-responsive table tr th {
+  border: 1px solid black;
+  padding: 2px 5px;
+  text-align: center;
+}
+.table-responsive table tr td {
+  border: 1px solid black;
+  padding: 2px 5px;
+}
+/*# sourceMappingURL=pdf.css.map */

@@ -98,7 +98,7 @@
                                             <?php
                                                 $value = ($results['resultsSummary'][$pool->id][$category->id][$parameter->id] / $results['resultsSummaryParam'][$pool->id][$category->id][$parameter->id]);
                                                 $sum0 = $sum0 + $value;
-                                                echo sprintf("%.2f", $value);
+                                                echo sprintf("%.2f", $value * $parameter->rating_max);
                                             ?>
                                         </td>
                                         <td>{{str_replace('.', ',', median($results['results'][$pool->id][$category->id][$parameter->id]))}}</td>

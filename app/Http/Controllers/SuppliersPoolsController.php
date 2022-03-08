@@ -221,6 +221,12 @@ class SuppliersPoolsController extends VoyagerBaseController {
         return view('suppliers/averagePools', ['supplier' => $supplier, 'results' => $result, 'pool' => $pool, 'ut' => $ut]);
     }
 
+    /**
+     * generate pdf
+     * @param $poolId
+     * @param $supplierId
+     * @return \Illuminate\Http\Response|void
+     */
     public function displaypoolsPdf($poolId, $supplierId)
     {
         $supplier = Supplier::where('id', $supplierId)->first();
@@ -244,10 +250,13 @@ class SuppliersPoolsController extends VoyagerBaseController {
             view()->share('pool', $pool);
             view()->share('ut', $ut);
             $pdf = PDF::loadView('suppliers/averagePoolsPdf');
+
 //            $pdf->setWarnings(true);
-            $pdf->setPaper('a4', 'landscape');
-//            $pdf->save('ankieta-'.$poolId.'-'.$supplierId.'.pdf');
-            return $pdf->stream('ankieta-'.$poolId.'-'.$supplierId.'.pdf');
+            $pdf->setPaper('a4', 'portrait');
+            $path = public_path().'/pdf/';
+//            $pdf->save($path.'ankieta-'.$poolId.'-'.$supplierId.'.pdf', 'UTF-8');
+            return $pdf->stream('ankieta-'.$poolId.'-'.$supplierId.'-'.date('Y', strtotime($pool->data_wydania_ankiety)).'_'.$pool->numer_procedury.'_'.$supplier->skrot.'.pdf');
+//            return response()->download($path.'ankieta-'.$poolId.'-'.$supplierId.'.pdf');
         } catch (\Exception $ex) {
             dd($ex);
         }

@@ -58,7 +58,7 @@
         $departmentsList = \App\Models\Department::getAllDepartmentsList();
 
     ?>
-    <div class="page-content browse container-fluid">
+    <div class="page-content browse container-fluid pools-page-browse">
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">

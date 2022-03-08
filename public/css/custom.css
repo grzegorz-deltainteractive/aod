@@ -13,6 +13,9 @@
 .dataTables_wrapper .dt-buttons .buttons-page-length {
   background: white;
 }
+.dataTables_wrapper .dt-buttons .dt-button-collection {
+  margin-left: -60px;
+}
 .dataTables_wrapper .dataTables_filter {
   width: 50%;
   float: left;
@@ -47,20 +50,67 @@
 .dataTable2 th {
   font-size: 14px;
 }
-.export-buttons-table a {
-  margin-left: 20px;
+.export-buttons-table {
+  margin-left: 10px;
+  transition: all 0.5s;
+  display: inline-block;
+  height: 35px;
+  width: 35px;
+  text-align: center;
+  border-radius: 20px;
 }
 .export-buttons-table img {
   max-width: 30px;
   height: auto;
+  margin-top: 6px;
+  display: inline-block;
+  margin-left: 2px;
+}
+.export-buttons-table:hover {
+  -webkit-box-shadow: inset 0px 0px 7px 0px rgba(50, 50, 50, 0.67);
+  -moz-box-shadow: inset 0px 0px 7px 0px rgba(50, 50, 50, 0.67);
+  box-shadow: inset 0px 0px 7px 0px rgba(50, 50, 50, 0.67);
 }
 .btn-secondary {
   background-color: #cccccc;
 }
 .row > [class*=col-] {
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 .page-content .panel-bordered h3 {
   font-size: 20px;
+}
+.pools-page-browse .bread-actions {
+  min-width: 190px;
+}
+#adminmenu .ico-uzytkownicy {
+  background-image: url('/images/gray_uzytkownicy.png');
+  height: 20px;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+#adminmenu .ico-dzialy {
+  background-image: url('/images/gray_departamenty.png');
+  height: 20px;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+#adminmenu .ico-laboratoria {
+  background-image: url('/images/gray_laboratoria.png');
+  height: 20px;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+#adminmenu .ico-ankiety {
+  background-image: url('/images/gray_ankiety.png');
+  height: 20px;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+#adminmenu .ico-dostawcy {
+  background-image: url('/images/gray_dostawcy.png');
+  height: 20px;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 /*# sourceMappingURL=custom.css.map */

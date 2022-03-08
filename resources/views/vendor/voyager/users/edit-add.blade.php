@@ -150,14 +150,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <button type="submit" class="btn btn-primary  save">
+                        {{ __('voyager::generic.save') }}
+                    </button>
+                    <a href="javascript:history.back();" class="btn btn-sm btn-secondary ">Powrót</a>
                 </div>
 
 
             </div>
 
-            <button type="submit" class="btn btn-primary pull-right save">
-                {{ __('voyager::generic.save') }}
-            </button>
+
         </form>
 
         <iframe id="form_target" name="form_target" style="display:none"></iframe>

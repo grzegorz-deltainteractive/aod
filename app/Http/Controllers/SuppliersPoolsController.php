@@ -109,9 +109,9 @@ class SuppliersPoolsController extends VoyagerBaseController {
             view()->share('data', $spq);
             $pdf = PDF::loadView('suppliers/filledSinglePdf');
 //            $pdf->setWarnings(true);
-            $pdf->setPaper('a4', 'landscape');
+            $pdf->setPaper('a4', 'portrait');
 //            $pdf->save('ankieta-'.$poolId.'-'.$supplierId.'.pdf');
-            return $pdf->stream('ankieta-pojedyncza-'.$poolId.'-'.$id.'.pdf');
+            return $pdf->stream('ankieta-pojedyncza-'.$poolId.'-'.$id.date('Y', strtotime($pool->data_wydania_ankiety)).'_'.$pool->numer_procedury.'.pdf');
         } catch (\Exception $ex) {
             dd($ex);
         }

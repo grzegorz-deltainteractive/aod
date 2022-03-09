@@ -111,7 +111,7 @@ class SuppliersPoolsController extends VoyagerBaseController {
 //            $pdf->setWarnings(true);
             $pdf->setPaper('a4', 'portrait');
 //            $pdf->save('ankieta-'.$poolId.'-'.$supplierId.'.pdf');
-            return $pdf->stream('ankieta-pojedyncza-'.$poolId.'-'.$id.date('Y', strtotime($pool->data_wydania_ankiety)).'_'.$pool->numer_procedury.'.pdf');
+            return $pdf->stream('ankieta-pojedyncza-'.$poolId.'-'.$id.date('Y', strtotime($pool->data_wydania_ankiety)).'_'.$pool->numer_procedury.'-'.date('Y_m_d_H_i_s').'.pdf');
         } catch (\Exception $ex) {
             dd($ex);
         }
@@ -255,7 +255,7 @@ class SuppliersPoolsController extends VoyagerBaseController {
             $pdf->setPaper('a4', 'portrait');
             $path = public_path().'/pdf/';
 //            $pdf->save($path.'ankieta-'.$poolId.'-'.$supplierId.'.pdf', 'UTF-8');
-            return $pdf->stream('ankieta-'.$poolId.'-'.$supplierId.'-'.date('Y', strtotime($pool->data_wydania_ankiety)).'_'.$pool->numer_procedury.'_'.$supplier->skrot.'.pdf');
+            return $pdf->stream('ankieta-'.$poolId.'-'.$supplierId.'-'.date('Y', strtotime($pool->data_wydania_ankiety)).'_'.$pool->numer_procedury.'_'.$supplier->skrot.date('Y_m_d_H_i_s').'.pdf');
 //            return response()->download($path.'ankieta-'.$poolId.'-'.$supplierId.'.pdf');
         } catch (\Exception $ex) {
             dd($ex);

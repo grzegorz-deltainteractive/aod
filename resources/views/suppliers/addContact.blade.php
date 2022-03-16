@@ -8,7 +8,7 @@
 @extends('voyager::master')
 @section('content')
     <h1 class="page-title">
-        Dodaj kontakt dla dostawcy <strong>{{$supplier->name}}</strong>
+        <img src="/images/gray_dostawcy.png" alt="" class="header-icon-img" />  Dodaj kontakt dla dostawcy <strong>{{$supplier->name}}</strong>
     </h1>
     <div class="page-content container-fluid">
         <div class="panel panel-bordered">

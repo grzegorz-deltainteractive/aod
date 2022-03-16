@@ -19,7 +19,7 @@ if (!empty($status)) {
 @extends('voyager::master')
 @section('content')
     <h1 class="page-title" style="width: 100%;">
-        Ankieta "{{$pool->name}}" - wyniki
+        <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" />  Ankieta "{{$pool->name}}" - wyniki
         <a href="{{route('suppliers.pools.filled.single.pdf', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float">Zapisz PDF</a>
     </h1>
     <div class="page-content container-fluid">

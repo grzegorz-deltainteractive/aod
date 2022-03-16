@@ -11,7 +11,7 @@
 
 @section('page_header')
     <h1 class="page-title">
-        Lista ankiet dostawcy {{$supplier->name}}
+        <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" />  Lista ankiet dostawcy {{$supplier->name}}
     </h1>
     @include('voyager::multilingual.language-selector')
 @stop

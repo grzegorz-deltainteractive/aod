@@ -3,7 +3,7 @@
 @section('page_title', __('voyager::generic.view').' '.$dataType->getTranslatedAttribute('display_name_singular'))
 
 @section('page_header')
-    <h1 class="page-title">
+    <h1 class="page-title  page-title-users">
         <i class="{{ $dataType->icon }}"></i> {{ __('voyager::generic.viewing') }} {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }}
         &nbsp;
 
@@ -40,7 +40,7 @@
 @stop
 
 @section('content')
-    <div class="page-content read container-fluid">
+    <div class="page-content read container-fluid ">
         <?php
         $userId = $dataTypeContent->id;
         $user = \App\User::where('id', $userId)->first();

@@ -8,7 +8,7 @@
 @extends('voyager::master')
 @section('content')
     <h1 class="page-title">
-        Wypełnione ankiety
+        <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" />  Wypełnione ankiety
     </h1>
     <div class="page-content container-fluid">
         <div class="panel panel-bordered">

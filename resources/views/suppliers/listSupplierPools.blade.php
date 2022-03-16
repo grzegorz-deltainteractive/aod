@@ -32,7 +32,7 @@ $statuses = [
 
 @section('page_header')
     <h1 class="page-title">
-        {{'Lista ankiet dostawcy: '.$supplier->name}} &nbsp;
+        <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" />  {{'Lista ankiet dostawcy: '.$supplier->name}} &nbsp;
     </h1>
 @stop
 

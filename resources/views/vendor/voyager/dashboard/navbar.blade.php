@@ -71,7 +71,7 @@ $user = \Illuminate\Support\Facades\Auth::user();
                                             @if(isset($item['icon_class']) && !empty($item['icon_class']))
                                                 <i class="{!! $item['icon_class'] !!}"></i>
                                             @endif
-                                            {{__($name)}}
+                                            Wyloguj
                                         </button>
                                     </form>
                                 @else

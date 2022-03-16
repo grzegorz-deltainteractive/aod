@@ -1,7 +1,7 @@
 @extends('voyager::master')
 @section('content')
     <h1 class="page-title">
-        Przeglądaj ankiety dla dostawcy
+        <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" />  Przeglądaj ankiety dla dostawcy
     </h1>
     <div class="page-content container-fluid">
         @if (isset($pools) && !empty($pools))

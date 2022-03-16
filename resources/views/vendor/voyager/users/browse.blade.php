@@ -4,7 +4,7 @@
 
 @section('page_header')
     <div class="container-fluid">
-        <h1 class="page-title">
+        <h1 class="page-title page-title-users">
             <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
         </h1>
         @can('add', app($dataType->model_name))
@@ -59,7 +59,7 @@
 
     ?>
 @section('content')
-    <div class="page-content browse container-fluid">
+    <div class="page-content browse container-fluid page-users-wrapper">
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">

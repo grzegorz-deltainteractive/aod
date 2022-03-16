@@ -11,7 +11,7 @@
 
 @section('page_header')
     <h1 class="page-title" style="width: 100%;">
-        Ankiety Dostawcy, średnia z {{date('Y', strtotime($pool->data_wydania_ankiety))}}, {{$pool->numer_procedury}}
+        <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" />  Ankiety Dostawcy, średnia z {{date('Y', strtotime($pool->data_wydania_ankiety))}}, {{$pool->numer_procedury}}
         <a href="{{route('suppliers.displayPoolsPdf', ['id' => $pool->id, 'supplierId' => $supplier->id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float">Zapisz PDF</a>
     </h1>
     @include('voyager::multilingual.language-selector')

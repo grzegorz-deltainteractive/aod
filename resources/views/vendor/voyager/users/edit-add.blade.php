@@ -7,14 +7,14 @@
 @stop
 
 @section('page_header')
-    <h1 class="page-title">
+    <h1 class="page-title page-title-users">
         <i class="{{ $dataType->icon }}"></i>
         {{ __('voyager::generic.'.(isset($dataTypeContent->id) ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular') }}
     </h1>
 @stop
 
 @section('content')
-    <div class="page-content container-fluid">
+    <div class="page-content container-fluid page-users-wrapper">
         <form class="form-edit-add" role="form"
               action="@if(!is_null($dataTypeContent->getKey())){{ route('voyager.'.$dataType->slug.'.update', $dataTypeContent->getKey()) }}@else{{ route('voyager.'.$dataType->slug.'.store') }}@endif"
               method="POST" enctype="multipart/form-data" autocomplete="off">

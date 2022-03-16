@@ -11,7 +11,7 @@
 
 @section('page_header')
     <h1 class="page-title">
-        Ankiety Dostawcy, Wykres parametru {{$parameter->name}} {{date('Y', strtotime($pool->data_wydania_ankiety))}}, {{$pool->numer_procedury}}
+        <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" /> Ankiety Dostawcy, Wykres parametru {{$parameter->name}} {{date('Y', strtotime($pool->data_wydania_ankiety))}}, {{$pool->numer_procedury}}
     </h1>
     @include('voyager::multilingual.language-selector')
 @stop

@@ -21,19 +21,24 @@ if (!function_exists('getBreadcrumbs')) {
             'displaypools' => 'Średnia ankiet',
             'draws' => 'Wykres parametru',
             'listpools' => 'Lista ankiet dla dostawcy',
-            'singlepool' => 'Pojedyńcza ankieta'
+            'singlepool' => 'Pojedyńcza ankieta',
+            'filled'    => 'Wypełnienia'
         ];
-        foreach ($segments as &$segment) {
+        foreach ($segments as $key => &$segment) {
             if (array_key_exists($segment, $translations)) {
                 $segment = [
                     'title' => $translations[$segment],
                     'url' => $segment
                 ];
             } else {
-                $segment = [
-                    'title' => $segment,
-                    'url' => ''
-                ];
+                if (is_numeric($segment)) {
+                    unset($segments[$key]);
+                } else {
+                    $segment = [
+                        'title' => $segment,
+                        'url' => ''
+                    ];
+                }
             }
         }
         unset ($segment);

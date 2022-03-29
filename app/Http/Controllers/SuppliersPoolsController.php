@@ -330,6 +330,6 @@ class SuppliersPoolsController extends VoyagerBaseController {
     {
         $supplier = Supplier::where('id', $supplierId)->first();
 
-        return view('suppliers/listSupplierPools', ['supplier' => $supplier]);
+        return view('suppliers/listSupplierPools', ['supplier' => $supplier, 'supplierId' => $supplierId]);
     }
 }

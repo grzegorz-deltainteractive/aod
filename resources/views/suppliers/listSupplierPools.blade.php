@@ -106,7 +106,11 @@ $statuses = [
                             <?php
                             $year = \App\Models\SupplierPoolStatus::getPoolFilledYear($pool->id, $supplier->id);
                             $filled = \App\Models\SupplierPoolQuestion::getFilledData($pool->id, $supplier->id);
-                            $status = \App\Models\SupplierPoolStatus::getPoolFilledStatus($filled->user->id, $pool->id, $supplier->id );
+                            $userIdCheck = 0;
+                            if (isset($filled->user->id) && !empty($filled->user->id)) {
+                                $userIdCheck = $filled->user->id;
+                            }
+                            $status = \App\Models\SupplierPoolStatus::getPoolFilledStatus($userIdCheck, $pool->id, $supplier->id );
                             $color = 'transparent';
                             $statusText = '';
                             $accepted = false;
@@ -125,8 +129,8 @@ $statuses = [
                             <tr>
                                 <td>
                                     <div>
-                                    @if(!empty($year) && $year != '')
-                                        <a href="{{route('suppliers.pools.filled.single', ['id' => $supplier->id, 'poolId' => $pool->id, 'userId' => $filled->user->id])}}">
+                                    @if(!empty($year) && $year != '' && $userIdCheck > 0)
+                                        <a href="{{route('suppliers.pools.filled.single', ['id' => $supplier->id, 'poolId' => $pool->id, 'userId' => $userIdCheck])}}">
                                             {{trim($pool->numer_procedury .'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id))}}
                                         </a>
                                     @else
@@ -166,7 +170,7 @@ $statuses = [
                                 </td>
                                 <td>
                                     <div>
-                                        {{$filled->user->name}}
+                                        {{$filled->user->name ?? ''}}
                                     </div>
                                 </td>
                                 <td>

@@ -438,6 +438,9 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
                         'buttons' => ['pageLength', 'excelHtml5', 'csvHtml5', [
                             'extend' => 'pdfHtml5',
                             'orientation' => 'landscape',
+                            'title' => 'Lista dostawców',
+                            'download' => 'open',
+                            
                         ]   ],
                         'dom' => 'Bfrtip',
                         "order" => $orderColumn,

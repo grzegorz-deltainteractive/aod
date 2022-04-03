@@ -40,14 +40,16 @@ class SupplierPoolQuestion extends Model
      */
     public static function getValue($parameterId, $data, $supplierId, $poolId, $userId)
     {
-        if (!empty($data)) {
-            foreach ($data as $s) {
-                if ($s->supplier_id == $supplierId && $s->pool_id == $poolId && $s->user_id == $userId && $s->category_param_id == $parameterId) {
-                    if (!empty($s->value)) {
+        try {
+            if (!empty($data)) {
+                foreach ($data as $s) {
+                    if ($s->supplier_id == $supplierId && $s->pool_id == $poolId && $s->user_id == $userId && $s->category_param_id == $parameterId) {
                         return $s->value;
                     }
                 }
             }
+        } catch (\Exception $ex) {
+
         }
         return '-';
     }

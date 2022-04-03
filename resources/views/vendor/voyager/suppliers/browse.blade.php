@@ -440,7 +440,7 @@ border-radius: 3px; text-align:center;">Plik został wczytany.<br/>Dostawcy któ
                             'orientation' => 'landscape',
                             'title' => 'Lista dostawców',
                             'download' => 'open',
-                            
+
                         ]   ],
                         'dom' => 'Bfrtip',
                         "order" => $orderColumn,

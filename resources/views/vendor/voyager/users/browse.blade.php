@@ -42,6 +42,14 @@
     $departments = [];
     $laboratiories = [];
     $years = [];
+    $roles = [
+        'Biuro jakości' => 'Biuro jakości',
+        'Pracownik laboratorium' => 'Pracownik laboratorium',
+        'Kierownik' => 'Kierownik',
+        'Pracownik biura' => 'Pracownik biura',
+        'Admin' => 'Admin'
+    ];
+    $cities = [];
     foreach ($dataTypeContent as $data) {
         if (isset($data->department) && !empty($data->department)) {
             if (!in_array($data->department, $departments)) {
@@ -53,9 +61,14 @@
                 $laboratiories[] = $data->laboratory;
             }
         }
+        if (isset($data->miasto) && !empty($data->miasto)) {
+            if (!in_array($data->miasto, $cities)) {
+                $cities[] = $data->miasto;
+            }
+        }
     }
-    $departmentsList = \App\Models\Department::getDepartmentsById($departments);
-    $laboratioriesList = \App\Models\Laboratory::getLaboratoriesById($laboratiories);
+    $departmentsList = \App\Models\Department::getAllDepartmentsList($departments);
+    $laboratioriesList = \App\Models\Laboratory::getAllLaboratoriesList($laboratiories);
 
     ?>
 @section('content')
@@ -73,9 +86,9 @@
                                 <label class="control-label">
                                     Rola
                                 </label>
-                                <select name="dzial" id="search-dzial" class="form-control">
+                                <select name="dzial" id="search-rola" class="form-control">
                                     <option value="">Wybierz rolę</option>
-                                    @foreach ($departmentsList as $listItem)
+                                    @foreach ($roles as $listItem)
                                         <option value="{{$listItem}}">{{$listItem}}</option>
                                     @endforeach
                                 </select>
@@ -97,10 +110,10 @@
                                 <label class="control-label">
                                     Miasto
                                 </label>
-                                <select name="laboratorium" id="search-laboratorium" class="form-control">
+                                <select name="laboratorium" id="search-miasto" class="form-control">
                                     <option value="">Wybierz miasto</option>
 									<option value="Warszawa">Warszawa</option>
-                                    @foreach ($laboratioriesList as $listItem)
+                                    @foreach ($cities as $listItem)
                                         <option value="{{$listItem}}">{{$listItem}}</option>
                                     @endforeach
                                 </select>
@@ -477,6 +490,38 @@
             @endif
             $('.select_all').on('click', function(e) {
                 $('input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
+            });
+            $('#search-rola').change(function() {
+                let val = $(this).val();
+                table
+                    .column(7)
+                    .search(val)
+                    .draw();
+                table.columns.adjust().draw();
+            });
+            $('#search-dzial').change(function() {
+                let val = $(this).val();
+                table
+                    .column(9)
+                    .search(val)
+                    .draw();
+                table.columns.adjust().draw();
+            });
+            $('#search-miasto').change(function() {
+                let val = $(this).val();
+                table
+                    .column(4)
+                    .search(val)
+                    .draw();
+                table.columns.adjust().draw();
+            });
+            $('#search-status').change(function() {
+                let val = $(this).val();
+                table
+                    .column(8)
+                    .search(val)
+                    .draw();
+                table.columns.adjust().draw();
             });
         });
 

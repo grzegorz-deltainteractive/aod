@@ -24,6 +24,7 @@ class PoolsController extends VoyagerBaseController {
                 $categories[$i] = [
                     'id' => $single->id,
                     'name' => $single->name,
+                    'is_requested' => $single->is_requested,
                     'parameters' => $categoriesParams->toArray()
                 ];
             }
@@ -49,6 +50,11 @@ class PoolsController extends VoyagerBaseController {
                             $category->id = $single['id'];
                         }
                         $category->name = $single['name'];
+                        if (isset($single['is_requested']) && $single['is_requested']) {
+                            $category->is_requested = 1;
+                        } else {
+                            $category->is_requested = 0;
+                        }
                         $category->pool_id = $id;
                         if ($category->save()) {
                             if (isset($single['parameters']) && !empty($single['parameters'])) {

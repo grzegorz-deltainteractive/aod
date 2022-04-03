@@ -14,6 +14,7 @@
                     <th class="dt-not-orderable sorting_disabled">
                         Ilość parametrów
                     </th>
+                    <th>Czy warunek bezwględny?</th>
                     <th>Opcje</th>
                 </tr>
                 </thead>
@@ -23,13 +24,17 @@
                         <td v-html="item.name" style="vertical-align: middle">
                         </td>
                         <td style="vertical-align: middle" v-html="getParamsCount(index)"></td>
+                        <td style="vertical-align: middle">
+                            <span v-if="item.is_requested == 1">Tak</span>
+                            <span v-else>Nie</span>
+                        </td>
                         <td>
                             <button class="btn btn-sm btn-danger" v-on:click="deleteCategory(index)">Usuń kategorię i parametry</button>
                             <button class="btn btn-sm btn-primary" v-on:click="editParameters(item.id, index)">Edytuj parametry</button>
                         </td>
                     </tr>
                     <tr :id="'categoryParams'+index" style="display: none" class="editParametersDiv">
-                        <td colspan="3">
+                        <td colspan="4">
                             <h5>Parametry</h5>
                             <div v-if="item.parameters.length == 0">
                                 <p>Nie dodano parametrów, kliknij poniższy przycisk aby dodać parametr.</p>
@@ -41,7 +46,7 @@
                                         <th>Nazwa</th>
                                         <th>Ocena minimalna</th>
                                         <th>Ocena maksymalna</th>
-                                        <th>Czy widzi to laboratorium</th>
+                                        <th v-show="item.is_requested == 0">Czy widzi to laboratorium</th>
                                         <th>Opcje</th>
                                     </tr>
                                     </thead>
@@ -50,7 +55,7 @@
                                         <td style="vertical-align: middle" v-html="item2.name"></td>
                                         <td style="vertical-align: middle" v-html="item2.rating_min"></td>
                                         <td style="vertical-align: middle" v-html="item2.rating_max"></td>
-                                        <td style="vertical-align: middle">
+                                        <td style="vertical-align: middle"  v-show="item.is_requested == 0">
                                             <span v-if="item2.visible_for_lab == 0">nie</span>
                                             <span v-else>tak</span>
                                         </td>
@@ -76,7 +81,7 @@
                                                 <label class="control-label">
                                                     Punktacja minimum
                                                 </label>
-                                                <select v-model="newParameterRatingMin" class="form-control">
+                                                <select v-model="newParameterRatingMin" class="form-control" v-if="newParamaterIsRequested == 0">
                                                     <option value="0">0</option>
                                                     <option value="1">1</option>
                                                     <option value="2">2</option>
@@ -98,13 +103,17 @@
                                                     <option value="18">18</option>
                                                     <option value="19">19</option>
                                                     <option value="20">20</option>
+                                                </select>
+                                                <select v-model="newParameterRatingMin" class="form-control" v-else>
+                                                    <option value="0">0</option>
+
                                                 </select>
                                             </div>
                                             <div class="form-group  col-md-12 ">
                                                 <label class="control-label">
                                                     Punktacja maksumim
                                                 </label>
-                                                <select v-model="newParameterRatingMax" class="form-control">
+                                                <select v-model="newParameterRatingMax" class="form-control" v-if="newParamaterIsRequested == 0">
                                                     <option value="0">0</option>
                                                     <option value="1">1</option>
                                                     <option value="2">2</option>
@@ -127,8 +136,12 @@
                                                     <option value="19">19</option>
                                                     <option value="20">20</option>
                                                 </select>
+                                                <select v-model="newParameterRatingMax" class="form-control" v-else>
+                                                    <option value="1">1</option>
+
+                                                </select>
                                             </div>
-                                            <div class="form-group  col-md-12 ">
+                                            <div class="form-group  col-md-12 " v-show="newParamaterIsRequested == 0">
                                                 <label class="control-label">
                                                     Czy parametr widoczny dla laboratorium
                                                 </label>
@@ -141,11 +154,12 @@
                                     </div>
                                     <div class="panel-footer">
                                         <button class="btn btn-primary save " v-on:click="addParameterSave(item.id, index)">Zapisz parametr</button>
+                                        <button class="btn btn-secondary" v-on:click="cancelParameterSave(item.id, index)">Anuluj dodawanie parametru</button>
                                     </div>
                                 </div>
                             </div>
                             <div v-if="displayParametersForm == -1">
-                                <button class="btn btn-sm btn-primary" v-on:click="addParameter(item.id)">Dodaj nowy parametr</button>
+                                <button class="btn btn-sm btn-primary" v-on:click="addParameter(item.id, item.is_requested)">Dodaj nowy parametr</button>
                             </div>
                         </td>
                     </tr>
@@ -168,6 +182,12 @@
                                 Podaj nazwę kategorii
                             </label>
                             <input type="text" class="form-control" v-model="newCategoryName" placeholder="Podaj nazwę nowej kategorii" id="newCategoryName" />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="control-label" for="newCategoryRequest">
+                                Czy to kategoria warunków bezwględnych dla dostawcy?
+                            </label>
+                            <input type="checkbox" class="form-controll" v-model="newCategoryRequest" id="newCategoryRequest" />
                         </div>
                     </div>
                 </div>
@@ -192,7 +212,9 @@ export default {
         return {
             categoryData: [],
             newCategoryName: "",
+            newCategoryRequest: 0,
             displayParametersForm: -1,
+            newParamaterIsRequested: 0,
 
             newParameterName: "",
             newParameterRatingMin: 0,
@@ -219,18 +241,19 @@ export default {
                         try {
                             let item = {
                                 "name": self.newCategoryName,
+                                "is_requested": self.newCategoryRequest,
                                 "parameters": []
                             }
                             this.categoryData.push(item);
                             this.saveForm();
                         } catch (e2) {
                             console.log(e2);
-
                         }
                     } else if (Array.isArray(this.categoryData) && this.categoryData.length == 0) {
-                        console.log('2');
+                        // console.log('2');
                         let item = {
                             "name": self.newCategoryName,
+                            "is_requested": self.newCategoryRequest,
                             "parameters": []
                         }
                         this.categoryData.push(item);
@@ -250,6 +273,7 @@ export default {
                             } else {
                                 let item = {
                                     "name": self.newCategoryName,
+                                    "is_requested": self.newCategoryRequest,
                                     "parameters": []
                                 }
                                 this.categoryData.push(item);
@@ -281,13 +305,19 @@ export default {
                 $(id).hide();
             }
         },
-        addParameter: function(id)
+        addParameter: function(id, is_requested = 0)
         {
+
             this.displayParametersForm = id;
             this.newParameterRatingMin = 0;
             this.newParameterRatingMax = 20;
             this.newParameterName = "";
             this.newParameterLabVisible = 0;
+            this.newParameterIsRequested = 0;
+            if (is_requested == 1) {
+                this.newParameterRatingMax = 1;
+                this.newParamaterIsRequested = 1;
+            }
             $('#newParameterName').focus();
             setTimeout(function() {
                 $('#newParameterName').focus();
@@ -320,6 +350,9 @@ export default {
                     alert ("Wystąpił problem przy dodawaniu parametru, proszę spróbować raz jeszcze");
                 }
             }
+        },
+        cancelParameterSave: function(id, index) {
+            this.displayParametersForm = -1;
         },
         deleteCategory: function(index)
         {

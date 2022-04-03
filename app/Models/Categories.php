@@ -11,7 +11,7 @@ class Categories extends Model
     public $table = 'categories';
 
     public $fillable = [
-        'id', 'name', 'pool_id'
+        'id', 'name', 'pool_id', 'is_requested'
     ];
 
     public function categoriesParameters()

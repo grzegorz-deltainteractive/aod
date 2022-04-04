@@ -167,6 +167,60 @@ class SuppliersPoolsController extends VoyagerBaseController {
         $pool = Pool::where('id', $poolId)->first();
         return view('suppliers/fillPool', ['supplier_id' => $id, 'pool_id' => $poolId, 'pool' => $pool, 'message' => $message]);
     }
+
+    /**
+     * edycja ankiety
+     * @param $id
+     * @param $poolId
+     * @param $userId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
+     */
+    public function editPool($id, $poolId, $userId)
+    {
+
+        $data = request()->all();
+        if (!empty($data)) {
+            $user = Auth::user();
+            $userIdLogged = $user->id;
+            $changedData = false;
+            if (isset($data['parameter']) && !empty($data['parameter'])) {
+                foreach ($data['parameter'] as $categoryId => $params) {
+                    foreach ($params as $paramId => $value) {
+                        $notice = $data['parameter-notices'][$categoryId][$paramId] ?? '';
+                        $check = SupplierPoolQuestion::where('user_id', $userId)->where('pool_id', $poolId)->where('supplier_id', $id)
+                            ->where('category_id', $categoryId)->where('category_param_id', $paramId)->first();
+                        if ($check->value != $value || $check->notices != $notice) {
+                            // zmiana
+                            $check->value = $value;
+                            $check->notices = $notice;
+                            $check->updated_at = date('Y-m-d H:i:s');
+                            $check->save();
+                            $changedData = true;
+                        }
+                    }
+                }
+            }
+            if ($changedData) {
+                // trzeba dodać status
+                SupplierPoolStatus::addAdminEditDate($userIdLogged, $poolId, $id);
+            }
+            return redirect(route('suppliers.pools', ['id' => $id]));
+        }
+
+        $pool = Pool::where('id', $poolId)->first();
+        $message = '';
+        $parametersQuery = SupplierPoolQuestion::where('user_id', $userId)->where('pool_id', $poolId)->where('supplier_id', $id)->get();
+        $parameters = [];
+        $notices = [];
+        if (!empty($parametersQuery)) {
+            foreach ($parametersQuery as $pq) {
+                $parameters[$pq->category_id][$pq->category_param_id] = $pq->value;
+                $notices[$pq->category_id][$pq->category_param_id] = $pq->notices ?? '';
+            }
+        }
+        return view('suppliers/editPool', ['supplier_id' => $id, 'pool_id' => $poolId, 'pool' => $pool, 'message' => $message, 'parameters' => $parameters, 'notices' => $notices, 'userId' => $userId]);
+    }
+
     public function categoriesSave($id)
     {
         if (!empty(request()->all())) {

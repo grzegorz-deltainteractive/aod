@@ -24,7 +24,44 @@ $statuses = [
     'Wypełniona, ale nie zaakceptowana',
     'Niewypełniona',
     'Zaakceptowano'
-]
+];
+
+$poolsRelation = $supplier->poolsRelation;
+$poolsList = [];
+if (!empty($poolsRelation)) {
+    foreach ($poolsRelation as $pool) {
+        foreach($supplier->laboratories as $laboratory) {
+            // tworze mixa ankieta_dostawca_laboratorium
+            $name = $pool->numer_procedury.'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id);
+            $name .= '_'.\App\Models\Laboratory::getLaboratoryShortcode($laboratory->id);
+            $filledData = \App\Models\SupplierPoolQuestion::getFilledDataAll($pool->id, $supplier->id);
+            $users = \App\Models\Laboratory::getLaboratoryUsers($laboratory->id);
+            if (count($users) == 1) {
+                $poolsList[$name] = [
+                    'name' => $name,
+                    'pool' => $pool,
+                    'laboratory' => $laboratory,
+                    'user' => [
+                        'id' => array_key_first($users),
+                        'name' => reset($users)
+                    ]
+                ];
+            } else {
+                foreach ($users as $userId => $userName) {
+                    $poolsList[$name.$userId] = [
+                        'name' => $name,
+                        'pool' => $pool,
+                        'laboratory' => $laboratory,
+                        'user' => [
+                            'id' => $userId,
+                            'name' => $userName
+                        ]
+                    ];
+                }
+            }
+        }
+    }
+}
 ?>
 @extends('voyager::master')
 
@@ -86,7 +123,7 @@ $statuses = [
                     </select>
                 </div>
             </div>
-            @if(count($supplier->poolsRelation) > 0)
+            @if(count($poolsList) > 0)
             <div class="table-responsive">
                 <table id="dataTable2" class="table table-hover dataTable2 no-footer">
                     <thead>
@@ -102,44 +139,40 @@ $statuses = [
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($supplier->poolsRelation as $pool)
-                            <?php
-                            $year = \App\Models\SupplierPoolStatus::getPoolFilledYear($pool->id, $supplier->id);
-                            $filled = \App\Models\SupplierPoolQuestion::getFilledData($pool->id, $supplier->id);
-                            $userIdCheck = 0;
-                            if (isset($filled->user->id) && !empty($filled->user->id)) {
-                                $userIdCheck = $filled->user->id;
-                            }
-                            $status = \App\Models\SupplierPoolStatus::getPoolFilledStatus($userIdCheck, $pool->id, $supplier->id );
-                            $color = 'transparent';
-                            $statusText = '';
-                            $accepted = false;
-                            if ($status == 'unfilled') {
-                                $color = 'yellow';
-                                $statusText = 'Niewypełniona';
-                            } else if ($status == 'unaceppted') {
-                                $color = 'red';
-                                $statusText = 'Wypełniona, ale nie zaakceptowana';
-                            } else {
-                                $color = 'green';
-                                $statusText = $status;
-                                $accepted = true;
-                            }
-                            ?>
-                            <tr>
-                                <td>
-                                    <div>
-                                    @if(!empty($year) && $year != '' && $userIdCheck > 0)
-                                        <a href="{{route('suppliers.pools.filled.single', ['id' => $supplier->id, 'poolId' => $pool->id, 'userId' => $userIdCheck])}}">
-                                            {{trim($pool->numer_procedury .'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id))}}
-                                        </a>
-                                    @else
-                                        {{trim($pool->numer_procedury .'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id))}}
-                                    @endif
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
+                    @foreach ($poolsList as $poolName => $poolData)
+                        <?php
+                        $year = \App\Models\SupplierPoolStatus::getPoolFilledUserYear($poolData['pool']->id, $supplier->id, $poolData['user']['id']);
+//                        $filled = \App\Models\SupplierPoolQuestion::getFilledData($pool->id, $supplier->id);
+                        $status = \App\Models\SupplierPoolStatus::getPoolFilledStatus($poolData['user']['id'], $poolData['pool']->id, $supplier->id );
+                        $color = 'transparent';
+                        $statusText = '';
+                        $accepted = false;
+                        $textColor = 'white';
+                        if ($status == 'unfilled') {
+                            $color = 'yellow';
+                            $statusText = 'Niewypełniona';
+                            $textColor = 'black';
+                        } else if ($status == 'unaceppted') {
+                            $color = 'red';
+                            $statusText = 'Wypełniona, ale nie zaakceptowana';
+                        } else {
+                            $color = 'green';
+                            $statusText = $status;
+                            $accepted = true;
+                        }
+                        ?>
+                        <tr>
+                            <td>
+                                @if(!empty($year) && $year != '-' && $status != 'unfilled')
+                                    <a href="{{route('suppliers.pools.filled.single', ['id' => $supplier->id, 'poolId' => $poolData['pool']->id, 'userId' => $poolData['user']['id']])}}">
+                                        {{$poolData['name']}}
+                                    </a>
+                                @else
+                                {{$poolData['name']}}
+                                @endif
+                            </td>
+                            <td>
+                                <div>
                                     <?php
                                     $departments = [];
                                     foreach ($supplier->departments as $department) {
@@ -151,58 +184,30 @@ $statuses = [
                                         echo '-';
                                     }
                                     ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                    <?php
-                                    $laboratories = [];
-                                    foreach ($supplier->laboratories as $laboratory) {
-                                        $laboratories[] = $laboratory->name;
-                                    }
-                                    if (!empty($laboratories)) {
-                                        echo implode(", ", $laboratories);
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        {{$filled->user->name ?? ''}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                    {{$year}}
-                                    </div>
-                                </td>
-                                <td style="background-color: {{$color}}; color: white;">
-                                    <div>
+                                </div>
+                            </td>
+                            <td>
+                                {{$poolData['laboratory']->name}}
+                            </td>
+                            <td>
+                                {{$poolData['user']['name']}}
+                            </td>
+                            <td>
+                                {{$year}}
+                            </td>
+                            <td style="background-color: {{$color}}; color: {{$textColor}};">
+                                <div>
                                     {{$statusText}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <?php
-                                    try {
-                                        echo $suppliersPoolsResult['poolsSummary'][$pool->id]['total'] .' / '.$suppliersPoolsResult['poolsSummary'][$pool->id]['max'];
-                                    } catch (Exception $ex) {
-                                        echo '- / -';
-                                    }
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    try {
-                                        echo sprintf("%.2f", ($suppliersPoolsResult['poolsSummary'][$pool->id]['total'] / $suppliersPoolsResult['poolsSummary'][$pool->id]['max'] )*100) .' %';
-                                    } catch (Exception $ex) {
-                                        echo '- / - %';
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                        @endforeach
+                                </div>
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>

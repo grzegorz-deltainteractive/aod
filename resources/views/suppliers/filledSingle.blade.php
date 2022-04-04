@@ -10,6 +10,11 @@ if (!empty($status)) {
     $userNameFilled = $userName->name;
     $userName = \App\User::where('id', $status->accepted_user_id)->first();
     $userNameAccepted = $userName->name ?? '-';
+    $userNameAdmin = '-';
+    if (!empty($status->admin_edited_user)) {
+        $userName = \App\User::where('id', $status->admin_edited_user)->first();
+        $userNameAdmin = $userName->name ?? '-';
+    }
 } else {
     $userName = \App\User::where('id', $user_id)->first();
     $userNameFilled = $userName->name;
@@ -20,7 +25,10 @@ if (!empty($status)) {
 @section('content')
     <h1 class="page-title" style="width: 100%;">
         <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" />  Ankieta "{{$pool->name}}" - wyniki
-        <a href="{{route('suppliers.pools.filled.single.pdf', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float">Zapisz PDF</a>
+        <a href="{{route('suppliers.pools.filled.single.pdf', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" target="_blank" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float">Zapisz PDF</a>
+        @if (canEditPool())
+            &nbsp;&nbsp; <a href="{{route('suppliers.pools.edit', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float" style="margin-right:15px;">Edytuj ankietę</a>
+        @endif
     </h1>
     <div class="page-content container-fluid">
         <div class="panel panel-bordered">
@@ -93,6 +101,24 @@ if (!empty($status)) {
                         {{$status->accepted_date ?? '-'}}
                     </div>
                 </div>
+                @if (!empty($status->admin_edited_date))
+                        <div class="row">
+                            <div class="col-12 col-md-5">
+                                Edytowane przed administratora:
+                            </div>
+                            <div class="col-12 col-md-7">
+                                {{$userNameAdmin}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-5">
+                                Data edycji:
+                            </div>
+                            <div class="col-12 col-md-7">
+                                {{$status->admin_edited_date ?? '-'}}
+                            </div>
+                        </div>
+                @endif
                 <br />
                 <a href="javascript:history.back();" class="btn btn-sm btn-secondary " style="background-color: #cccccc">Powrót</a>
             </div>

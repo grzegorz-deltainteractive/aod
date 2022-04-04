@@ -96,9 +96,9 @@ class Supplier extends Model
         $supplier = self::where('id', $id)->first();
         if ($supplier) {
             if (!empty($supplier->skrot)) {
-                return $supplier->skrot;
+                return mb_strtoupper($supplier->skrot);
             }
-            return strtoupper(substr($supplier->name, 0, 3)).$supplier->id;
+            return mb_strtoupper(substr($supplier->name, 0, 3)).$supplier->id;
         }
         return '';
     }

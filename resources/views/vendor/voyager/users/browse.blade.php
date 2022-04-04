@@ -364,21 +364,50 @@
                                                 @endif
                                             </td>
                                         @endforeach
-                                        <td>
-                                            <?php
+                                            <td>
+                                                <?php
                                                 $usersPools = \App\Models\SupplierPoolQuestion::getUserPools($data->getKey());
                                                 if (!empty($usersPools)) {
-                                                    foreach ($usersPools as $s) {
-                                                        $pool = \App\Models\Pool::where('id', $s->pool_id)->first();
-                                                        ?>
-                                                        <a href="{{route('suppliers.pools.filled.single', ['id' => $s->supplier_id, 'poolId' => $s->pool_id, 'userId' => $data->getKey()])}}">
-                                                            {{$pool->name}}
-                                                        </a><br />
-                                                        <?php
-                                                    }
+                                                foreach ($usersPools as $i => $s) {
+                                                $pool = \App\Models\Pool::where('id', $s->pool_id)->first();
+                                                ?>
+                                                <?php if ($pool):?>
+                                                <?php if ($i < 4):?>
+                                                <a href="{{route('suppliers.pools.filled.single', ['id' => $s->supplier_id, 'poolId' => $s->pool_id, 'userId' => $data->getKey()])}}">
+                                                    {{$pool->name}}
+                                                </a><br/>
+                                                <?php endif;?>
+                                                <?php
+                                                endif;
                                                 }
-                                            ?>
-                                        </td>
+                                                if (count($usersPools) > 4) {
+                                                ?><br/>
+                                                <a href="#expandid-<?php echo $data->getKey();?>" data-toggle="collapse"
+                                                   class="expand-collapse-pools"
+                                                   data-expandid="<?php echo $data->getKey();?>">Pokaż/ukryj
+                                                    następne</a>
+                                                <div class="collapse" id="expandid-<?php echo $data->getKey();?>">
+                                                    <br/>
+                                                    <?php
+                                                    foreach ($usersPools as $i => $s) {
+                                                    $pool = \App\Models\Pool::where('id', $s->pool_id)->first();
+                                                    ?>
+                                                    <?php if ($pool) {?>
+                                                    <?php if ($i >= 3){?>
+                                                    <a href="{{route('suppliers.pools.filled.single', ['id' => $s->supplier_id, 'poolId' => $s->pool_id, 'userId' => $data->getKey()])}}">
+                                                        {{$pool->name}}
+                                                    </a><br/>
+                                                    <?php
+                                                    }
+                                                    }
+                                                    }
+                                                    ?>
+                                                </div>
+                                                <?php
+                                                }
+                                                }
+                                                ?>
+                                            </td>
                                         <td class="no-sort no-click bread-actions">
 										<?php if( $data->getKey()==1 || $data->getKey()==2  || $data->getKey()>130 ){  ?>
                                             @foreach($actions as $action)

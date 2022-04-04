@@ -59,6 +59,9 @@
                                 </td>
                                 <td>
                                     <a href="{{route('suppliers.pools.filled.single', ['id' => $pool->supplier_id, 'poolId' => $pool->pool_id, 'userId' => $pool->user_id])}}" class="btn btn-sm btn-primary ">Przeglądnij wyniki</a>
+                                    @if(canEditPool())
+                                        <a href="{{route('suppliers.pools.edit', ['id' => $pool->supplier_id, 'poolId' => $pool->pool_id, 'userId' => $pool->user_id])}}" class="btn btn-sm btn-primary ">Edytuj uzupełnienie</a>
+                                    @endif
                                     @if(canAcceptPool() && !$accepted)
                                         <a href="{{route('suppliers.pools.accept', ['id' => $pool->supplier_id, 'poolId' => $pool->pool_id, 'userId' => $pool->user_id])}}" class="btn btn-sm btn-primary " onclick="return confirm('Czy chcesz zaakceptować ankietę? Zostanie zapisany status z datą i Twoim użytkownikiem jako użytkownik akceptujący daną ankietę.')">Akceptuj ankietę</a>
                                     @endif

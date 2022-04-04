@@ -70,6 +70,16 @@ function canFillPool()
     return false;
 }
 
+function canEditPool()
+{
+    $user = Auth::user();
+    $allowedRoles = [1, 8];
+    if (in_array($user->role_id, $allowedRoles)) {
+        return true;
+    }
+    return false;
+}
+
 function canAcceptPool()
 {
     $user = Auth::user();

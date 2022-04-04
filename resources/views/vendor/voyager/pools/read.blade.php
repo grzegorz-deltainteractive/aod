@@ -90,6 +90,7 @@ foreach ($pool->suppliers as $supplier) {
                     <thead>
                         <tr>
                             <th>Nazwa ankiety</th>
+                            <th>Dostawca</th>
                             <th>Dział</th>
                             <th>Laboratoria</th>
                             <th>Rok</th>
@@ -110,6 +111,9 @@ foreach ($pool->suppliers as $supplier) {
                                     @else
                                         {{trim($pool->numer_procedury .'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id))}}
                                     @endif
+                                </td>
+                                <td>
+                                    {{$supplier->name}}
                                 </td>
                                 <td>
                                     <?php
@@ -183,7 +187,7 @@ foreach ($pool->suppliers as $supplier) {
         $('#search-dzial').change(function() {
             let val = $(this).val();
             table2
-                .column(1)
+                .column(2)
                 .search(val)
                 .draw();
         });
@@ -197,7 +201,7 @@ foreach ($pool->suppliers as $supplier) {
         $('#search-status').change(function() {
             let val = $(this).val();
             table2
-                .column(4)
+                .column(5)
                 .search(val)
                 .draw();
         });

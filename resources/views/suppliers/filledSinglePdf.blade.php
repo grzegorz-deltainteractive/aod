@@ -83,11 +83,6 @@ foreach ($pool->categories as $category) {
             <td style="text-align: right; font-weight: bold; font-size: 16px;">
                 {{$pool->numer_procedury}}_{{date('Y', strtotime($pool->data_wydania_ankiety))}}
         </tr>
-        <tr>
-            <td colspan="2" style="border-bottom: 1px solid black;">
-                ANKIETA OCENY DOSTAWCY USŁUG LABORATORYJNYCH, Średnia z {{date('Y', strtotime($pool->data_wydania_ankiety))}}
-            </td>
-        </tr>
     </table>
     @if(isset($supplier) && !empty($supplier))
     <br />

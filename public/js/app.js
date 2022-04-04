@@ -2111,6 +2111,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     // console.log(this.categories);
@@ -21352,6 +21353,16 @@ var render = function () {
           ]),
         ]),
       ]
+    ),
+    _vm._v(" "),
+    _c(
+      "a",
+      {
+        staticClass: "btn btn-sm",
+        staticStyle: { "background-color": "#cccccc" },
+        attrs: { href: "/admin/pools/" },
+      },
+      [_vm._v("Zapisz - powrót do definicji")]
     ),
   ])
 }

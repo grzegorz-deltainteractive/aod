@@ -196,6 +196,7 @@
                 </div>
             </div>
         </div>
+        <a href="/admin/pools/" class="btn btn-sm" style="background-color: #cccccc">Zapisz - powrót do definicji</a>
     </div>
 </template>
 

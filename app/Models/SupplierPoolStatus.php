@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SupplierPoolStatus extends Model {
     public $table = 'suppliers_pools_status';
-    public $fillable = ['pool_id', 'user_id', 'supplier_id', 'filled_date', 'accepted_date', 'accepted_user_id'];
+    public $fillable = ['pool_id', 'user_id', 'supplier_id', 'filled_date', 'accepted_date', 'accepted_user_id', 'admin_edited_date', 'admin_edited_user'];
 
     /**
      * save filled date
@@ -76,6 +76,16 @@ class SupplierPoolStatus extends Model {
         }
     }
 
+    public static function getPoolFilledUserYear($pool_id, $supplier_id, $userId)
+    {
+        $check = self::where('pool_id', $pool_id)->where('supplier_id', $supplier_id)->where('user_id', $userId)->first();
+        if (!empty($check)) {
+            return date('Y', strtotime($check->filled_date));
+        } else {
+            return '-';
+        }
+    }
+
     /**
      * Accept pool
      * @param $user_id
@@ -88,6 +98,26 @@ class SupplierPoolStatus extends Model {
         if ($check) {
             $check->accepted_date = date('Y-m-d H:i:s');
             $check->accepted_user_id = Auth::user()->id;
+            if ($check->save()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * set admin edited pool status
+     * @param $user_id
+     * @param $pool_id
+     * @param $supplier_id
+     * @return bool
+     */
+    public static function addAdminEditDate($user_id, $pool_id, $supplier_id)
+    {
+        $check = self::where('pool_id', $pool_id)->where('user_id', $user_id)->where('supplier_id', $supplier_id)->first();
+        if ($check) {
+            $check->admin_edited_date = date('Y-m-d H:i:s');
+            $check->admin_edited_user = Auth::user()->id;
             if ($check->save()) {
                 return true;
             }

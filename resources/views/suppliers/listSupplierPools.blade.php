@@ -201,10 +201,30 @@ if (!empty($poolsRelation)) {
                                 </div>
                             </td>
                             <td>
-
+                                <?php
+                                try {
+                                    if ($status != 'unfilled') {
+                                        echo $suppliersPoolsResult['poolsSummary'][$poolData['pool']->id]['total'] .' / '.$suppliersPoolsResult['poolsSummary'][$poolData['pool']->id]['max'];
+                                    } else {
+                                        echo '-';
+                                    }
+                                } catch (Exception $ex) {
+                                    echo '- / -';
+                                }
+                                ?>
                             </td>
                             <td>
-
+                                <?php
+                                try {
+                                    if ($status != 'unfilled') {
+                                        echo sprintf("%.2f", ($suppliersPoolsResult['poolsSummary'][$poolData['pool']->id]['total'] / $suppliersPoolsResult['poolsSummary'][$poolData['pool']->id]['max'] )*100) .' %';
+                                    } else {
+                                        echo '- / - %';
+                                    }
+                                } catch (Exception $ex) {
+                                    echo '- / - %';
+                                }
+                                ?>
                             </td>
                         </tr>
                     @endforeach

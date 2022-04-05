@@ -10,6 +10,11 @@ if (!empty($status)) {
     $userNameFilled = $userName->name;
     $userName = \App\User::where('id', $status->accepted_user_id)->first();
     $userNameAccepted = $userName->name ?? '-';
+    $userNameAdmin = '-';
+    if (!empty($status->admin_edited_user)) {
+        $userName = \App\User::where('id', $status->admin_edited_user)->first();
+        $userNameAdmin = $userName->name ?? '-';
+    }
 } else {
     $userName = \App\User::where('id', $user_id)->first();
     $userNameFilled = $userName->name;
@@ -64,6 +69,15 @@ foreach ($pool->categories as $category) {
             right: 0px;
             height: 50px;
 
+        }
+        .row {
+            width: 100%;
+        }
+        .col-md-5 {
+            width: 30%;
+        }
+        .col-md-7 {
+            width: 60%;
         }
     </style>
 </head>
@@ -254,20 +268,35 @@ foreach ($pool->categories as $category) {
 
     <br /><br /><br />
     <div class="table-responsive">
-        <table class="table table-hover">
+        <table>
             <tr>
-                <th>Uzupełnił</th>
-                <th>Data uzupełnienia</th>
-                <th>Zaakceptował</th>
-                <th>Data zaakceptowania</th>
+                <td>Uzupełnił:</td>
+                <td>{{$userNameFilled}}</td>
             </tr>
             <tr>
-                <td>{{$userNameFilled}}</td>
+                <td>Data uzupełnienia:</td>
                 <td>{{$status->filled_date}}</td>
+            </tr>
+            <tr>
+                <td>Zaakceptował:</td>
                 <td>{{$userNameAccepted}}</td>
+            </tr>
+            <tr>
+                <td>Data zaakceptowania:</td>
                 <td>{{$status->accepted_date ?? '-'}}</td>
             </tr>
+            @if (!empty($status->admin_edited_date))
+                <tr>
+                    <td>Edytowane przed administratora:</td>
+                    <td>{{$userNameAdmin}}</td>
+                </tr>
+                <tr>
+                    <td>Data edycji:</td>
+                    <td>{{$status->admin_edited_date ?? '-'}}</td>
+                </tr>
+            @endif
         </table>
+
     </div>
 </main>
 </body>

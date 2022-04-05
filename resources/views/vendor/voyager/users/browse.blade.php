@@ -372,7 +372,7 @@
                                                 $pool = \App\Models\Pool::where('id', $s->pool_id)->first();
                                                 ?>
                                                 <?php if ($pool):?>
-                                                <?php if ($i < 4):?>
+                                                <?php if ($i < 3):?>
                                                 <a href="{{route('suppliers.pools.filled.single', ['id' => $s->supplier_id, 'poolId' => $s->pool_id, 'userId' => $data->getKey()])}}">
                                                     {{$pool->name}}
                                                 </a><br/>
@@ -380,7 +380,7 @@
                                                 <?php
                                                 endif;
                                                 }
-                                                if (count($usersPools) > 4) {
+                                                if (count($usersPools) > 3) {
                                                 ?><br/>
                                                 <a href="#expandid-<?php echo $data->getKey();?>" data-toggle="collapse"
                                                    class="expand-collapse-pools"

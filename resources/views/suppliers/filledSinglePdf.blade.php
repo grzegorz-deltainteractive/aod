@@ -7,17 +7,21 @@
 $status = \App\Models\SupplierPoolStatus::getStatus($user_id, $pool->id, $supplier_id);
 if (!empty($status)) {
     $userName = \App\User::where('id', $status->user_id)->first();
-    $userNameFilled = $userName->name;
+    $userNameFilled = $userName->imie .' '. $userName->nazwisko;
     $userName = \App\User::where('id', $status->accepted_user_id)->first();
-    $userNameAccepted = $userName->name ?? '-';
+    if (!empty($userName)) {
+        $userNameAccepted = $userName->imie .' '.$userName->nazwisko ?? '-';
+    } else {
+        $userNameAccepted = '-';
+    }
     $userNameAdmin = '-';
     if (!empty($status->admin_edited_user)) {
         $userName = \App\User::where('id', $status->admin_edited_user)->first();
-        $userNameAdmin = $userName->name ?? '-';
+        $userNameAdmin = $userName->imie .' ' .$userName->nazwisko ?? '-';
     }
 } else {
     $userName = \App\User::where('id', $user_id)->first();
-    $userNameFilled = $userName->name;
+    $userNameFilled = $userName->imie .' '.$userName->nazwisko;
     $userNameAccepted = '';
 }
 

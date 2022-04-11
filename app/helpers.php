@@ -69,6 +69,15 @@ function canFillPool()
     }
     return false;
 }
+function isSuperAdmin()
+{
+    $user = Auth::user();
+    $allowedRoles = [1];
+    if (in_array($user->role_id, $allowedRoles)) {
+        return true;
+    }
+    return false;
+}
 
 function canEditPool()
 {
@@ -84,6 +93,16 @@ function canAcceptPool()
 {
     $user = Auth::user();
     $allowedRoles = [1, 6, 7, 8];
+    if (in_array($user->role_id, $allowedRoles)) {
+        return true;
+    }
+    return false;
+}
+
+function canAcceptPoolDyrektorMedyczny()
+{
+    $user = Auth::user();
+    $allowedRoles = [9];
     if (in_array($user->role_id, $allowedRoles)) {
         return true;
     }

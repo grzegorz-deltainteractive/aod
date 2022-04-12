@@ -20,6 +20,8 @@ if (!empty($status)) {
     $userNameFilled = $userName->name;
     $userNameAccepted = '';
 }
+$status2 = \App\Models\SupplierPoolStatus::getPoolFilledStatus($user_id, $pool->id, $supplier_id );
+
 ?>
 @extends('voyager::master')
 @section('content')
@@ -28,6 +30,9 @@ if (!empty($status)) {
         <a href="{{route('suppliers.pools.filled.single.pdf', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" target="_blank" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float">Zapisz PDF</a>
         @if (canEditPool())
             &nbsp;&nbsp; <a href="{{route('suppliers.pools.edit', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float" style="margin-right:15px;">Edytuj ankietę</a>
+        @endif
+        @if (canAcceptPool() && !empty($status2) && $status2 == 'unaceppted')
+            <a href="{{route('suppliers.pools.accept', ['id' => $supplier_id, 'poolId' => $pool->id, 'userId' => $user_id, 'extra' =>1])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float " style="margin-right:15px;" onclick="return confirm('Czy chcesz zaakceptować ankietę? Zostanie zapisany status z datą i Twoim użytkownikiem jako użytkownik akceptujący daną ankietę.')">Akceptuj ankietę</a>
         @endif
     </h1>
     <div class="page-content container-fluid">

@@ -66,20 +66,28 @@ class SuppliersPoolsController extends VoyagerBaseController {
      * @param $userId
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function acceptPool($id, $poolId, $userId)
+    public function acceptPool($id, $poolId, $userId, $extra = 0)
     {
         if (SupplierPoolStatus::acceptPool($userId, $poolId, $id)) {
-            return redirect(route('suppliers.pools.filled', ['id' => $id, 'poolId' => $poolId]))->with([
-                    'message'    => 'Poprawnie zaakceptowano ankietę',
-                    'alert-type' => 'success',
-                ]
-            );
+            if ($extra == 1) {
+                return redirect(route('suppliers.pools.filled.single', ['id' => $id, 'poolId' => $poolId, 'userId' => $userId]));
+            } else {
+                return redirect(route('suppliers.pools.filled', ['id' => $id, 'poolId' => $poolId]))->with([
+                        'message' => 'Poprawnie zaakceptowano ankietę',
+                        'alert-type' => 'success',
+                    ]
+                );
+            }
         } else {
-            return redirect(route('suppliers.pools.filled', ['id' => $id, 'poolId' => $poolId]))->with([
-                    'message'    => 'Nie udało się zaakceptować ankiety',
-                    'alert-type' => 'error',
-                ]
-            );
+            if ($extra == 1) {
+                return redirect(route('suppliers.pools.filled.single', ['id' => $id, 'poolId' => $poolId, 'userId' => $userId]));
+            } else {
+                return redirect(route('suppliers.pools.filled', ['id' => $id, 'poolId' => $poolId]))->with([
+                        'message' => 'Nie udało się zaakceptować ankiety',
+                        'alert-type' => 'error',
+                    ]
+                );
+            }
         }
     }
 

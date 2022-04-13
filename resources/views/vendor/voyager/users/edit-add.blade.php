@@ -94,6 +94,7 @@
 
                                         $row     = $dataTypeRows->where('field', 'user_belongsto_role_relationship')->first();
                                         $options = $row->details;
+
                                     @endphp
                                     @include('voyager::formfields.relationship')
                                 </div>

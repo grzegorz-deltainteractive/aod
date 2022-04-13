@@ -7,17 +7,21 @@
 $status = \App\Models\SupplierPoolStatus::getStatus($user_id, $pool->id, $supplier_id);
 if (!empty($status)) {
     $userName = \App\User::where('id', $status->user_id)->first();
-    $userNameFilled = $userName->name;
+    $userNameFilled = $userName->imie .' '. $userName->nazwisko;
     $userName = \App\User::where('id', $status->accepted_user_id)->first();
-    $userNameAccepted = $userName->name ?? '-';
+    if (!empty($userName)) {
+        $userNameAccepted = $userName->imie .' '.$userName->nazwisko ?? '-';
+    } else {
+        $userNameAccepted = '-';
+    }
     $userNameAdmin = '-';
     if (!empty($status->admin_edited_user)) {
         $userName = \App\User::where('id', $status->admin_edited_user)->first();
-        $userNameAdmin = $userName->name ?? '-';
+        $userNameAdmin = $userName->imie .' ' .$userName->nazwisko ?? '-';
     }
 } else {
     $userName = \App\User::where('id', $user_id)->first();
-    $userNameFilled = $userName->name;
+    $userNameFilled = $userName->imie .' '.$userName->nazwisko;
     $userNameAccepted = '';
 }
 
@@ -38,7 +42,25 @@ foreach ($pool->categories as $category) {
     <meta charset="utf-8">
     <link rel="stylesheet" href="/css/pdf.css">
     <style>
-        *{ font-family: DejaVu Sans !important; font-size: 12px;}
+        @font-face {
+            font-family: 'arialn';
+            src: url({{ storage_path('fonts/arialn.ttf') }}) format("truetype");
+            font-weight: 400;
+            font-style: normal; // use the matching font-style here
+        }
+        @font-face {
+            font-family: 'arialn';
+            src: url({{ storage_path('fonts/arialni.ttf') }}) format("truetype");
+            font-weight: 400;
+            font-style: italic; // use the matching font-style here
+        }
+        @font-face {
+            font-family: 'arialn';
+            src: url({{ storage_path('fonts/arialnb.ttf') }}) format("truetype");
+            font-weight: 700;
+            font-style: normal; // use the matching font-style here
+        }
+        *{ font-family: "arialn" !important; font-size: 12px;}
 
         .table-responsive table {
             border-collapse: collapse;

@@ -223,4 +223,54 @@ class SupplierPoolQuestion extends Model
 
         return $filled;
     }
+
+
+    /**
+     * generate years for supplier id by pools results
+     * @param $supplierId
+     * @return array
+     */
+    public static function getYearsForSupplier($supplierId)
+    {
+        $results = self::where('supplier_id', $supplierId)->select('created_at', 'supplier_id')->groupBy(['created_at', 'supplier_id'])->distinct()->get();
+        $years = [];
+        if (!empty($results)) {
+            foreach ($results as $single) {
+                $year = (int)date('Y', strtotime($single->created_at));
+                if (!in_array($year, $years)) {
+                    $years[] = $year;
+                }
+            }
+        }
+        return $years;
+    }
+
+
+    /**
+     * get Average pools results
+     * @param $poolId
+     * @param $categoryId
+     * @param $categoryParamId
+     * @param $supplierId
+     * @param $year
+     * @return string|void
+     */
+    public static function getAverageResult($poolId, $categoryId, $categoryParamId, $supplierId, $year, $maxValue = 0)
+    {
+        $startDate = $year.'-01-01 00:00:00';
+        $endDate = $year.'-12-31 23:59:59';
+        $data = self::where('pool_id', $poolId)->where('category_id', $categoryId)->where('category_param_id', $categoryParamId)->where('supplier_id', $supplierId)
+            ->where('created_at', '>=', $startDate)->where('created_at', '<=', $endDate)->get();
+        if (empty($data) || count($data) == 0) {
+            return '-';
+        } else {
+            $value = 0;
+            $max = 0;
+            foreach ($data as $single) {
+                $value = $value + $single->value;
+                $max = $max + $maxValue;
+            }
+            return sprintf('%.2f', ($value/$maxValue));
+        }
+    }
 }

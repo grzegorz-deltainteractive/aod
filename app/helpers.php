@@ -69,10 +69,29 @@ function canFillPool()
     }
     return false;
 }
+
+/**
+ * check is logged user is superadmin
+ * @return bool
+ */
 function isSuperAdmin()
 {
     $user = Auth::user();
     $allowedRoles = [1];
+    if (in_array($user->role_id, $allowedRoles)) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * check is logged user is admin
+ * @return bool
+ */
+function isAdmin()
+{
+    $user = Auth::user();
+    $allowedRoles = [8];
     if (in_array($user->role_id, $allowedRoles)) {
         return true;
     }

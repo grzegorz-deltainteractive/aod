@@ -65,6 +65,21 @@ class Supplier extends Model
     }
 
     /**
+     * get suppliers list
+     * @param $forUser id for checking user
+     * @return mixed
+     */
+    public static function getList($forUser = [])
+    {
+        if (empty($forUser)) {
+            $list = self::whereNull('deleted_at')->pluck('name', 'id')->toArray();
+        } else {
+            $list = self::whereNull('deleted_at')->whereIn('id', $forUser)->pluck('name', 'id')->toArray();
+        }
+        return $list;
+    }
+
+    /**
      * get suppliers pools
      * @param $supplier Supplier model of supplier
      * @return void

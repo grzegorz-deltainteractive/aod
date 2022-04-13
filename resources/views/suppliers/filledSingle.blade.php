@@ -26,6 +26,15 @@ if (!empty($status)) {
 }
 $status2 = \App\Models\SupplierPoolStatus::getPoolFilledStatus($user_id, $pool->id, $supplier_id );
 
+$userNameAcceptedDm = null;
+$dateAcceptedDm = null;
+$statusDM = \App\Models\SupplierPoolStatus::getStatus($user_id, $pool->id, $supplier_id);
+if (!empty($statusDM)) {
+    $userName = \App\User::where('id', $statusDM->dm_accepted_user_id)->first();
+    if (!empty($userName)) {
+        $userNameAcceptedDm = $userName->imie .' '.$userName->nazwisko ?? '-';
+    }
+}
 ?>
 @extends('voyager::master')
 @section('content')
@@ -35,8 +44,8 @@ $status2 = \App\Models\SupplierPoolStatus::getPoolFilledStatus($user_id, $pool->
         @if (canEditPool())
             &nbsp;&nbsp; <a href="{{route('suppliers.pools.edit', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float" style="margin-right:15px;">Edytuj ankietę</a>
         @endif
-        @if (canAcceptPoolDyrektorMedyczny())
-            &nbsp;&nbsp; <a href="{{route('suppliers.pools.edit', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float" style="margin-right:15px;">Edytuj ankietę</a>
+        @if (canAcceptPoolDyrektorMedyczny() && empty($statusDM))
+            &nbsp;&nbsp; <a href="{{route('suppliers.pools.acceptDm', ['id' => $supplier_id, 'poolId' => $pool->id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float" style="margin-right:15px;"  onclick="return confirm('Czy chcesz zaakceptować ankietę? Zostanie zapisany status z datą i Twoim użytkownikiem?')">Zaakceptuj jako dyrektor Medyczny</a>
         @endif
         @if (canAcceptPool() && !empty($status2) && $status2 == 'unaceppted')
             <a href="{{route('suppliers.pools.accept', ['id' => $supplier_id, 'poolId' => $pool->id, 'userId' => $user_id, 'extra' =>1])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float " style="margin-right:15px;" onclick="return confirm('Czy chcesz zaakceptować ankietę? Zostanie zapisany status z datą i Twoim użytkownikiem jako użytkownik akceptujący daną ankietę.')">Akceptuj ankietę</a>
@@ -113,23 +122,42 @@ $status2 = \App\Models\SupplierPoolStatus::getPoolFilledStatus($user_id, $pool->
                         {{$status->accepted_date ?? '-'}}
                     </div>
                 </div>
+
+                @if (!empty($statusDM->dm_accepted_date))
+                    <div class="row">
+                        <div class="col-12 col-md-5">
+                            Edytowane przed Dyrektora Medycznego:
+                        </div>
+                        <div class="col-12 col-md-7">
+                            {{$userNameAcceptedDm}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-5">
+                            Data akceptacji:
+                        </div>
+                        <div class="col-12 col-md-7">
+                            {{$statusDM->dm_accepted_date ?? '-'}}
+                        </div>
+                    </div>
+                @endif
                 @if (!empty($status->admin_edited_date))
-                        <div class="row">
-                            <div class="col-12 col-md-5">
-                                Edytowane przed administratora:
-                            </div>
-                            <div class="col-12 col-md-7">
-                                {{$userNameAdmin}}
-                            </div>
+                    <div class="row">
+                        <div class="col-12 col-md-5">
+                            Edytowane przed administratora:
                         </div>
-                        <div class="row">
-                            <div class="col-12 col-md-5">
-                                Data edycji:
-                            </div>
-                            <div class="col-12 col-md-7">
-                                {{$status->admin_edited_date ?? '-'}}
-                            </div>
+                        <div class="col-12 col-md-7">
+                            {{$userNameAcceptedDm}}
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-5">
+                            Data edycji:
+                        </div>
+                        <div class="col-12 col-md-7">
+                            {{$status->admin_edited_date ?? '-'}}
+                        </div>
+                    </div>
                 @endif
                 <br />
                 <a href="javascript:history.back();" class="btn btn-sm btn-secondary " style="background-color: #cccccc">Powrót</a>

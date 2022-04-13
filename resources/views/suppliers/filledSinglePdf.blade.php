@@ -34,6 +34,15 @@ foreach ($pool->categories as $category) {
         $pools1[] = $category;
     }
 }
+$statusDM = \App\Models\SupplierPoolStatus::getStatus($user_id, $pool->id, $supplier_id);
+$userNameAcceptedDm = null;
+$dateAcceptedDm = null;
+if (!empty($statusDM)) {
+    $userName = \App\User::where('id', $statusDM->dm_accepted_user_id)->first();
+    if (!empty($userName)) {
+        $userNameAcceptedDm = $userName->imie .' '.$userName->nazwisko ?? '-';
+    }
+}
 ?>
 <html>
 <head>
@@ -307,6 +316,16 @@ foreach ($pool->categories as $category) {
                 <td>Data zaakceptowania:</td>
                 <td>{{$status->accepted_date ?? '-'}}</td>
             </tr>
+            @if (!empty($statusDM->dm_accepted_date))
+                <tr>
+                    <td>Zaakceptowane przez Dyrektora Medycznego:</td>
+                    <td>{{$userNameAcceptedDm}}</td>
+                </tr>
+                <tr>
+                    <td>Data akceptacji:</td>
+                    <td>{{$statusDM->dm_accepted_date ?? '-'}}</td>
+                </tr>
+            @endif
             @if (!empty($status->admin_edited_date))
                 <tr>
                     <td>Edytowane przed administratora:</td>

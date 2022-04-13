@@ -32,6 +32,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::any('suppliers/pools/{id}/fill/{poolId}/edit/{userId}', 'SuppliersPoolsController@editPool')->name('suppliers.pools.edit');
     Route::any('suppliers/pools/{id}/filled/{poolId}', 'SuppliersPoolsController@filledPools')->name('suppliers.pools.filled');
     Route::any('suppliers/pools/accept/{id}/{poolId}/{userId}/{extra?}', 'SuppliersPoolsController@acceptPool')->name('suppliers.pools.accept');
+    Route::any('suppliers/pools/acceptDm/{id}/{poolId}/{userId}', 'SuppliersPoolsController@acceptPoolDM')->name('suppliers.pools.acceptDm');
     Route::any('suppliers/pools/{id}/filled/{poolId}/user/{userId}', 'SuppliersPoolsController@filledPoolsSingle')->name('suppliers.pools.filled.single');
     Route::any('suppliers/pools/{id}/filled/{poolId}/user/{userId}/pdf', 'SuppliersPoolsController@filledPoolsSinglePdf')->name('suppliers.pools.filled.single.pdf');
     Route::any('suppliers/contacts/add/{id}', 'SuppliersController@addContact')->name('suppliers.contact.add');

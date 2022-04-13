@@ -92,6 +92,22 @@ class SuppliersPoolsController extends VoyagerBaseController {
     }
 
     /**
+     * accept pool as dyrektor medyczny
+     * @param $id
+     * @param $poolId
+     * @param $userId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function acceptPoolDM($id, $poolId, $userId)
+    {
+        if (SupplierPoolStatus::acceptDMPool($userId, $poolId, $id)) {
+            return redirect(route('suppliers.pools.filled.single', ['id' => $id, 'poolId' => $poolId, 'userId' => $userId]));
+        } else {
+            return redirect(route('suppliers.pools.filled.single', ['id' => $id, 'poolId' => $poolId, 'userId' => $userId]));
+        }
+    }
+
+    /**
      * show single filled data
      * @param $id
      * @param $poolId

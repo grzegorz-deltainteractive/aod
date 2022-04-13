@@ -134,6 +134,7 @@ if (!empty($poolsRelation)) {
                             <th>Użytkownik</th>
                             <th>Rok</th>
                             <th>Status</th>
+                            <th>Status DM</th>
                             <th>Wynik #</th>
                             <th>Wynik %</th>
                         </tr>
@@ -144,6 +145,15 @@ if (!empty($poolsRelation)) {
                         $year = \App\Models\SupplierPoolStatus::getPoolFilledUserYear($poolData['pool']->id, $supplier->id, $poolData['user']['id']);
 //                        $filled = \App\Models\SupplierPoolQuestion::getFilledData($pool->id, $supplier->id);
                         $status = \App\Models\SupplierPoolStatus::getPoolFilledStatus($poolData['user']['id'], $poolData['pool']->id, $supplier->id );
+                        $userNameAcceptedDm = null;
+                        $dateAcceptedDm = null;
+                        $statusDM = \App\Models\SupplierPoolStatus::getStatus($poolData['user']['id'], $poolData['pool']->id, $supplier->id);
+                        if (!empty($statusDM)) {
+                            $userName = \App\User::where('id', $statusDM->dm_accepted_user_id)->first();
+                            if (!empty($userName)) {
+                                $userNameAcceptedDm = $userName->imie .' '.$userName->nazwisko ?? '-';
+                            }
+                        }
                         $color = 'transparent';
                         $statusText = '';
                         $accepted = false;
@@ -202,6 +212,15 @@ if (!empty($poolsRelation)) {
                             </td>
                             <td>
                                 <?php
+                                if (empty($userNameAcceptedDm)) {
+                                    echo '-';
+                                } else {
+                                    echo 'Zaakceptopwana przez '.$userNameAcceptedDm.', dnia: '.$statusDM->dm_accepted_date;
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
                                 try {
                                     if ($status != 'unfilled') {
                                         echo $suppliersPoolsResult['poolsSummary'][$poolData['pool']->id]['total'] .' / '.$suppliersPoolsResult['poolsSummary'][$poolData['pool']->id]['max'];
@@ -213,6 +232,7 @@ if (!empty($poolsRelation)) {
                                 }
                                 ?>
                             </td>
+
                             <td>
                                 <?php
                                 try {

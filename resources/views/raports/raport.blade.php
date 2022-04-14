@@ -1,7 +1,8 @@
 @extends('voyager::master')
 @section('content')
-    <h1 class="page-title">
+    <h1 class="page-title" style="width: 100%">
         <img src="/images/gray_ankiety.png" alt="" class="header-icon-img" />  Raport - wyniki
+        <img src="/images/export-pdf.png" alt="" class="float-right pull-right " style="cursor:pointer; margin-top: 15px;" id="export-pdf-image" />
     </h1>
     <div class="page-content container-fluid">
         <div class="panel panel-bordered">
@@ -13,7 +14,7 @@
                     <?php echo e(csrf_field()); ?>
                     <div class="row">
                         <div class="form-group col-12 col-lg-8">
-                            <label for="suppliersIds">Wybierz dostawcę (możesz zaznaczyć kilku)</label>
+                            <label for="suppliersIds">Wybierz dostawcę (można zaznaczyć kilku)</label>
                             <select name="suppliersIds[]" class="form-control" multiple>
                                 @foreach ($suppliersList as $supplierId => $supplierName)
                                     <?php
@@ -42,7 +43,7 @@
                         </div>
                     </div>
                     <button class="btn btn-sm btn-primary"  type="submit">Wygeneruj raport</button>
-                    <button class="btn btn-sm btn-primary" formtarget="_blank"  type="submit" name="generatePDF" value="1">Zapisz do PDF</button>
+                    <button class="btn btn-sm btn-primary" id="generate-pdf-button" style="display: none" formtarget="_blank"  type="submit" name="generatePDF" value="1">Zapisz do PDF</button>
                 </form>
             </div>
             <div class="panel-body">
@@ -61,7 +62,7 @@
                         @foreach ($pools as $pool)
                             <h4>Definicja ankiety {{$pool->name}} {{$pool->numer_procedury}}</h4>
                             @foreach($pool->categories as $category)
-                                <h5>Kategoria: <strong>{{$category->name}}</strong></h5>
+                                <h5 style="color: black;">Kategoria: <strong>{{$category->name}}</strong></h5>
                                 <table class="table" style="width: 100%;">
                                     <thead>
                                     <tr>
@@ -93,12 +94,22 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                                <br /><hr/><br />
                             @endforeach
+                            <br /><hr/><br />
                         @endforeach
                     @endif
                 @endforeach
             </div>
         </div>
     </div>
+
+@stop
+@section('javascript')
+    <script>
+        jQuery(function() {
+            jQuery('img#export-pdf-image').click(function() {
+                jQuery('#generate-pdf-button').click();
+            })
+        })
+    </script>
 @stop

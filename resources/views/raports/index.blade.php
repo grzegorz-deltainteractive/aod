@@ -13,7 +13,7 @@
                     <?php echo e(csrf_field()); ?>
                     <div class="row">
                         <div class="form-group col-12 col-lg-8">
-                            <label for="suppliersIds">Wybierz dostawcę (możesz zaznaczyć kilku)</label>
+                            <label for="suppliersIds">Wybierz dostawcę (można zaznaczyć kilku)</label>
                             <select name="suppliersIds[]" class="form-control" multiple>
                                 @foreach ($suppliersList as $supplierId => $supplierName)
                                     <option value="{{$supplierId}}">{{$supplierName}}</option>

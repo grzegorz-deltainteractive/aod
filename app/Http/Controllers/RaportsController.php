@@ -33,7 +33,11 @@ class RaportsController extends VoyagerBaseController {
         $data = $request->all();
 
         if (empty($data['suppliersIds']) || empty($data['years'])) {
-            return redirect('/admin/raports');
+
+            return redirect('/admin/raports')->with([
+                'message'    => "Proszę wybrać dostawcę i rok",
+                'alert-type' => 'error',
+            ]);
         }
         $selectedSuppliers = $data['suppliersIds'];
         $selectedYears = $data['years'];

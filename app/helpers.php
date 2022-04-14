@@ -22,7 +22,9 @@ if (!function_exists('getBreadcrumbs')) {
             'draws' => 'Wykres parametru',
             'listpools' => 'Lista ankiet dla dostawcy',
             'singlepool' => 'Pojedyńcza ankieta',
-            'filled'    => 'Wypełnienia'
+            'filled'    => 'Wypełnienia',
+            'raports'   => 'Raporty',
+            'generate'  => 'Wygenerowany raport'
         ];
         foreach ($segments as $key => &$segment) {
             if (array_key_exists($segment, $translations)) {

@@ -39,6 +39,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::any('suppliers/contacts/remove/{id}/{contactId}', 'SuppliersController@removeContact')->name('suppliers.contact.remove');
 
     Route::any('raports/generate', 'RaportsController@generateRaport')->name('raports.generate');
+    Route::any('raports/getPools', 'RaportsController@getPools')->name('raports.getPools');
     Voyager::routes();
 
     Route::get('users/relation', ['uses' => 'VoyagerUserController@relation', 'as' => 'voyager.users.relation']);

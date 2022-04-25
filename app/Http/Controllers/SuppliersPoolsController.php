@@ -14,6 +14,7 @@ use App\Models\Supplier;
 use App\Models\SupplierPoolQuestion;
 use App\Models\SupplierPoolStatus;
 use App\User;
+use Dompdf\Options;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
@@ -137,7 +138,10 @@ class SuppliersPoolsController extends VoyagerBaseController {
             $pdf = PDF::loadView('suppliers/filledSinglePdf');
 
 //            $pdf->setWarnings(true);
+//            $options = new Options();
+//            $options->setIsPhpEnabled(true);
             $pdf->setPaper('a4', 'portrait');
+            $pdf->setOptions(['isPhpEnabled' => true]);
 //            $pdf->save('ankieta-'.$poolId.'-'.$supplierId.'.pdf');
             return $pdf->stream('ankieta-pojedyncza-'.$poolId.'-'.$id.date('Y', strtotime($pool->data_wydania_ankiety)).'_'.$pool->numer_procedury.'-'.date('Y_m_d_H_i_s').'.pdf');
         } catch (\Exception $ex) {

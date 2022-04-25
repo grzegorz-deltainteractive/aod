@@ -93,6 +93,9 @@ if (!empty($statusDM)) {
             height: 50px;
             border-top: 1px solid black;
         }
+        footer #pagenumber:after {
+            content: counter(page);
+        }
         header {
             position: fixed;
             top: -30px;
@@ -117,7 +120,17 @@ if (!empty($statusDM)) {
     ALAB laboratoria Sp. z o.o.
 </header>
 <footer>
-    {{$pool->numer_wydania_ankiety}} - {{$pool->data_wydania_ankiety}}
+    <table style="width:100%;">
+        <tr>
+            <td style="width: 50%;">
+                {{$pool->numer_wydania_ankiety}} - {{$pool->data_wydania_ankiety}}
+            </td>
+            <td style="widows: 50%; text-align: right">
+                Strona <span id="pagenumber"></span>
+            </td>
+        </tr>
+
+    </table>
 </footer>
 <main>
     <table style="width: 100%;">

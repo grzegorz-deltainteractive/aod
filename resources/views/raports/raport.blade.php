@@ -13,13 +13,27 @@
                 <form action="{{route('raports.generate')}}" method="post">
                     <?php echo e(csrf_field()); ?>
                     <div class="row">
-                        <div class="form-group col-12 col-lg-8">
+                        <div class="form-group col-12 col-lg-4">
                             <label for="suppliersIds">Wybierz dostawcę (można zaznaczyć kilku)</label>
                             <select name="suppliersIds[]" class="form-control" multiple>
                                 @foreach ($suppliersList as $supplierId => $supplierName)
                                     <?php
                                     $selected = '';
                                     if (in_array($supplierId, $selectedSuppliers)) {
+                                        $selected = 'selected="selected"';
+                                    }
+                                    ?>
+                                    <option value="{{$supplierId}}" {{$selected}}>{{$supplierName}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-12 col-lg-4">
+                            <label for="poolsIds">Wybierz szablon ankiety (można zaznaczyć kilka)</label>
+                            <select name="poolsIds[]" id="poolsIds" class="form-control" multiple>
+                                @foreach ($pools as $supplierId => $supplierName)
+                                    <?php
+                                    $selected = '';
+                                    if (in_array($supplierId, $selectedPools)) {
                                         $selected = 'selected="selected"';
                                     }
                                     ?>
@@ -53,12 +67,28 @@
                     <?php
                         $supplier = \App\Models\Supplier::where('id', $supplierId)->first();
                         $pools = [];
+                        $poolsExists = false;
                         if (!empty($supplier)) {
                             $pools = $supplier->poolsRelation;
 
                         }
+                        if (isset($selectedPools) && !empty($selectedPools)) {
+                            foreach ($pools as $i=>$pool) {
+
+                                if (!in_array($pool->id, $selectedPools)) {
+                                    unset($pools[$i]);
+                                } else {
+                                    $poolsExists = true;
+                                }
+                            }
+                        } else {
+                            $poolsExists = true;
+                        }
+//                        dd($pools);
+//                        dd($selectedPools);
+//                        dd($poolsExists);
                     ?>
-                    @if (!empty($pools))
+                    @if (!empty($pools) && $poolsExists)
                         @foreach ($pools as $pool)
                             <h4>Definicja ankiety {{$pool->name}} {{$pool->numer_procedury}}</h4>
                             @foreach($pool->categories as $category)

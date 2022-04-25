@@ -41,8 +41,26 @@ class RaportsController extends VoyagerBaseController {
         }
         $selectedSuppliers = $data['suppliersIds'];
         $selectedYears = $data['years'];
+        $selectedPools = $data['poolsIds'] ?? [];
 
-        $return = array_merge($this->getData(), ['selectedSuppliers' => $selectedSuppliers, 'selectedYears' => $selectedYears]);
+        $pools = [];
+        if (!empty($selectedSuppliers)) {
+            foreach ($selectedSuppliers as $supplierId) {
+                $supplier = Supplier::where('id', $supplierId)->first();
+                if (!empty($supplier)) {
+                    $poolsRelation = $supplier->poolsRelation;
+                    if (!empty($poolsRelation)) {
+                        foreach ($poolsRelation as $pool) {
+                            if (!array_key_exists($pool->id, $pools)) {
+                                $pools[$pool->id] = $pool->name.' '.$pool->numer_procedury;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $return = array_merge($this->getData(), ['selectedSuppliers' => $selectedSuppliers, 'selectedYears' => $selectedYears, 'selectedPools' => $selectedPools, 'pools' => $pools]);
         if (isset($data['generatePDF']) && $data['generatePDF'] == 1) {
             try {
                 view()->share($return);
@@ -98,5 +116,33 @@ class RaportsController extends VoyagerBaseController {
         sort($allYears);
 
         return ['suppliersList' => $suppliers, 'years' => $allYears];
+    }
+
+    public function getPools(Request $request)
+    {
+        $ids = $request->get('suppliersIds', []);
+        if (!empty($ids)) {
+            $pools = [];
+            foreach ($ids as $id) {
+                $supplier = Supplier::where('id', $id)->first();
+                if (!empty($supplier)) {
+                    $poolsRelation = $supplier->poolsRelation;
+                    if (!empty($poolsRelation)) {
+                        foreach ($poolsRelation as $pool) {
+                            if (!array_key_exists($pool->id, $pools)) {
+                                $pools[$pool->id] = $pool->name .' '.$pool->numer_procedury;
+                            }
+                        }
+                    }
+                }
+            }
+            if (!empty($pools)) {
+                return response()->json(['pools' => $pools, 'error' => '']);
+            } else {
+                return response()->json(['pools' => '', 'error' => 'Brak ankiet']);
+            }
+        } else {
+            return response()->json(['pools' => '', 'error' => 'Brak ankiet']);
+        }
     }
 }

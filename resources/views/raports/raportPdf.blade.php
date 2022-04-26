@@ -47,6 +47,9 @@
             height: 50px;
             border-top: 1px solid black;
         }
+        footer #pagenumber:after {
+            content: counter(page);
+        }
         header {
             position: fixed;
             top: -30px;
@@ -71,7 +74,17 @@
     ALAB laboratoria Sp. z o.o.
 </header>
 <footer>
-    Wydruk raportu
+    <table style="width:100%;">
+        <tr>
+            <td style="width: 50%;">
+                Wydruk raportu
+            </td>
+            <td style="widows: 50%; text-align: right">
+                Strona <span id="pagenumber"></span>
+            </td>
+        </tr>
+
+    </table>
 </footer>
 <main>
     <h1 class="page-title">

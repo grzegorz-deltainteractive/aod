@@ -48,7 +48,7 @@ if (!empty($statusDM)) {
             &nbsp;&nbsp; <a href="{{route('suppliers.pools.acceptDm', ['id' => $supplier_id, 'poolId' => $pool->id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float" style="margin-right:15px;"  onclick="return confirm('Czy chcesz zaakceptować ankietę? Zostanie zapisany status z datą i Twoim użytkownikiem?')">Zaakceptuj jako dyrektor Medyczny</a>
         @endif
         @if (canAcceptPool() && !empty($status2) && $status2 == 'unaceppted')
-            <a href="{{route('suppliers.pools.accept', ['id' => $supplier_id, 'poolId' => $pool->id, 'userId' => $user_id, 'extra' =>1])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float " style="margin-right:15px;" onclick="return confirm('Czy chcesz zaakceptować ankietę? Zostanie zapisany status z datą i Twoim użytkownikiem jako użytkownik akceptujący daną ankietę.')">Akceptuj ankietę</a>
+            <a href="{{route('suppliers.pools.accept', ['id' => $supplier_id, 'poolId' => $pool->id, 'userId' => $user_id, 'extra' =>1])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float " style="margin-right:15px;" onclick="return confirm('Czy chcesz zaakceptować ankietę? Zostanie zapisany status z datą i Twoim użytkownikiem jako użytkownik akceptujący daną ankietę.')">Zapisz ankietę</a>
         @endif
     </h1>
     <div class="page-content container-fluid">

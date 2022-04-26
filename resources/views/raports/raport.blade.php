@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <button class="btn btn-sm btn-primary"  type="submit">Wygeneruj raport</button>
-                    <button class="btn btn-sm btn-primary" id="generate-pdf-button" style="display: none" formtarget="_blank"  type="submit" name="generatePDF" value="1">Zapisz do PDF</button>
+                    <button class="btn btn-sm btn-primary" id="generate-pdf-button"  formtarget="_blank"  type="submit" name="generatePDF" value="1">Zapisz do PDF</button>
                 </form>
             </div>
             <div class="panel-body">

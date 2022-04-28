@@ -2112,6 +2112,99 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     // console.log(this.categories);
@@ -2129,7 +2222,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       newParameterRatingMin: 0,
       newParameterRatingMax: 10,
       newParameterLabVisible: 0,
-      prevParametrsIndexShow: -1
+      prevParametrsIndexShow: -1,
+      editParameterId: -1,
+      tmpIndex2: 0
     };
   },
   methods: {
@@ -2216,8 +2311,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         $(id).hide();
       }
     },
+    editParameter: function editParameter(index, index2) {
+      this.editParameterId = index;
+      this.newParameterRatingMin = this.categoryData[index]['parameters'][index2]['rating_min'];
+      this.newParameterRatingMax = this.categoryData[index]['parameters'][index2]['rating_max'];
+      this.newParameterLabVisible = this.categoryData[index]['parameters'][index2]['visible_for_lab'];
+      this.newParameterName = this.categoryData[index]['parameters'][index2]['name'];
+      this.tmpIndex2 = index2;
+    },
+    editParameterCancel: function editParameterCancel() {
+      this.editParameterId = -1;
+    },
     addParameter: function addParameter(id) {
       var is_requested = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      this.editParameterId = -1;
       this.displayParametersForm = id;
       this.newParameterRatingMin = 0;
       this.newParameterRatingMax = 20;
@@ -2257,6 +2364,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         try {
           this.categoryData[index]['parameters'].push(tmp);
           this.displayParametersForm = -1;
+          this.saveForm();
+        } catch (e) {
+          alert("Wystąpił problem przy dodawaniu parametru, proszę spróbować raz jeszcze");
+        }
+      }
+    },
+    editParameterSave: function editParameterSave(id, index) {
+      if (this.newParameterName == '') {
+        alert('Proszę podać nazwę nowego parametru!');
+      } else {
+        var tmp = {
+          "name": this.newParameterName,
+          "rating_max": this.newParameterRatingMax,
+          "rating_min": this.newParameterRatingMin,
+          "visible_for_lab": this.newParameterLabVisible,
+          "category_id": id
+        };
+
+        try {
+          this.categoryData[index]['parameters'][this.tmpIndex2] = tmp;
+          this.editParameterId = -1;
           this.saveForm();
         } catch (e) {
           alert("Wystąpił problem przy dodawaniu parametru, proszę spróbować raz jeszcze");
@@ -2319,7 +2447,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       toastr.info('Proszę czekać, zapisuję dane');
       axios.post(this.saveUrl, formData).then(function (response) {
         if (response.status == 200) {
-          toastr.success('Dane zostałyz zapisane poprawnie');
+          toastr.success('Dane zostały zapisane poprawnie');
         } else {
           toastr.error('Wystąpił błąd przy zapisie danych');
         }
@@ -20242,6 +20370,23 @@ var render = function () {
                                                   "button",
                                                   {
                                                     staticClass:
+                                                      "btn btn-sm btn-primary",
+                                                    on: {
+                                                      click: function ($event) {
+                                                        return _vm.editParameter(
+                                                          index,
+                                                          index2
+                                                        )
+                                                      },
+                                                    },
+                                                  },
+                                                  [_vm._v("Edytuj parametr")]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
                                                       "btn btn-sm btn-danger",
                                                     on: {
                                                       click: function ($event) {
@@ -21180,6 +21325,935 @@ var render = function () {
                                               [
                                                 _vm._v(
                                                   "Anuluj dodawanie parametru"
+                                                ),
+                                              ]
+                                            ),
+                                          ]
+                                        ),
+                                      ]
+                                    ),
+                                  ]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.editParameterId != -1
+                              ? _c(
+                                  "div",
+                                  {
+                                    attrs: {
+                                      id:
+                                        "parametersEdit" + _vm.editParameterId,
+                                    },
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      { staticClass: "panel panel-bordered" },
+                                      [
+                                        _c(
+                                          "div",
+                                          { staticClass: "panel-body" },
+                                          [
+                                            _c("div", { staticClass: "row" }, [
+                                              _c(
+                                                "div",
+                                                {
+                                                  staticClass:
+                                                    "form-group  col-md-12 ",
+                                                },
+                                                [
+                                                  _c(
+                                                    "label",
+                                                    {
+                                                      staticClass:
+                                                        "control-label",
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                                                    Parametr\n                                                "
+                                                      ),
+                                                    ]
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c("input", {
+                                                    directives: [
+                                                      {
+                                                        name: "model",
+                                                        rawName: "v-model",
+                                                        value:
+                                                          _vm.newParameterName,
+                                                        expression:
+                                                          "newParameterName",
+                                                      },
+                                                    ],
+                                                    staticClass: "form-control",
+                                                    attrs: {
+                                                      type: "text",
+                                                      placeholder:
+                                                        "Podaj nazwę nowego parametru",
+                                                      id: "newParameterName",
+                                                    },
+                                                    domProps: {
+                                                      value:
+                                                        _vm.newParameterName,
+                                                    },
+                                                    on: {
+                                                      input: function ($event) {
+                                                        if (
+                                                          $event.target
+                                                            .composing
+                                                        ) {
+                                                          return
+                                                        }
+                                                        _vm.newParameterName =
+                                                          $event.target.value
+                                                      },
+                                                    },
+                                                  }),
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                {
+                                                  staticClass:
+                                                    "form-group  col-md-12 ",
+                                                },
+                                                [
+                                                  _c(
+                                                    "label",
+                                                    {
+                                                      staticClass:
+                                                        "control-label",
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                                                    Punktacja minimum\n                                                "
+                                                      ),
+                                                    ]
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _vm.newParamaterIsRequested ==
+                                                  0
+                                                    ? _c(
+                                                        "select",
+                                                        {
+                                                          directives: [
+                                                            {
+                                                              name: "model",
+                                                              rawName:
+                                                                "v-model",
+                                                              value:
+                                                                _vm.newParameterRatingMin,
+                                                              expression:
+                                                                "newParameterRatingMin",
+                                                            },
+                                                          ],
+                                                          staticClass:
+                                                            "form-control",
+                                                          on: {
+                                                            change: function (
+                                                              $event
+                                                            ) {
+                                                              var $$selectedVal =
+                                                                Array.prototype.filter
+                                                                  .call(
+                                                                    $event
+                                                                      .target
+                                                                      .options,
+                                                                    function (
+                                                                      o
+                                                                    ) {
+                                                                      return o.selected
+                                                                    }
+                                                                  )
+                                                                  .map(
+                                                                    function (
+                                                                      o
+                                                                    ) {
+                                                                      var val =
+                                                                        "_value" in
+                                                                        o
+                                                                          ? o._value
+                                                                          : o.value
+                                                                      return val
+                                                                    }
+                                                                  )
+                                                              _vm.newParameterRatingMin =
+                                                                $event.target
+                                                                  .multiple
+                                                                  ? $$selectedVal
+                                                                  : $$selectedVal[0]
+                                                            },
+                                                          },
+                                                        },
+                                                        [
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "0",
+                                                              },
+                                                            },
+                                                            [_vm._v("0")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "1",
+                                                              },
+                                                            },
+                                                            [_vm._v("1")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "2",
+                                                              },
+                                                            },
+                                                            [_vm._v("2")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "3",
+                                                              },
+                                                            },
+                                                            [_vm._v("3")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "4",
+                                                              },
+                                                            },
+                                                            [_vm._v("4")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "5",
+                                                              },
+                                                            },
+                                                            [_vm._v("5")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "6",
+                                                              },
+                                                            },
+                                                            [_vm._v("6")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "7",
+                                                              },
+                                                            },
+                                                            [_vm._v("7")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "8",
+                                                              },
+                                                            },
+                                                            [_vm._v("8")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "9",
+                                                              },
+                                                            },
+                                                            [_vm._v("9")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "10",
+                                                              },
+                                                            },
+                                                            [_vm._v("10")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "11",
+                                                              },
+                                                            },
+                                                            [_vm._v("11")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "12",
+                                                              },
+                                                            },
+                                                            [_vm._v("12")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "13",
+                                                              },
+                                                            },
+                                                            [_vm._v("13")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "14",
+                                                              },
+                                                            },
+                                                            [_vm._v("14")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "15",
+                                                              },
+                                                            },
+                                                            [_vm._v("15")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "16",
+                                                              },
+                                                            },
+                                                            [_vm._v("16")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "17",
+                                                              },
+                                                            },
+                                                            [_vm._v("17")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "18",
+                                                              },
+                                                            },
+                                                            [_vm._v("18")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "19",
+                                                              },
+                                                            },
+                                                            [_vm._v("19")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "20",
+                                                              },
+                                                            },
+                                                            [_vm._v("20")]
+                                                          ),
+                                                        ]
+                                                      )
+                                                    : _c(
+                                                        "select",
+                                                        {
+                                                          directives: [
+                                                            {
+                                                              name: "model",
+                                                              rawName:
+                                                                "v-model",
+                                                              value:
+                                                                _vm.newParameterRatingMin,
+                                                              expression:
+                                                                "newParameterRatingMin",
+                                                            },
+                                                          ],
+                                                          staticClass:
+                                                            "form-control",
+                                                          on: {
+                                                            change: function (
+                                                              $event
+                                                            ) {
+                                                              var $$selectedVal =
+                                                                Array.prototype.filter
+                                                                  .call(
+                                                                    $event
+                                                                      .target
+                                                                      .options,
+                                                                    function (
+                                                                      o
+                                                                    ) {
+                                                                      return o.selected
+                                                                    }
+                                                                  )
+                                                                  .map(
+                                                                    function (
+                                                                      o
+                                                                    ) {
+                                                                      var val =
+                                                                        "_value" in
+                                                                        o
+                                                                          ? o._value
+                                                                          : o.value
+                                                                      return val
+                                                                    }
+                                                                  )
+                                                              _vm.newParameterRatingMin =
+                                                                $event.target
+                                                                  .multiple
+                                                                  ? $$selectedVal
+                                                                  : $$selectedVal[0]
+                                                            },
+                                                          },
+                                                        },
+                                                        [
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "0",
+                                                              },
+                                                            },
+                                                            [_vm._v("0")]
+                                                          ),
+                                                        ]
+                                                      ),
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                {
+                                                  staticClass:
+                                                    "form-group  col-md-12 ",
+                                                },
+                                                [
+                                                  _c(
+                                                    "label",
+                                                    {
+                                                      staticClass:
+                                                        "control-label",
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                                                    Punktacja maksumim\n                                                "
+                                                      ),
+                                                    ]
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _vm.newParamaterIsRequested ==
+                                                  0
+                                                    ? _c(
+                                                        "select",
+                                                        {
+                                                          directives: [
+                                                            {
+                                                              name: "model",
+                                                              rawName:
+                                                                "v-model",
+                                                              value:
+                                                                _vm.newParameterRatingMax,
+                                                              expression:
+                                                                "newParameterRatingMax",
+                                                            },
+                                                          ],
+                                                          staticClass:
+                                                            "form-control",
+                                                          on: {
+                                                            change: function (
+                                                              $event
+                                                            ) {
+                                                              var $$selectedVal =
+                                                                Array.prototype.filter
+                                                                  .call(
+                                                                    $event
+                                                                      .target
+                                                                      .options,
+                                                                    function (
+                                                                      o
+                                                                    ) {
+                                                                      return o.selected
+                                                                    }
+                                                                  )
+                                                                  .map(
+                                                                    function (
+                                                                      o
+                                                                    ) {
+                                                                      var val =
+                                                                        "_value" in
+                                                                        o
+                                                                          ? o._value
+                                                                          : o.value
+                                                                      return val
+                                                                    }
+                                                                  )
+                                                              _vm.newParameterRatingMax =
+                                                                $event.target
+                                                                  .multiple
+                                                                  ? $$selectedVal
+                                                                  : $$selectedVal[0]
+                                                            },
+                                                          },
+                                                        },
+                                                        [
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "0",
+                                                              },
+                                                            },
+                                                            [_vm._v("0")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "1",
+                                                              },
+                                                            },
+                                                            [_vm._v("1")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "2",
+                                                              },
+                                                            },
+                                                            [_vm._v("2")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "3",
+                                                              },
+                                                            },
+                                                            [_vm._v("3")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "4",
+                                                              },
+                                                            },
+                                                            [_vm._v("4")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "5",
+                                                              },
+                                                            },
+                                                            [_vm._v("5")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "6",
+                                                              },
+                                                            },
+                                                            [_vm._v("6")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "7",
+                                                              },
+                                                            },
+                                                            [_vm._v("7")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "8",
+                                                              },
+                                                            },
+                                                            [_vm._v("8")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "9",
+                                                              },
+                                                            },
+                                                            [_vm._v("9")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "10",
+                                                              },
+                                                            },
+                                                            [_vm._v("10")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "11",
+                                                              },
+                                                            },
+                                                            [_vm._v("11")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "12",
+                                                              },
+                                                            },
+                                                            [_vm._v("12")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "13",
+                                                              },
+                                                            },
+                                                            [_vm._v("13")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "14",
+                                                              },
+                                                            },
+                                                            [_vm._v("14")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "15",
+                                                              },
+                                                            },
+                                                            [_vm._v("15")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "16",
+                                                              },
+                                                            },
+                                                            [_vm._v("16")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "17",
+                                                              },
+                                                            },
+                                                            [_vm._v("17")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "18",
+                                                              },
+                                                            },
+                                                            [_vm._v("18")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "19",
+                                                              },
+                                                            },
+                                                            [_vm._v("19")]
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "20",
+                                                              },
+                                                            },
+                                                            [_vm._v("20")]
+                                                          ),
+                                                        ]
+                                                      )
+                                                    : _c(
+                                                        "select",
+                                                        {
+                                                          directives: [
+                                                            {
+                                                              name: "model",
+                                                              rawName:
+                                                                "v-model",
+                                                              value:
+                                                                _vm.newParameterRatingMax,
+                                                              expression:
+                                                                "newParameterRatingMax",
+                                                            },
+                                                          ],
+                                                          staticClass:
+                                                            "form-control",
+                                                          on: {
+                                                            change: function (
+                                                              $event
+                                                            ) {
+                                                              var $$selectedVal =
+                                                                Array.prototype.filter
+                                                                  .call(
+                                                                    $event
+                                                                      .target
+                                                                      .options,
+                                                                    function (
+                                                                      o
+                                                                    ) {
+                                                                      return o.selected
+                                                                    }
+                                                                  )
+                                                                  .map(
+                                                                    function (
+                                                                      o
+                                                                    ) {
+                                                                      var val =
+                                                                        "_value" in
+                                                                        o
+                                                                          ? o._value
+                                                                          : o.value
+                                                                      return val
+                                                                    }
+                                                                  )
+                                                              _vm.newParameterRatingMax =
+                                                                $event.target
+                                                                  .multiple
+                                                                  ? $$selectedVal
+                                                                  : $$selectedVal[0]
+                                                            },
+                                                          },
+                                                        },
+                                                        [
+                                                          _c(
+                                                            "option",
+                                                            {
+                                                              attrs: {
+                                                                value: "1",
+                                                              },
+                                                            },
+                                                            [_vm._v("1")]
+                                                          ),
+                                                        ]
+                                                      ),
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                {
+                                                  directives: [
+                                                    {
+                                                      name: "show",
+                                                      rawName: "v-show",
+                                                      value:
+                                                        _vm.newParamaterIsRequested ==
+                                                        0,
+                                                      expression:
+                                                        "newParamaterIsRequested == 0",
+                                                    },
+                                                  ],
+                                                  staticClass:
+                                                    "form-group  col-md-12 ",
+                                                },
+                                                [
+                                                  _c(
+                                                    "label",
+                                                    {
+                                                      staticClass:
+                                                        "control-label",
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                                                    Czy parametr widoczny dla laboratorium\n                                                "
+                                                      ),
+                                                    ]
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "select",
+                                                    {
+                                                      directives: [
+                                                        {
+                                                          name: "model",
+                                                          rawName: "v-model",
+                                                          value:
+                                                            _vm.newParameterLabVisible,
+                                                          expression:
+                                                            "newParameterLabVisible",
+                                                        },
+                                                      ],
+                                                      staticClass:
+                                                        "form-control",
+                                                      on: {
+                                                        change: function (
+                                                          $event
+                                                        ) {
+                                                          var $$selectedVal =
+                                                            Array.prototype.filter
+                                                              .call(
+                                                                $event.target
+                                                                  .options,
+                                                                function (o) {
+                                                                  return o.selected
+                                                                }
+                                                              )
+                                                              .map(function (
+                                                                o
+                                                              ) {
+                                                                var val =
+                                                                  "_value" in o
+                                                                    ? o._value
+                                                                    : o.value
+                                                                return val
+                                                              })
+                                                          _vm.newParameterLabVisible =
+                                                            $event.target
+                                                              .multiple
+                                                              ? $$selectedVal
+                                                              : $$selectedVal[0]
+                                                        },
+                                                      },
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "option",
+                                                        {
+                                                          attrs: { value: "0" },
+                                                        },
+                                                        [_vm._v("nie")]
+                                                      ),
+                                                      _vm._v(" "),
+                                                      _c(
+                                                        "option",
+                                                        {
+                                                          attrs: { value: "1" },
+                                                        },
+                                                        [_vm._v("tak")]
+                                                      ),
+                                                    ]
+                                                  ),
+                                                ]
+                                              ),
+                                            ]),
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          { staticClass: "panel-footer" },
+                                          [
+                                            _c(
+                                              "button",
+                                              {
+                                                staticClass:
+                                                  "btn btn-primary save ",
+                                                on: {
+                                                  click: function ($event) {
+                                                    return _vm.editParameterSave(
+                                                      item.id,
+                                                      index
+                                                    )
+                                                  },
+                                                },
+                                              },
+                                              [_vm._v("Zaktualizuj parametr")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "button",
+                                              {
+                                                staticClass:
+                                                  "btn btn-secondary",
+                                                on: {
+                                                  click: function ($event) {
+                                                    return _vm.editParameterCancel()
+                                                  },
+                                                },
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "Anuluj edycję parametru"
                                                 ),
                                               ]
                                             ),

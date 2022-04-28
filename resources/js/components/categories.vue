@@ -60,6 +60,7 @@
                                             <span v-else>tak</span>
                                         </td>
                                         <td>
+                                            <button class="btn btn-sm btn-primary" @click="editParameter(index, index2)">Edytuj parametr</button>
                                             <button class="btn btn-sm btn-danger" @click="deleteParameter(index, index2)">Usuń parametr</button>
                                         </td>
                                     </tr>
@@ -158,6 +159,98 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="" :id="'parametersEdit'+editParameterId"  v-if="editParameterId != -1">
+                                <!--                                formularz dodania parametru-->
+                                <div class="panel panel-bordered">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group  col-md-12 ">
+                                                <label class="control-label">
+                                                    Parametr
+                                                </label>
+                                                <input type="text" class="form-control" v-model="newParameterName" placeholder="Podaj nazwę nowego parametru" id="newParameterName" />
+                                            </div>
+                                            <div class="form-group  col-md-12 ">
+                                                <label class="control-label">
+                                                    Punktacja minimum
+                                                </label>
+                                                <select v-model="newParameterRatingMin" class="form-control" v-if="newParamaterIsRequested == 0">
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                    <option value="13">13</option>
+                                                    <option value="14">14</option>
+                                                    <option value="15">15</option>
+                                                    <option value="16">16</option>
+                                                    <option value="17">17</option>
+                                                    <option value="18">18</option>
+                                                    <option value="19">19</option>
+                                                    <option value="20">20</option>
+                                                </select>
+                                                <select v-model="newParameterRatingMin" class="form-control" v-else>
+                                                    <option value="0">0</option>
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group  col-md-12 ">
+                                                <label class="control-label">
+                                                    Punktacja maksumim
+                                                </label>
+                                                <select v-model="newParameterRatingMax" class="form-control" v-if="newParamaterIsRequested == 0">
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                    <option value="13">13</option>
+                                                    <option value="14">14</option>
+                                                    <option value="15">15</option>
+                                                    <option value="16">16</option>
+                                                    <option value="17">17</option>
+                                                    <option value="18">18</option>
+                                                    <option value="19">19</option>
+                                                    <option value="20">20</option>
+                                                </select>
+                                                <select v-model="newParameterRatingMax" class="form-control" v-else>
+                                                    <option value="1">1</option>
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group  col-md-12 " v-show="newParamaterIsRequested == 0">
+                                                <label class="control-label">
+                                                    Czy parametr widoczny dla laboratorium
+                                                </label>
+                                                <select v-model="newParameterLabVisible" class="form-control">
+                                                    <option value="0">nie</option>
+                                                    <option value="1">tak</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <button class="btn btn-primary save " v-on:click="editParameterSave(item.id, index)">Zaktualizuj parametr</button>
+                                        <button class="btn btn-secondary" v-on:click="editParameterCancel()">Anuluj edycję parametru</button>
+                                    </div>
+                                </div>
+                            </div>
                             <div v-if="displayParametersForm == -1">
                                 <button class="btn btn-sm btn-primary" v-on:click="addParameter(item.id, item.is_requested)">Dodaj nowy parametr</button>
                             </div>
@@ -222,7 +315,11 @@ export default {
             newParameterRatingMax: 10,
             newParameterLabVisible: 0,
 
-            prevParametrsIndexShow: -1
+            prevParametrsIndexShow: -1,
+
+            editParameterId: -1,
+            tmpIndex2: 0
+
         }
     },
     methods: {
@@ -306,9 +403,22 @@ export default {
                 $(id).hide();
             }
         },
+        editParameter: function(index, index2)
+        {
+            this.editParameterId = index;
+            this.newParameterRatingMin = this.categoryData[index]['parameters'][index2]['rating_min'];
+            this.newParameterRatingMax = this.categoryData[index]['parameters'][index2]['rating_max'];
+            this.newParameterLabVisible = this.categoryData[index]['parameters'][index2]['visible_for_lab'];
+            this.newParameterName = this.categoryData[index]['parameters'][index2]['name'];
+            this.tmpIndex2 = index2;
+        },
+        editParameterCancel: function()
+        {
+            this.editParameterId = -1;
+        },
         addParameter: function(id, is_requested = 0)
         {
-
+            this.editParameterId = -1;
             this.displayParametersForm = id;
             this.newParameterRatingMin = 0;
             this.newParameterRatingMax = 20;
@@ -346,6 +456,26 @@ export default {
                 try {
                     this.categoryData[index]['parameters'].push(tmp);
                     this.displayParametersForm = -1;
+                    this.saveForm();
+                } catch (e) {
+                    alert ("Wystąpił problem przy dodawaniu parametru, proszę spróbować raz jeszcze");
+                }
+            }
+        },
+        editParameterSave: function (id, index) {
+            if (this.newParameterName == '') {
+                alert('Proszę podać nazwę nowego parametru!');
+            } else {
+                let tmp = {
+                    "name": this.newParameterName,
+                    "rating_max": this.newParameterRatingMax,
+                    "rating_min": this.newParameterRatingMin,
+                    "visible_for_lab": this.newParameterLabVisible,
+                    "category_id": id
+                };
+                try {
+                    this.categoryData[index]['parameters'][this.tmpIndex2] = tmp;
+                    this.editParameterId = -1;
                     this.saveForm();
                 } catch (e) {
                     alert ("Wystąpił problem przy dodawaniu parametru, proszę spróbować raz jeszcze");
@@ -405,7 +535,7 @@ export default {
             toastr.info('Proszę czekać, zapisuję dane');
             axios.post(this.saveUrl, formData).then(function (response) {
                 if (response.status == 200) {
-                    toastr.success('Dane zostałyz zapisane poprawnie');
+                    toastr.success('Dane zostały zapisane poprawnie');
                 } else {
                     toastr.error('Wystąpił błąd przy zapisie danych');
                 }

@@ -209,7 +209,66 @@
                                                 @elseif($row->type == 'image')
                                                     <img src="@if( !filter_var($data->{$row->field}, FILTER_VALIDATE_URL)){{ Voyager::image( $data->{$row->field} ) }}@else{{ $data->{$row->field} }}@endif" style="width:100px">
                                                 @elseif($row->type == 'relationship')
-                                                    @include('voyager::formfields.relationship', ['view' => 'browse','options' => $row->details])
+
+                                                    @if( isset($row->details->pivot_table) && $row->details->pivot_table=='pools_suppliers')
+                                                        <?php
+                                                        $pool = \App\Models\Pool::where('id', $data->getKey())->first();
+                                                        $items = $pool->suppliers;
+                                                        $toThree = [];
+                                                        $toMore = [];
+                                                        $i = 0;
+                                                        foreach ($items as $item) {
+                                                            if ($i < 3) {
+                                                                $toThree[] = $item->name;
+                                                            } else {
+                                                                $toMore[] = $item->name;
+                                                            }
+                                                            $i++;
+                                                        }
+                                                        $toThree = implode(', ', $toThree);
+                                                        $toMore = implode(', ', $toMore);
+                                                        ?>
+                                                        {{$toThree}}
+                                                        @if (!empty($toMore))
+                                                                <a href="#expandid-pools-<?php echo $data->getKey();?>" data-toggle="collapse"
+                                                                   class="expand-collapse-pools"
+                                                                   data-expandid="<?php echo $data->getKey();?>">Pokaż/ukryj
+                                                                    następne</a>
+                                                                <div class="collapse" id="expandid-pools-<?php echo $data->getKey();?>">
+                                                                    {{$toMore}}
+                                                                </div>
+                                                        @endif
+                                                    @elseif( isset($row->details->pivot_table) && $row->details->pivot_table=='pools_laboratories')
+                                                        <?php
+                                                        $pool = \App\Models\Pool::where('id', $data->getKey())->first();
+                                                        $items = $pool->laboratories;
+                                                        $toThree = [];
+                                                        $toMore = [];
+                                                        $i = 0;
+                                                        foreach ($items as $item) {
+                                                            if ($i < 1) {
+                                                                $toThree[] = $item->name;
+                                                            } else {
+                                                                $toMore[] = $item->name;
+                                                            }
+                                                            $i++;
+                                                        }
+                                                        $toThree = implode(', ', $toThree);
+                                                        $toMore = implode(', ', $toMore);
+                                                        ?>
+                                                        {{$toThree}}
+                                                        @if (!empty($toMore))
+                                                            <a href="#expandid-laboratories-<?php echo $data->getKey();?>" data-toggle="collapse"
+                                                               class="expand-collapse-pools"
+                                                               data-expandid="<?php echo $data->getKey();?>">Pokaż/ukryj
+                                                                następne</a>
+                                                            <div class="collapse" id="expandid-laboratories-<?php echo $data->getKey();?>">
+                                                                {{$toMore}}
+                                                            </div>
+                                                        @endif
+                                                    @else
+                                                        @include('voyager::formfields.relationship', ['view' => 'browse','options' => $row->details])
+                                                    @endif
                                                 @elseif($row->type == 'select_multiple')
                                                     @if(property_exists($row->details, 'relationship'))
 

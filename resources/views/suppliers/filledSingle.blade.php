@@ -29,10 +29,13 @@ $status2 = \App\Models\SupplierPoolStatus::getPoolFilledStatus($user_id, $pool->
 $userNameAcceptedDm = null;
 $dateAcceptedDm = null;
 $statusDM = \App\Models\SupplierPoolStatus::getStatus($user_id, $pool->id, $supplier_id);
+$DMAccept = false;
 if (!empty($statusDM)) {
     $userName = \App\User::where('id', $statusDM->dm_accepted_user_id)->first();
     if (!empty($userName)) {
         $userNameAcceptedDm = $userName->imie .' '.$userName->nazwisko ?? '-';
+    } else {
+        $DMAccept = true;
     }
 }
 ?>
@@ -44,7 +47,7 @@ if (!empty($statusDM)) {
         @if (canEditPool())
             &nbsp;&nbsp; <a href="{{route('suppliers.pools.edit', ['poolId' => $pool->id, 'id' => $supplier_id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float" style="margin-right:15px;">Edytuj ankietę</a>
         @endif
-        @if (canAcceptPoolDyrektorMedyczny() && empty($statusDM))
+        @if (canAcceptPoolDyrektorMedyczny() && $DMAccept)
             &nbsp;&nbsp; <a href="{{route('suppliers.pools.acceptDm', ['id' => $supplier_id, 'poolId' => $pool->id, 'userId' => $user_id])}}" class="btn btn-secondary btn-small btn-sml btn-info float-right right-float" style="margin-right:15px;"  onclick="return confirm('Czy chcesz zaakceptować ankietę? Zostanie zapisany status z datą i Twoim użytkownikiem?')">Zaakceptuj jako dyrektor Medyczny</a>
         @endif
         @if (canAcceptPool() && !empty($status2) && $status2 == 'unaceppted')

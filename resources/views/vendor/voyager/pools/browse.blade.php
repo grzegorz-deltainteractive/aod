@@ -246,7 +246,7 @@
                                                         $toMore = [];
                                                         $i = 0;
                                                         foreach ($items as $item) {
-                                                            if ($i < 1) {
+                                                            if ($i < 3) {
                                                                 $toThree[] = $item->name;
                                                             } else {
                                                                 $toMore[] = $item->name;

@@ -409,7 +409,7 @@
                                                 ?>
                                             </td>
                                         <td class="no-sort no-click bread-actions">
-										<?php if( $data->getKey()==1 || $data->getKey()==2  || $data->getKey()>130 ){  ?>
+										<?php if( $data->getKey()==1 || $data->getKey()==2  || $data->getKey()>130 || isAdmin() || isSuperAdmin()){  ?>
                                             @foreach($actions as $action)
                                                 @if (!method_exists($action, 'massAction'))
                                                     @include('vendor.voyager.users.partials.actions', ['action' => $action])

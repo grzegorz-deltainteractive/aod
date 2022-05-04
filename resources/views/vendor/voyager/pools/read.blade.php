@@ -130,16 +130,31 @@ foreach ($pool->suppliers as $supplier) {
                                 </td>
                                 <td>
                                     <?php
-                                    $laboratories = [];
-                                    foreach ($supplier->laboratories as $laboratory) {
-                                        $laboratories[] = $laboratory->name;
+                                    $items = $pool->laboratories;
+                                    $toThree = [];
+                                    $toMore = [];
+                                    $i = 0;
+                                    foreach ($items as $item) {
+                                        if ($i < 3) {
+                                            $toThree[] = $item->name;
+                                        } else {
+                                            $toMore[] = $item->name;
+                                        }
+                                        $i++;
                                     }
-                                    if (!empty($laboratories)) {
-                                        echo implode(", ", $laboratories);
-                                    } else {
-                                        echo '-';
-                                    }
+                                    $toThree = implode(', ', $toThree);
+                                    $toMore = implode(', ', $toMore);
                                     ?>
+                                    {{$toThree}}
+                                    @if (!empty($toMore))
+                                        <a href="#expandid-laboratories-<?php echo $supplier->id;?>" data-toggle="collapse"
+                                           class="expand-collapse-pools"
+                                           data-expandid="<?php echo $supplier->id;?>">Pokaż/ukryj
+                                            następne</a>
+                                        <div class="collapse" id="expandid-laboratories-<?php echo $supplier->id;?>">
+                                            {{$toMore}}
+                                        </div>
+                                    @endif
                                 </td>
                                 <td>
                                     {{$year}}

@@ -6,7 +6,12 @@
  */
 namespace App\Actions;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Actions\AbstractAction;
+use TCG\Voyager\Facades\Voyager;
 
 class SuppliersAction extends AbstractAction
 {
@@ -35,6 +40,8 @@ class SuppliersAction extends AbstractAction
     public function shouldActionDisplayOnDataType()
     {
         // show or hide the action button, in this case will show for posts model
-        return $this->dataType->slug == 'suppliers';
+        $check = $this->dataType->slug == 'suppliers';
+
+        return ($check && (isAdmin() || isSuperAdmin() || isDyrektorM()));
     }
 }

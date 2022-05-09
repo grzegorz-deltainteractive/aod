@@ -100,6 +100,25 @@ function isAdmin()
     return false;
 }
 
+function isBiuro()
+{
+    $user = Auth::user();
+    $allowedRoles = [3];
+    if (in_array($user->role_id, $allowedRoles)) {
+        return true;
+    }
+    return false;
+}
+function isDyrektorM()
+{
+    $user = Auth::user();
+    $allowedRoles = [9];
+    if (in_array($user->role_id, $allowedRoles)) {
+        return true;
+    }
+    return false;
+}
+
 function canEditPool()
 {
     $user = Auth::user();

@@ -5,12 +5,20 @@
  * Time: 23:28
  */
 
+use Illuminate\Support\Facades\Auth;
+
 $pool = [];
 $poolStatuses = App\Models\Pool::getStatuses();
 $departmentsList = \App\Models\Department::getAllDepartmentsList();
 $laboratoriesList = App\Models\Laboratory::getAllLaboratoriesList();
+$supplierPoolsArray = [];
 if ($supplier) {
     $supplierPools = \App\Models\Supplier::pools($supplier);
+    foreach ($supplierPools as $spy => $spa) {
+        foreach ($spa as $sp) {
+            $supplierPoolsArray[] = $sp->id;
+        }
+    }
 } else {
     $supplierPools = [];
 }
@@ -27,36 +35,85 @@ $statuses = [
 ];
 
 $poolsRelation = $supplier->poolsRelation;
+//dd($poolsRelation);
 $poolsList = [];
+if (isAdmin() || isSuperAdmin() || isDyrektorM()) {
+    $laboratories = $supplier->laboratories;
+
+} else {
+    $user = Auth::user();
+    $laboratories = $user->laboratory;
+}
 if (!empty($poolsRelation)) {
     foreach ($poolsRelation as $pool) {
-        foreach($supplier->laboratories as $laboratory) {
-            // tworze mixa ankieta_dostawca_laboratorium
-            $name = $pool->numer_procedury.'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id);
-            $name .= '_'.\App\Models\Laboratory::getLaboratoryShortcode($laboratory->id);
-            $filledData = \App\Models\SupplierPoolQuestion::getFilledDataAll($pool->id, $supplier->id);
-            $users = \App\Models\Laboratory::getLaboratoryUsers($laboratory->id);
-            if (count($users) == 1) {
-                $poolsList[$name] = [
-                    'name' => $name,
-                    'pool' => $pool,
-                    'laboratory' => $laboratory,
-                    'user' => [
-                        'id' => array_key_first($users),
-                        'name' => reset($users)
-                    ]
-                ];
-            } else {
-                foreach ($users as $userId => $userName) {
-                    $poolsList[$name.$userId] = [
+        if (isAdmin() || isSuperAdmin() || isDyrektorM()) {
+            foreach($laboratories as $laboratory) {
+                // tworze mixa ankieta_dostawca_laboratorium
+                $name2 = $pool->numer_procedury.'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id);
+                $name2 .= '_'.\App\Models\Laboratory::getLaboratoryShortcode($laboratory->id);
+                $name = $pool->name;
+                $filledData = \App\Models\SupplierPoolQuestion::getFilledDataAll($pool->id, $supplier->id);
+                $users = \App\Models\Laboratory::getLaboratoryUsers($laboratory->id);
+                if (count($users) == 1) {
+                    $poolsList[$name] = [
+                        'name2' => $name2,
                         'name' => $name,
                         'pool' => $pool,
                         'laboratory' => $laboratory,
                         'user' => [
-                            'id' => $userId,
-                            'name' => $userName
+                            'id' => array_key_first($users),
+                            'name' => reset($users)
                         ]
                     ];
+                } else {
+                    foreach ($users as $userId => $userName) {
+                        $poolsList[$name.$userId] = [
+                            'name2' => $name2,
+                            'name' => $name,
+                            'pool' => $pool,
+                            'laboratory' => $laboratory,
+                            'user' => [
+                                'id' => $userId,
+                                'name' => $userName
+                            ]
+                        ];
+                    }
+                }
+            }
+        } else {
+            if (in_array($pool->id, $supplierPoolsArray)) {
+                foreach($laboratories as $laboratory) {
+                    // tworze mixa ankieta_dostawca_laboratorium
+                    $name2 = $pool->numer_procedury.'_'.\App\Models\Supplier::getSupplierShortcode($supplier->id);
+                    $name2 .= '_'.\App\Models\Laboratory::getLaboratoryShortcode($laboratory->id);
+                    $name = $pool->name;
+                    $filledData = \App\Models\SupplierPoolQuestion::getFilledDataAll($pool->id, $supplier->id);
+                    $users = \App\Models\Laboratory::getLaboratoryUsers($laboratory->id);
+                    if (count($users) == 1) {
+                        $poolsList[$name] = [
+                            'name2' => $name2,
+                            'name' => $name,
+                            'pool' => $pool,
+                            'laboratory' => $laboratory,
+                            'user' => [
+                                'id' => array_key_first($users),
+                                'name' => reset($users)
+                            ]
+                        ];
+                    } else {
+                        foreach ($users as $userId => $userName) {
+                            $poolsList[$name.$userId] = [
+                                'name2' => $name2,
+                                'name' => $name,
+                                'pool' => $pool,
+                                'laboratory' => $laboratory,
+                                'user' => [
+                                    'id' => $userId,
+                                    'name' => $userName
+                                ]
+                            ];
+                        }
+                    }
                 }
             }
         }
@@ -128,7 +185,8 @@ if (!empty($poolsRelation)) {
                 <table id="dataTable2" class="table table-hover dataTable2 no-footer">
                     <thead>
                         <tr>
-                            <th>Nazwa ankiety</th>
+                            <th>Nazwa</th>
+                            <th>Kod</th>
                             <th>Dział</th>
                             <th>Laboratoria</th>
                             <th>Użytkownik</th>
@@ -173,12 +231,15 @@ if (!empty($poolsRelation)) {
                         ?>
                         <tr>
                             <td>
+                                {{$poolData['name']}}
+                            </td>
+                            <td>
                                 @if(!empty($year) && $year != '-' && $status != 'unfilled')
                                     <a href="{{route('suppliers.pools.filled.single', ['id' => $supplier->id, 'poolId' => $poolData['pool']->id, 'userId' => $poolData['user']['id']])}}">
-                                        {{$poolData['name']}}
+                                        {{$poolData['name2']}}
                                     </a>
                                 @else
-                                {{$poolData['name']}}
+                                {{$poolData['name2']}}
                                 @endif
                             </td>
                             <td>

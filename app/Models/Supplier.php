@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 
 class Supplier extends Model
@@ -57,6 +58,13 @@ class Supplier extends Model
             foreach ($laboratories as $single) {
                 $laboratoriesIds[] = $single->id;
             }
+        }
+        if (isAdmin() || isSuperAdmin() || isDyrektorM()) {
+
+        } else {
+            $user = Auth::user();
+            $laboratoriesIds = $user->laboratory->pluck('id')->toArray();
+//            dd($laboratories);
         }
         return [
             'departmentsIds' => $deparmentsIds,

@@ -59,10 +59,10 @@ class User extends \TCG\Voyager\Models\User
     public static function getPoolsForUser($userId)
     {
         $user = self::where('id', $userId)->first();
-        $departmentsId = $user->departments->pluck('id')->toArray();
+        $departmentsId = $user->laboratory->pluck('id')->toArray();
         $pools = [];
         if (!empty($departmentsId)) {
-            $poolsId = DB::table('pools_departments')->whereIn('department_id', $departmentsId)->groupBy('pool_id')->pluck('pool_id')->toArray();
+            $poolsId = DB::table('pools_laboratories')->whereIn('laboratory_id', $departmentsId)->groupBy('pool_id')->pluck('pool_id')->toArray();
             if (!empty($poolsId)) {
                 $pools = Pool::whereIn('id', $poolsId)->get();
             }

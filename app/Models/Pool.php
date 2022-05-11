@@ -39,11 +39,15 @@ class Pool extends Model
 
     public static function getPoolsForDepartmentAndLaboratoryList($departmentsIds, $laboratoryIds)
     {
-        $poolsForDepartments = DB::table('pools_departments')->whereIn('department_id', $departmentsIds)->pluck('pool_id')->toArray();
-        $poolsForLaboratory = DB::table('pools_laboratories')->whereIn('laboratory_id', $laboratoryIds)->pluck('pool_id')->toArray();
-//        dd(array_intersect($poolsForLaboratory, $poolsForDepartments));
+        if (isSuperAdmin() || isAdmin() || isDyrektorM()) {
+            $poolsForDepartments = DB::table('pools_departments')->whereIn('department_id', $departmentsIds)->pluck('pool_id')->toArray();
+            $poolsForLaboratory = DB::table('pools_laboratories')->whereIn('laboratory_id', $laboratoryIds)->pluck('pool_id')->toArray();
+            return self::whereIn('id', array_intersect($poolsForLaboratory, $poolsForDepartments))->get();
+        } else {
+            $poolsForLaboratory = DB::table('pools_laboratories')->whereIn('laboratory_id', $laboratoryIds)->pluck('pool_id')->toArray();
+            return self::whereIn('id', $poolsForLaboratory)->get();
+        }
 
-        return self::whereIn('id', array_intersect($poolsForLaboratory, $poolsForDepartments))->get();
     }
 
     public static function getPoolsByDepartment($departmentId)

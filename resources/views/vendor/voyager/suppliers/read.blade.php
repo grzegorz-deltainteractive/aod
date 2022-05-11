@@ -12,6 +12,7 @@ if ($supplier) {
 } else {
     $supplierPools = [];
 }
+//dd($supplierPools);
 $suppliersPoolsResult = [];
 if (!empty($supplierPools)) {
     $suppliersPoolsResult = \App\Models\SupplierPoolQuestion::getResults($supplierPools, $supplier);
@@ -188,6 +189,9 @@ $departmens = \App\Models\Department::orderBy('name', 'asc')->pluck('name', 'id'
                                         <th>
                                             Nazwa
                                         </th>
+                                        <th>
+                                            Numer procedury
+                                        </th>
                                         <th>Rok</th>
                                         <th>
                                             Wynik #
@@ -206,29 +210,57 @@ $departmens = \App\Models\Department::orderBy('name', 'asc')->pluck('name', 'id'
                                             <?php
                                             $poolData = \App\Models\SupplierPoolQuestion::calculatePoolResult($pool->id, $supplier);
                                             ?>
+                                            @endif
                                             <tr>
                                                 <td>
                                                     <a href="{{route('suppliers.listPools', ['id' => $pool->id, 'supplierId' => $supplier->id])}}">
                                                     {{$pool->name ?? ''}}
                                                     </a>
                                                 </td>
+                                                <td>
+                                                    {{$pool->numer_procedury}}
+                                                </td>
                                                 <td>{{$year}}</td>
                                                 <td>
-                                                    {{$suppliersPoolsResult['poolsSummary'][$pool->id]['total'] .' / '.$suppliersPoolsResult['poolsSummary'][$pool->id]['max']}}
+                                                    @if (isset($suppliersPoolsResult['poolsSummary'][$pool->id]))
+                                                    {{$suppliersPoolsResult['poolsSummary'][$pool->id]['total'] .' / '.$suppliersPoolsResult['poolsSummary'][$pool->id]['max'] }}
+                                                    @else
+                                                    -
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    {{sprintf("%.2f", ($suppliersPoolsResult['poolsSummary'][$pool->id]['total'] / $suppliersPoolsResult['poolsSummary'][$pool->id]['max'] )*100 )}}%
+                                                    @if (isset($suppliersPoolsResult['poolsSummary'][$pool->id]))
+                                                    {{sprintf("%.2f", ($suppliersPoolsResult['poolsSummary'][$pool->id]['total'] / $suppliersPoolsResult['poolsSummary'][$pool->id]['max'] )*100 ) ?? '-'}}%
+                                                    @else
+                                                        -
+                                                    @endif
                                                 </td>
                                                 <td>-</td>
-                                                <td>{{count($suppliersPoolsResult['poolsCount'][$pool->id])}}</td>
-                                                <td>{{count($suppliersPoolsResult['poolsCount'][$pool->id])}}</td>
                                                 <td>
+                                                    @if (isset($suppliersPoolsResult['poolsSummary'][$pool->id]))
+                                                    {{count($suppliersPoolsResult['poolsCount'][$pool->id]) ?? '-'}}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if (isset($suppliersPoolsResult['poolsSummary'][$pool->id]))
+                                                    {{count($suppliersPoolsResult['poolsCount'][$pool->id]) ?? '-'}}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if (isset($suppliersPoolsResult['poolsSummary'][$pool->id]))
                                                     <a href="{{route('suppliers.displayPools', ['id' => $pool->id, 'supplierId' => $supplier->id])}}">
                                                     {{count($suppliersPoolsResult['poolsCount'][$pool->id])}}
                                                     </a>
+                                                    @else
+                                                    -
+                                                    @endif
                                                 </td>
                                             </tr>
-                                            @endif
+
                                         @endforeach
                                     @endforeach
                                     </tbody>

@@ -204,6 +204,64 @@ class SupplierPoolQuestion extends Model
         ];
     }
 
+    public static function getResultForSinglePoolYear ($poolId, $supplier)
+    {
+        $results = [];
+        $resultsSummary = [];
+        $resultsSummaryParam = [];
+        $poolsMax = [];
+        $poolsSummary = [];
+        $poolsCount = [];
+        $pool = Pool::where('id', $poolId)->first();
+        $users = [];
+
+        $categories = $pool->categories;
+        foreach ($categories as $category) {
+            $categoriesParameter = $category->categoriesParameters;
+            foreach ($categoriesParameter as $single) {
+                if (!isset($poolsMax[$pool->id])) {
+                    $poolsMax[$pool->id] = 0;
+                } else {
+                    $poolsMax[$pool->id] = $poolsMax[$pool->id] + $single->rating_max;
+                }
+
+                $score = self::where('pool_id', $pool->id)->where('category_id', $category->id)
+                    ->where('category_param_id', $single->id)->where('supplier_id', $supplier->id)->get();
+                if (!empty($score)) {
+                    foreach ($score as $singleScore) {
+                        $year = date('Y', strtotime($singleScore->created_at));
+
+                        $results[$pool->id][$year][$category->id][$single->id][$singleScore->user_id] = $singleScore->value;
+                        if (!isset($resultsSummary[$pool->id][$year][$singleScore->user_id])) {
+                            $resultsSummary[$pool->id][$year][$singleScore->user_id] = $singleScore->value;
+                        } else {
+                            $resultsSummary[$pool->id][$year][$singleScore->user_id] = $resultsSummary[$pool->id][$year][$singleScore->user_id] + $singleScore->value;
+                        }
+                        if (!isset($poolsSummary[$pool->id]['total'])) {
+                            $poolsSummary[$pool->id]['max'] = $single->rating_max;
+                            $poolsSummary[$pool->id]['total'] = $singleScore->value;
+                        } else {
+                            $poolsSummary[$pool->id]['max'] = $poolsSummary[$pool->id]['max'] + $single->rating_max;
+                            $poolsSummary[$pool->id]['total'] = $poolsSummary[$pool->id]['total'] + $singleScore->value;
+                        }
+                        if (!in_array($singleScore->user_id, $users)) {
+                            $users[] = $singleScore->user_id;
+                        }
+                    }
+                }
+            }
+        }
+        return [
+            'results' => $results,
+            'resultsSummary' => $resultsSummary,
+            'resultsSummaryParam' => $resultsSummaryParam,
+            'poolsMax' => $poolsMax,
+            'poolsSummary' => $poolsSummary,
+            'poolsCount' => $poolsCount,
+            'users' => $users
+        ];
+    }
+
     public static function getFilledData($poolId, $id)
     {
         $filled = self::where('pool_id', $poolId)->where('supplier_id', $id)->select(['user_id', 'created_at', 'pool_id', 'supplier_id'])->groupBy(['user_id', 'created_at', 'pool_id', 'supplier_id'])->distinct()->first();

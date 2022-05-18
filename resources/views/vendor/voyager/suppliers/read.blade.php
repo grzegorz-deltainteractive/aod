@@ -120,8 +120,43 @@ $departmens = \App\Models\Department::orderBy('name', 'asc')->pluck('name', 'id'
                 </div>
                 <div class="col-12 col-lg-4">
                     <h4 class="center-text align-text-center">
-                        Ankiety
+                        Ocena
                     </h4>
+                    <?php
+                        $supplierData = \App\Models\Supplier::getSupplierPointsYear($supplier->id);
+                    ?>
+                    @if (empty($supplierData))
+                        <h6>Brak ocen</h6>
+                    @else
+                        <table style="width: 100%;" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Rok</th>
+                                    <th>Ocena</th>
+                                    <th></th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($supplierData['points'] as $pointYear => $points)
+                                <tr>
+                                    <td>{{$pointYear}}</td>
+                                    <td>
+                                        {{$points}} / {{$supplierData['maxPoints']}}
+                                    </td>
+                                    <td>
+                                        <?php
+                                            $percent = $points / $supplierData['maxPoints'];
+                                            $percent = $percent * 100;
+                                            echo sprintf("%.2f", $percent).' %';
+                                        ?>
+                                    </td>
+                                    <td> - </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    @endif
                 </div>
             </div>
             <hr />

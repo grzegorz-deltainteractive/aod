@@ -82,7 +82,7 @@ class RaportsController extends VoyagerBaseController {
     private function getData()
     {
         $suppliers = [];
-        if (isSuperAdmin() || isAdmin()) {
+        if (isSuperAdmin() || isAdmin() || isDyrektorM()) {
             // if logged user is admin or superadmin get all supplier list
             $suppliers = Supplier::getList(0);
         } else {
